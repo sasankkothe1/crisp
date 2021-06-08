@@ -4,7 +4,7 @@ const express = require('express');
 const router = express.Router();
 
 // Load VerifiedPartner model
-const Post = require('../../models/VerifiedPartner');
+const VerifiedPartner = require('../../models/VerifiedPartner');
 
 // @route GET api/verified_partner/test
 // @description tests verified_partner route
@@ -15,7 +15,7 @@ router.get('/test', (req, res) => res.send('verified_partner route testing!'));
 // @description Get all verified partners
 // @access Public
 router.get('/', (req, res) => {
-    Post.find()
-        .then(posts => res.json(posts))
-        .catch(err => res.status(404).json({ noverifiedpartnerfound: 'No Verified Partner found' }));
+    VerifiedPartner.find()
+        .then(VerifiedPartner => res.json(VerifiedPartner))
+        .catch(err => res.status(404).json({ noVerifiedPartnerfound: 'No Verified Partner found' }));
 });
