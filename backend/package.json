@@ -15,7 +15,6 @@
     "config": "^3.3.6",
     "express": "^4.17.1",
     "mongoose": "^5.12.13",
-    "mongoose-schema-extend": "^0.2.2",
     "nodemon": "^2.0.7",
     "validation": "0.0.1"
   }

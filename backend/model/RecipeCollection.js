@@ -40,3 +40,7 @@ const RecipeCollectionSchema = new mongoose.Schema({
         required: true
     }
 });
+
+const RecipeCollection = mongoose.model('RecipeCollection', RecipeCollectionSchema);
+
+module.exports = RecipeCollection;
