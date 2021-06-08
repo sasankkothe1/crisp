@@ -4,7 +4,7 @@ const express = require('express');
 const router = express.Router();
 
 // Load Post model
-const Post = require('../../models/Post');
+const Post = require('../../model/Post');
 
 // @route GET api/posts/test
 // @description tests posts route
@@ -19,3 +19,5 @@ router.get('/', (req, res) => {
     .then(posts => res.json(posts))
     .catch(err => res.status(404).json({ nopostsfound: 'No Posts found' }));
 });
+
+module.exports = router;
