@@ -4,7 +4,7 @@ const express = require('express');
 const router = express.Router();
 
 // Load PartnerManager model
-const Post = require('../../models/PartnerManager');
+const PartnerManager = require('../../models/PartnerManager');
 
 // @route GET api/partner_manager/test
 // @description tests partner_manager route
@@ -15,7 +15,7 @@ router.get('/test', (req, res) => res.send('partner_manager route testing!'));
 // @description Get all partner managers
 // @access Public
 router.get('/', (req, res) => {
-    Post.find()
-        .then(posts => res.json(posts))
-        .catch(err => res.status(404).json({ nopartnermanagerfound: 'No Partner Manager found' }));
+    PartnerManager.find()
+        .then(PartnerManager => res.json(PartnerManager))
+        .catch(err => res.status(404).json({ noPartnerManagerfound: 'No Partner Manager found' }));
 });

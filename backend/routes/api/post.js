@@ -17,5 +17,5 @@ router.get('/test', (req, res) => res.send('post route testing!'));
 router.get('/', (req, res) => {
   Post.find()
     .then(posts => res.json(posts))
-    .catch(err => res.status(404).json({ nopostsfound: 'No Posts found' }));
+    .catch(err => res.status(404).json({ noPostsfound: 'No Posts found' }));
 });
