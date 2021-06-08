@@ -1,8 +1,10 @@
 const mongoose = require('mongoose');
 
 const RecipeCollectionSchema = new mongoose.Schema({
+    _id: mongoose.Schema.Types.ObjectId,
     postedBy: {
-        type: String,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
         required: true
     },
     title: {
