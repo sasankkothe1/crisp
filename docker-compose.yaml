@@ -1,0 +1,20 @@
+version: '3'
+services:
+  frontend: 
+    build: ./frontend
+    container_name: crisp-frontend
+    depends_on: 
+      - "backend"
+    environment:
+      - PORT=3000
+    ports:
+      - "3000:3000"
+    restart: always
+  backend:
+    build: ./backend
+    container_name: crisp-backend
+    environment:
+      - PORT=4000
+    ports:
+      - "4000:4000"
+    restart: always
