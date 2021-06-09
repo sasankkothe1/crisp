@@ -19,9 +19,5 @@ app.get('/', (req, res) => res.send("Hello World"));
 // use Routes
 app.use('/api', routes.api);
 
-// setting a port to run the server. Usually it is 4000. But can be set to any port
-const port = 4000;
-
-// listen() function will be triggered when the server is started
-// will be running on http://localhost:4000/
+const port = process.env.PORT;
 app.listen(port, () => console.log(`Server is running on port ${port}`));
