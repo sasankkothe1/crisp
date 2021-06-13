@@ -8,6 +8,7 @@ const Order = require('../../model/Order');
 const { protect, admin } = require('../../middleware/auth');
 
 // Get all orders
+// Auth: Admin
 router.get('/', protect, admin, (req, res) => {
     let orders = Order.find();
 
@@ -53,7 +54,7 @@ router.get('/:id', protect, (req, res) => {
     }
 
     order
-        .then(order => res.send(order))
+        .then(order => res.json(order))
         .catch(err => res.status(404).send({ message : err.message }));
 });
 
@@ -67,7 +68,7 @@ router.put('/:id', protect, (req, res) => {
         if (err) {
             res.status(404).send({ message: err.message });
         } else {
-            res.send({ message: "Successfully updated!", id: order._id });
+            res.send({ id: order._id });
         }
     });
 });
@@ -81,7 +82,7 @@ router.delete('/:id', protect, admin, (req, res) => {
         if (err) {
             res.status(404).send({ message: err.message });
         } else {
-            res.send({ message: "Successfully deleted", id: order._id });
+            res.send({ id: order._id });
         }
     });
 });

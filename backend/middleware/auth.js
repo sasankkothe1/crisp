@@ -26,6 +26,7 @@ exports.protect = async (req, res, next) => {
 
     next();
   } catch (error) {
+    return next(new ErrorResponse("Not authorized to access this route", 401))
   }
 }
 
@@ -38,5 +39,7 @@ exports.admin = async (req, res, next) => {
       return next(new ErrorResponse("This route requires admin privilege", 401));
     }
     next();
-  } catch (error) {}
+  } catch (error) {
+    return next(new ErrorResponse("Not authorized to access this route", 401))
+  }
 }
