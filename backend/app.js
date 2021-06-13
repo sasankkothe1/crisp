@@ -1,9 +1,11 @@
-const connectDB = require('./config/db');
-
-// importing express module
+require('dotenv').config();
 const express = require('express');
-
+const connectDB = require('./config/db');
 const routes = require('./routes');
+const errorHandler = require('./middleware/error');
+
+// Connect DB
+connectDB();
 
 // adding express to our app
 const app = express();
@@ -11,7 +13,11 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-connectDB();
+// use Routes
+app.use('/api', routes.api);
+
+// Error Handler (Should be last piece of middleware)
+app.use(errorHandler)
 
 // when server is running, get request with url '/' will return "Hello world. <-- for testing purposes"
 app.get('/', (req, res) => res.send("Hello World"));
