@@ -19,14 +19,12 @@ backend/build
 
 # misc
 frontend/.DS_Store
-frontend/.env
 frontend/.env.local
 frontend/.env.development.local
 frontend/.env.test.local
 frontend/.env.production.local
 
 backend/.DS_Store
-backend/.env
 backend/.env.local
 backend/.env.development.local
 backend/.env.test.local
