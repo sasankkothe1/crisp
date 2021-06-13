@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const PostSchema = new mongoose.Schema({
+const EventSchema = new mongoose.Schema({
     postedBy: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
@@ -19,22 +19,33 @@ const PostSchema = new mongoose.Schema({
     },
     tags: {
         type: [String],
+        default: ["noTags"]
     },
     datePosted: {
         type: Date,
-        required: true,
         default: Date.now
     },
     premiumStatus: {
         type: Boolean,
-        required: true
+        default: false
     },
     rating: {
         type: Number,
+    },
+    startDate: {
+        type: Date,
+        required: true
+    },
+    endDate: {
+        type: Date,
+        required: true
+    },
+    eventLocation: {
+        type: String,
         required: true
     }
 });
 
-const Post = mongoose.model('Post', PostSchema);
+const Event = mongoose.model('Event', EventSchema);
 
-module.exports = { Post };
+module.exports = { Event };

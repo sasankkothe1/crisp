@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const PostSchema = new mongoose.Schema({
+const RecipeSchema = new mongoose.Schema({
     postedBy: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
@@ -19,22 +19,35 @@ const PostSchema = new mongoose.Schema({
     },
     tags: {
         type: [String],
+        default: ["noTags"]
     },
     datePosted: {
         type: Date,
-        required: true,
         default: Date.now
     },
     premiumStatus: {
         type: Boolean,
-        required: true
+        default: false
     },
     rating: {
         type: Number,
-        required: true
+    },
+    ingredientsList: [{
+        ingredientName: {
+            type: String
+        },
+        ingredientQuantity: {
+            type: String
+        }
+    }],
+    instructions: {
+        type: [String]
+    },
+    cuisine: {
+        type: String
     }
 });
 
-const Post = mongoose.model('Post', PostSchema);
+const Recipe = mongoose.model('Recipe', RecipeSchema);
 
-module.exports = { Post };
+module.exports = { Recipe };

@@ -9,7 +9,7 @@ const routes = require('./routes');
 const app = express();
 
 app.use(express.json());
-app.use(express.urlencoded({extended: true}));
+app.use(express.urlencoded({ extended: true }));
 
 connectDB();
 
@@ -19,5 +19,5 @@ app.get('/', (req, res) => res.send("Hello World"));
 // use Routes
 app.use('/api', routes.api);
 
-const port = process.env.PORT;
+const port = process.env.PORT || 4000;
 app.listen(port, () => console.log(`Server is running on port ${port}`));
