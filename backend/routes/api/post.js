@@ -1,66 +1,45 @@
-// routes/api/post.js
-
 const express = require('express');
 const router = express.Router();
-const { v4: uuidv4 } = require('uuid')
-const fs = require('fs')
+const { v4: uuidv4 } = require('uuid');
 
-// Load Post model
-const { PostModel } = require('../../model/Post');
+const PostController = require('../../controllers/post');
+const middleware = require('../../middleware/auth')
+const mimetypes = ['image/png', 'image/jpg', 'image/jpeg', 'image/gif', 'video/mp4', 'video/quicktime', 'video/x-ms-wmv', 'video/x-msvideo', 'video/MP2T'];
 
-const imageFormats = ['png', 'jpg', 'jpeg']
-const videoFormats = ['.gif', '.mp4', '.mov', '.wmv', '.avi']
+const multer = require('multer')
 
-// @route GET api/posts/test
-// @description tests posts route
-// @access Public
-router.get('/test', (req, res) => res.send('post route testing!'));
-
-// to get all the posts populated by the user created "postedBy"
-router.get('/all', (req, res) => {
-  PostModel.find()
-    .populate('postedBy')
-    .exec()
-    .then(posts => res.json(posts))
-    .catch(err => res.status(404).json({ noPostsFound: 'No Posts Found' }));
-});
-
-// to get post with specific id
-router.get('/:id', (req, res) => {
-  PostModel.findById(req.params.id)
-    .populate('postedBy')
-    .exec()
-    .then(post => res.json(post))
-    .catch(err => res.status(404).json({ noPostFound: 'No Post Found' }))
-})
-
-// to post a new recipe
-router.post('/', (req, res) => {
-  if (Object.keys(req.body).length === 0) return res.status(400).json({
-    error: 'Bad Request',
-    message: 'The request body is empty'
-  });
-
-  // url to store the media (images/files). Format example: http://<host>/public/uploads/images
-  let recievedFiles = req.files;
-  let media = []
-  const url = req.protocol + '://' + req.get('host'); //getting the host url
-
-  if (recievedFiles.length > 0) {
-    for (var i = 0; i < recievedFiles.length; i++) {
-      var filetype = recievedFiles[i].filename.substr(recievedFiles[i].filename.lastIndexOf('.') + 1);
-      filetype = imageFormats.includes(filetype) ? 'image' : 'video';
-      let fileName = recievedFiles[i].filename.toLowerCase().split(' ').join('-')
-
-      if (filetype === 'image') {
-        media.push(url + '/public/uploads/images/' + uuidv4() + "-" + fileName)
-      }
-      if (filetype === 'video') {
-        media.push(url + '/public/uploads/videos/' + uuidv4() + "-" + fileName)
-      }
-
-    }
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, './public/uploads/');
+  },
+  filename: (req, file, cb) => {
+    const fileName = file.originalname.toLowerCase().split(' ').join('-');
+    cb(null, uuidv4() + '-' + fileName)
   }
 })
 
-module.exports = router;
+const fileFilter = (req, file, cb) => {
+  if (!req.files || !req.files.file || !mimetypes.includes(req.files.file.mimetype)) cb(null, true);
+  else {
+    cb(null, false);
+    return cb(new Error('Only .png, .jpg, .jpeg, .gif, .mp4, .mov, .wmv, .avi format allowed'));
+  }
+}
+
+// 10mb file size is allowed
+const upload = multer({
+  storage: storage,
+  fileFilter: fileFilter,
+  limits: {
+    fileSize: 1024 * 1024 * 10
+  }
+})
+
+router.post('/', middleware.protect, upload.array('media'), PostController.create)
+router.get('/', PostController.listPosts);
+router.get('/new', PostController.listNewPosts)
+router.get('/postedBy/:id', middleware.protect, PostController.listPostsByUserID)
+router.get('/:id', middleware.protect, PostController.read)
+router.put('/:id', middleware.protect, upload.array('media'), PostController.update)
+
+module.exports = router
