@@ -1,10 +1,9 @@
-const { PostModel } = require('../model/Post')
+const { EventModel } = require('../model/Event')
 
 const fs = require('fs')
 
-
 const test = async (req, res) => {
-    return res.send('testing')
+    return res.send('testing Event')
 }
 
 const create = async (req, res) => {
@@ -19,47 +18,59 @@ const create = async (req, res) => {
     if (req.files.length > 0) {
         for (var i = 0; i < req.files.length; i++) mediaFiles.push(url + req.files[i].filename)
     }
-    let post = {
+    let event = {
         ...req.body,
         media: mediaFiles
     }
 
-    PostModel.create(post)
-        .then(post => res.status(201).json(post))
+    EventModel.create(event)
+        .then(event => res.status(201).json(event))
         .catch(error => res.status(500).json({
             error: 'Internal server error',
             message: error.message
         }));
 }
 
-const listPosts = (req, res) => {
-    PostModel.find({})
+const listEvents = (req, res) => {
+    EventModel.find({})
         .populate('postedBy')
         .exec()
-        .then(posts => {
-            if (!posts) return res.status(400).json({
+        .then(events => {
+            if (!events) return res.status(400).json({
                 error: 'Not Found',
-                message: 'No Posts Found'
+                message: 'No events Found'
             })
-            else return res.status(200).json(posts)
+            else return res.status(200).json(events)
         })
 };
 
-const listNewPosts = (req, res) => {
-    PostModel.find({})
+const listNewEvents = (req, res) => {
+    EventModel.find({})
         .sort('-datePosted')
         .populate('postedBy')
         .exec()
-        .then(posts => res.status(200).json(posts))
+        .then(events => res.status(200).json(events))
         .catch(error => res.status(500).json({
             error: 'Internal server error',
             message: error.message
         }));
 };
 
-const listPostsByUserID = (req, res) => {
-    PostModel.find({ postedBy: req.params.id })
-        .then(posts => res.status(200).json(posts))
+const listSoonEndingEvents = (req, res) => {
+    EventModel.find({})
+        .sort('endDate')
+        .populate('postedBy')
+        .exec()
+        .then(events => res.status(200).json(events))
+        .catch(error => res.status(500).json({
+            error: 'Internal server error',
+            message: error.message
+        }));
+};
+
+const listEventsByUserID = (req, res) => {
+    EventModel.find({ postedBy: req.params.id })
+        .then(events => res.status(200).json(events))
         .catch(error => res.status(500).json({
             error: 'Internal server error',
             message: error.message
@@ -67,15 +78,15 @@ const listPostsByUserID = (req, res) => {
 }
 
 const read = (req, res) => {
-    PostModel.find(req.params.id)
+    EventModel.find(req.params.id)
         .populate('postedBy')
         .exec()
-        .then(post => {
-            if (!post) return res.status(404).json({
+        .then(event => {
+            if (!event) return res.status(404).json({
                 error: 'Not Found',
-                message: 'Post not found'
+                message: 'Event not found'
             })
-            else return res.status(200).json(post)
+            else return res.status(200).json(event)
         })
         .catch(error => res.status(500).json({
             error: 'Internal server error',
@@ -85,32 +96,35 @@ const read = (req, res) => {
 
 const update = async (req, res) => {
     try {
-        let post = await PostModel.findOne({ _id: req.params.id }).exec();
+        let event = await EventModel.findOne({ _id: req.params.id }).exec();
 
-        if (!post) {
+        if (!event) {
             return res.status(404).json({
                 error: 'Not found',
-                message: 'Post not found'
+                message: 'Event not found'
             });
         }
 
         if (req.file !== undefined) {
             let url = req.protocol + '://' + req.get('host') + '/'
-            let mediaFiles = post.media
+            let mediaFiles = event.media
 
             if (req.files.length > 0) {
                 for (var i = 0; i < req.files.length; i++) mediaFiles.push(url + req.files[i].filename)
             }
         }
 
-        post.title = req.body.title;
-        post.description = req.body.description;
-        post.media = mediaFiles;
-        post.tags = req.body.tags;
-        post.premiumStatus = req.body.premiumStatus;
-        post.rating = req.body.rating;
+        event.title = req.body.title;
+        event.description = req.body.description;
+        event.media = mediaFiles;
+        event.tags = req.body.tags;
+        event.premiumStatus = req.body.premiumStatus;
+        event.rating = req.body.rating;
+        event.startDate = req.body.startDate;
+        event.endDate = req.body.endDate;
+        event.eventLocation = req.body.eventLocation;
 
-        post.save(function (error) {
+        event.save(function (error) {
             if (error)
                 res.status(500).json({
                     error: 'Internal server error',
@@ -130,11 +144,11 @@ const update = async (req, res) => {
 }
 
 const remove = async (req, res) => {
-    let post;
+    let event;
     try {
-        post = await PostModel.findOne({ _id: req.params.id })
+        event = await EventModel.findOne({ _id: req.params.id })
             .populate('postedBy').exec()
-        if (!post) {
+        if (!event) {
             return res.status(404).json({
                 error: 'Not found',
                 message: 'Recipe not found'
@@ -148,7 +162,7 @@ const remove = async (req, res) => {
     }
     try {
 
-        let { media } = post;
+        let { media } = event;
         media.map(mediaFile => {
             let path = './public/uploads/' + mediaFile.substr(mediaFile.lastIndexOf('/') + 1);
             fs.access(path, fs.F_OK, err => {
@@ -162,7 +176,7 @@ const remove = async (req, res) => {
             })
         })
 
-        await post.remove();
+        await event.remove();
         res.status(200).json({ message: 'Recipe Deleted.' })
     } catch (error) {
         console.log(error);
@@ -177,9 +191,10 @@ const remove = async (req, res) => {
 module.exports = {
     create,
     read,
-    listPosts,
-    listNewPosts,
-    listPostsByUserID,
+    listEvents,
+    listNewEvents,
+    listEventsByUserID,
+    listSoonEndingEvents,
     update,
     remove,
     test

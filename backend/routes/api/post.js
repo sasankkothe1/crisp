@@ -35,11 +35,12 @@ const upload = multer({
   }
 })
 
-router.post('/', middleware.protect, upload.array('media'), PostController.create)
+router.post('/', middleware.protect, upload.array('media'), PostController.create);
 router.get('/', PostController.listPosts);
-router.get('/new', PostController.listNewPosts)
-router.get('/postedBy/:id', middleware.protect, PostController.listPostsByUserID)
-router.get('/:id', middleware.protect, PostController.read)
-router.put('/:id', middleware.protect, upload.array('media'), PostController.update)
+router.get('/new', PostController.listNewPosts);
+router.get('/postedBy/:id', middleware.protect, PostController.listPostsByUserID);
+router.get('/:id', middleware.protect, PostController.read);
+router.put('/:id', middleware.protect, upload.array('media'), PostController.update);
+router.delete('/:id', middleware.protect, PostController.remove);
 
 module.exports = router

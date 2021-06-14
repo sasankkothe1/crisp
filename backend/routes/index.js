@@ -3,6 +3,7 @@ const express = require('express');
 const api = express.Router()
     .use('/orders', require('./api/order'))
     .use('/posts', require('./api/post'))
+    .use('/events', require('./api/event'))
     .use('/recipe_collections', require('./api/recipe_collection'))
     .use('/users', require('./api/user'))
     .use('/auth', require('./api/auth'))

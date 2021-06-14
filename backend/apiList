@@ -1,7 +1,20 @@
 to post a POST:
-POST: '/api/posts/'            = to create a post. Requires FormData. Make sure, fileArray is named as 'media'
-GET: '/api/posts/'             = to get the list of posts
-GET: '/api/posts/new           = to get the new posts. (list of posts in the decreasing order of the date added)
-GET: '/api/posts/postedBy/:id' = to get the posts posted by specific user by id of the user
-GET: '/api/posts/:id'          = to get the post with a specific id
-PUT: '/api/posts/:id'          = to update a post with postID id
+POST:   '/api/posts/'              = to create a post. Requires FormData. Make sure, fileArray is named as 'media'
+GET:    '/api/posts/'              = to get the list of posts
+GET:    '/api/posts/new            = to get the new posts. (list of posts in the decreasing order of the date added)
+GET:    '/api/posts/postedBy/:id'  = to get the posts posted by specific user by id of the user
+GET:    '/api/posts/:id'           = to get the post with a specific id
+PUT:    '/api/posts/:id'           = to update a post with postID id
+DELETE: '/api/posts/:id'           = to delete a post with postID id
+
+
+to post an Event:
+
+POST:   '/api/events/'             = to create an event. Requires FormData. Make sure, fileArray is named as 'media'
+GET:    '/api/events/'             = to get the list of events
+GET:    '/api/events/new           = to get the newly added events. (list of posts in the decreasing order of the date added)
+GET:    '/api/events/soonEnding'   = to get the list of the events that are going to end soon
+GET:    '/api/events/postedBy/:id' = to get the events posted by specific user by id of the user
+GET:    '/api/events/:id'          = to get the event with a specific id
+PUT:    '/api/events/:id'          = to update a evnet with eventID id
+DELETE: '/api/events/:id'          = to delete a event with eventID id
