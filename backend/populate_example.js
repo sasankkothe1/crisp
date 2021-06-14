@@ -1,6 +1,6 @@
-const db = require('./model');
+const db = require("./model");
 
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 // Data is already in the cloud actually
 
@@ -26,13 +26,12 @@ user.save().
 });
 */
 
-const res = db.BillingInfo.
-    findOne({ 
-        cardNumber: "1488148814881488"
-    }).
-    populate('belongsTo').
-    exec(function(err, billingInfo) {
+const res = db.BillingInfo.findOne({
+    cardNumber: "1488148814881488",
+})
+    .populate("belongsTo")
+    .exec(function (err, billingInfo) {
         console.log(billingInfo);
         // Note that belongsTo was just an _id in the schema, but now it's a full-featured User entry.
-        console.log(`Andrew is indeed ${billingInfo.belongsTo.username}!`)
+        console.log(`Andrew is indeed ${billingInfo.belongsTo.username}!`);
     });
