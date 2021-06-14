@@ -83,15 +83,15 @@ UserSchema.methods.getSignedToken = function () {
     });
 };
 
-UserSchema.virtual("admin").get(function () {
-    return this.role == "Admin";
+UserSchema.virtual("isUser").get(function () {
+    return this.role == "User";
 });
 
-UserSchema.virtual("admin").get(function () {
-    return this.role == "Admin";
+UserSchema.virtual("isPartner").get(function () {
+    return this.role == "Partner";
 });
 
-UserSchema.virtual("admin").get(function () {
+UserSchema.virtual("isAdmin").get(function () {
     return this.role == "Admin";
 });
 
