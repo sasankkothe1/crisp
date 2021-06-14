@@ -1,4 +1,3 @@
-//TODO: complete the routes implementation from similar to post route
 const express = require('express');
 const router = express.Router();
 const { v4: uuidv4 } = require('uuid');

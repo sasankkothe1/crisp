@@ -1,9 +1,10 @@
-const { EventModel } = require('../model/Event')
+const { RecipeModel } = require('../model/Recipe')
 
 const fs = require('fs')
 
+
 const test = async (req, res) => {
-    return res.send('testing Event')
+    return res.send('testing')
 }
 
 const create = async (req, res) => {
@@ -18,59 +19,56 @@ const create = async (req, res) => {
     if (req.files.length > 0) {
         for (var i = 0; i < req.files.length; i++) mediaFiles.push(url + req.files[i].filename)
     }
-    let event = {
+    let recipe = {
         ...req.body,
         media: mediaFiles
     }
 
-    EventModel.create(event)
-        .then(event => res.status(201).json(event))
+    RecipeModel.create(recipe)
+        .then(recipe => res.status(201).json(recipe))
         .catch(error => res.status(500).json({
             error: 'Internal server error',
             message: error.message
         }));
 }
 
-const listEvents = (req, res) => {
-    EventModel.find({})
+const listRecipes = (req, res) => {
+    RecipeModel.find({})
         .populate('postedBy')
         .exec()
-        .then(events => {
-            if (!events) return res.status(400).json({
+        .then(recipes => {
+            if (!recipes) return res.status(400).json({
                 error: 'Not Found',
-                message: 'No events Found'
+                message: 'No Recipes Found'
             })
-            else return res.status(200).json(events)
+            else return res.status(200).json(recipes)
         })
 };
 
-const listNewEvents = (req, res) => {
-    EventModel.find({})
+const listNewRecipes = (req, res) => {
+    RecipeModel.find({})
         .sort('-datePosted')
         .populate('postedBy')
         .exec()
-        .then(events => res.status(200).json(events))
+        .then(recipes => res.status(200).json(recipes))
         .catch(error => res.status(500).json({
             error: 'Internal server error',
             message: error.message
         }));
 };
 
-const listSoonEndingEvents = (req, res) => {
-    EventModel.find({})
-        .sort('endDate')
-        .populate('postedBy')
-        .exec()
-        .then(events => res.status(200).json(events))
+const listRecipesByUserID = (req, res) => {
+    RecipeModel.find({ postedBy: req.params.id })
+        .then(recipes => res.status(200).json(recipes))
         .catch(error => res.status(500).json({
             error: 'Internal server error',
             message: error.message
         }));
-};
+}
 
-const listEventsByUserID = (req, res) => {
-    EventModel.find({ postedBy: req.params.id })
-        .then(events => res.status(200).json(events))
+const listRecipesByCuisine = (req, res) => {
+    RecipeModel.find({ cuisine: req.params.cuisine })
+        .then(recipes => res.status(200).json(recipes))
         .catch(error => res.status(500).json({
             error: 'Internal server error',
             message: error.message
@@ -78,15 +76,15 @@ const listEventsByUserID = (req, res) => {
 }
 
 const read = (req, res) => {
-    EventModel.find(req.params.id)
+    RecipeModel.find(req.params.id)
         .populate('postedBy')
         .exec()
-        .then(event => {
-            if (!event) return res.status(404).json({
+        .then(recipe => {
+            if (!recipe) return res.status(404).json({
                 error: 'Not Found',
-                message: 'Event not found'
+                message: 'Recipe not found'
             })
-            else return res.status(200).json(event)
+            else return res.status(200).json(recipe)
         })
         .catch(error => res.status(500).json({
             error: 'Internal server error',
@@ -96,35 +94,35 @@ const read = (req, res) => {
 
 const update = async (req, res) => {
     try {
-        let event = await EventModel.findOne({ _id: req.params.id }).exec();
+        let recipe = await RecipeModel.findOne({ _id: req.params.id }).exec();
 
-        if (!event) {
+        if (!recipe) {
             return res.status(404).json({
                 error: 'Not found',
-                message: 'Event not found'
+                message: 'Recipe not found'
             });
         }
 
         if (req.file !== undefined) {
             let url = req.protocol + '://' + req.get('host') + '/'
-            let mediaFiles = event.media
+            let mediaFiles = recipe.media
 
             if (req.files.length > 0) {
                 for (var i = 0; i < req.files.length; i++) mediaFiles.push(url + req.files[i].filename)
             }
         }
 
-        event.title = req.body.title;
-        event.description = req.body.description;
-        event.media = mediaFiles;
-        event.tags = req.body.tags;
-        event.premiumStatus = req.body.premiumStatus;
-        event.rating = req.body.rating;
-        event.startDate = req.body.startDate;
-        event.endDate = req.body.endDate;
-        event.eventLocation = req.body.eventLocation;
+        recipe.title = req.body.title;
+        recipe.description = req.body.description;
+        recipe.media = mediaFiles;
+        recipe.tags = req.body.tags;
+        recipe.premiumStatus = req.body.premiumStatus;
+        recipe.rating = req.body.rating;
+        recipe.ingredientsList = req.body.ingredientsList;
+        recipe.instructions = req.body.instructions;
+        recipe.cuisine = req.body.cuisine;
 
-        event.save(function (error) {
+        recipe.save(function (error) {
             if (error)
                 res.status(500).json({
                     error: 'Internal server error',
@@ -132,7 +130,7 @@ const update = async (req, res) => {
                 })
             else
 
-                res.status(200).json(event);
+                res.status(200).json(recipe);
         });
 
     } catch (error) {
@@ -144,25 +142,25 @@ const update = async (req, res) => {
 }
 
 const remove = async (req, res) => {
-    let event;
+    let recipe;
     try {
-        event = await EventModel.findOne({ _id: req.params.id })
+        recipe = await RecipeModel.findOne({ _id: req.params.id })
             .populate('postedBy').exec()
-        if (!event) {
+        if (!recipe) {
             return res.status(404).json({
                 error: 'Not found',
-                message: 'Event not found'
+                message: 'Recipe not found'
             });
         }
     } catch (error) {
         return res.status(404).json({
             error: 'Not found',
-            message: 'Event not found'
+            message: 'Recipe not found'
         });
     }
     try {
 
-        let { media } = event;
+        let { media } = recipe;
         media.map(mediaFile => {
             let path = './public/uploads/' + mediaFile.substr(mediaFile.lastIndexOf('/') + 1);
             fs.access(path, fs.F_OK, err => {
@@ -176,8 +174,8 @@ const remove = async (req, res) => {
             })
         })
 
-        await event.remove();
-        res.status(200).json({ message: 'Event Deleted.' })
+        await recipe.remove();
+        res.status(200).json({ message: 'Recipe Deleted.' })
     } catch (error) {
         console.log(error);
         res.status(500).json({
@@ -191,10 +189,10 @@ const remove = async (req, res) => {
 module.exports = {
     create,
     read,
-    listEvents,
-    listNewEvents,
-    listEventsByUserID,
-    listSoonEndingEvents,
+    listRecipes,
+    listNewRecipes,
+    listRecipesByUserID,
+    listRecipesByCuisine,
     update,
     remove,
     test

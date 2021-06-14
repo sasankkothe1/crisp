@@ -118,7 +118,7 @@ const update = async (req, res) => {
                 })
             else
 
-                res.status(200).json(recipe);
+                res.status(200).json(post);
         });
 
     } catch (error) {
@@ -137,13 +137,13 @@ const remove = async (req, res) => {
         if (!post) {
             return res.status(404).json({
                 error: 'Not found',
-                message: 'Recipe not found'
+                message: 'Post not found'
             });
         }
     } catch (error) {
         return res.status(404).json({
             error: 'Not found',
-            message: 'Recipe not found'
+            message: 'Post not found'
         });
     }
     try {
@@ -163,7 +163,7 @@ const remove = async (req, res) => {
         })
 
         await post.remove();
-        res.status(200).json({ message: 'Recipe Deleted.' })
+        res.status(200).json({ message: 'Post Deleted.' })
     } catch (error) {
         console.log(error);
         res.status(500).json({
