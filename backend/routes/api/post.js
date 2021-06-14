@@ -1,23 +1,46 @@
-// routes/api/post.js
-
 const express = require('express');
 const router = express.Router();
+const { v4: uuidv4 } = require('uuid');
 
-// Load Post model
-const Post = require('../../model/Post');
+const PostController = require('../../controllers/post');
+const middleware = require('../../middleware/auth')
+const mimetypes = ['image/png', 'image/jpg', 'image/jpeg', 'image/gif', 'video/mp4', 'video/quicktime', 'video/x-ms-wmv', 'video/x-msvideo', 'video/MP2T'];
 
-// @route GET api/posts/test
-// @description tests posts route
-// @access Public
-router.get('/test', (req, res) => res.send('post route testing!'));
+const multer = require('multer')
 
-// @route GET api/posts
-// @description Get all posts
-// @access Public
-router.get('/', (req, res) => {
-  Post.find()
-    .then(posts => res.json(posts))
-    .catch(err => res.status(404).json({ nopostsfound: 'No Posts found' }));
-});
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, './public/uploads/');
+  },
+  filename: (req, file, cb) => {
+    const fileName = file.originalname.toLowerCase().split(' ').join('-');
+    cb(null, uuidv4() + '-' + fileName)
+  }
+})
 
-module.exports = router;
+const fileFilter = (req, file, cb) => {
+  if (!req.files || !req.files.file || !mimetypes.includes(req.files.file.mimetype)) cb(null, true);
+  else {
+    cb(null, false);
+    return cb(new Error('Only .png, .jpg, .jpeg, .gif, .mp4, .mov, .wmv, .avi format allowed'));
+  }
+}
+
+// 10mb file size is allowed
+const upload = multer({
+  storage: storage,
+  fileFilter: fileFilter,
+  limits: {
+    fileSize: 1024 * 1024 * 10
+  }
+})
+
+router.post('/', middleware.protect, upload.array('media'), PostController.create);
+router.get('/', PostController.listPosts);
+router.get('/new', PostController.listNewPosts);
+router.get('/postedBy/:id', middleware.protect, PostController.listPostsByUserID);
+router.get('/:id', middleware.protect, PostController.read);
+router.put('/:id', middleware.protect, upload.array('media'), PostController.update);
+router.delete('/:id', middleware.protect, PostController.remove);
+
+module.exports = router
