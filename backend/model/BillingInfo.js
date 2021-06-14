@@ -38,6 +38,4 @@ const BillingInfoSchema = new mongoose.Schema({
     }
 });
 
-const BillingInfo = mongoose.model('BillingInfo', BillingInfoSchema);
-
-module.exports = BillingInfo;
+module.exports = BillingInfoSchema;

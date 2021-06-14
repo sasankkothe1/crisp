@@ -1,14 +1,16 @@
-const User = require('../model/User')
-const ErrorResponse = require('../utils/errorResponse')
+const User = require("../model/User");
+const ErrorResponse = require("../utils/errorResponse");
 
 exports.register = async (req, res, next) => {
-  const { username, email, password } = req.body;
+  const { firstName, lastName, username, email, password } = req.body;
 
   try {
     const user = await User.create({
-      username,
-      email,
-      password
+      firstName: firstName,
+      lastName: lastName,
+      username: username,
+      email: email,
+      password: password,
     });
 
     sendToken(user, 201, res);
@@ -43,15 +45,15 @@ exports.login = async (req, res, next) => {
   }
 };
 
-exports.forgotpassword = (req, res, next) => {
+exports.forgotpassword = (req, res) => {
   res.send("Forgot Password Route");
 };
 
-exports.resetpassword = (req, res, next) => {
+exports.resetpassword = (req, res) => {
   res.send("Reset Password Route");
 };
 
 const sendToken = (user, statusCode, res) => {
   const token = user.getSignedToken();
   res.status(statusCode).json({ success: true, token });
-}
+};
