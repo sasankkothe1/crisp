@@ -1,37 +1,37 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const OrderSchema = new mongoose.Schema({
     _id: mongoose.Schema.Types.ObjectId,
     orderedBy: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
-        required: true
+        ref: "User",
+        required: true,
     },
     transactionID: {
         type: String,
-        required: true
+        required: true,
     },
     type: {
         type: String,
-        enum : ['Subscription', 'RecipeCollections'],
+        enum: ["Subscription", "RecipeCollections"],
         required: () => {
-            return (this.type) && ((this.recipeCollections) ^ (this.subscription));
-        }
+            return this.type && this.recipeCollections ^ this.subscription;
+        },
     },
     subscription: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
+        ref: "User",
     },
     recipeCollections: {
         type: [mongoose.Schema.Types.ObjectId],
-        ref: 'RecipeCollection', 
+        ref: "RecipeCollection",
     },
     totalAmount: {
         type: Number,
-        required: true
-    }
+        required: true,
+    },
 });
 
-const Order = mongoose.model('Order', OrderSchema);
+const Order = mongoose.model("Order", OrderSchema);
 
 module.exports = Order;
