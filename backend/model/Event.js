@@ -1,51 +1,51 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const EventSchema = new mongoose.Schema({
     postedBy: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
-        required: true
+        ref: "User",
+        required: true,
     },
     title: {
         type: String,
-        required: true
+        required: true,
     },
     description: {
         type: String,
-        required: true
+        required: true,
     },
     media: {
-        type: [String]
+        type: [String],
     },
     tags: {
         type: [String],
-        default: ["noTags"]
+        default: ["noTags"],
     },
     datePosted: {
         type: Date,
-        default: Date.now
+        default: Date.now,
     },
     premiumStatus: {
         type: Boolean,
-        default: false
+        default: false,
     },
     rating: {
         type: Number,
     },
     startDate: {
         type: Date,
-        required: true
+        required: true,
     },
     endDate: {
         type: Date,
-        required: true
+        required: true,
     },
     eventLocation: {
         type: String,
-        required: true
-    }
+        required: true,
+    },
 });
 
-const EventModel = mongoose.model('Event', EventSchema);
+const EventModel = mongoose.model("Event", EventSchema);
 
 module.exports = { EventModel };

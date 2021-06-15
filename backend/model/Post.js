@@ -1,21 +1,21 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const PostSchema = new mongoose.Schema({
     postedBy: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
-        required: true
+        ref: "User",
+        required: true,
     },
     title: {
         type: String,
-        required: true
+        required: true,
     },
     description: {
         type: String,
-        required: true
+        required: true,
     },
     media: {
-        type: [String]
+        type: [String],
     },
     tags: {
         type: [String],
@@ -23,18 +23,18 @@ const PostSchema = new mongoose.Schema({
     datePosted: {
         type: Date,
         required: true,
-        default: Date.now
+        default: Date.now,
     },
     premiumStatus: {
         type: Boolean,
-        required: true
+        required: true,
     },
     rating: {
         type: Number,
-        required: true
-    }
+        required: true,
+    },
 });
 
-const PostModel = mongoose.model('Post', PostSchema);
+const PostModel = mongoose.model("Post", PostSchema);
 
 module.exports = { PostModel };

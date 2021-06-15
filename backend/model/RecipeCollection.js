@@ -1,48 +1,51 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const RecipeCollectionSchema = new mongoose.Schema({
     _id: mongoose.Schema.Types.ObjectId,
     postedBy: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
-        required: true
+        ref: "User",
+        required: true,
     },
     title: {
         type: String,
-        required: true
+        required: true,
     },
     description: {
         type: String,
-        required: true
+        required: true,
     },
     media: {
-        type: [String]
+        type: [String],
     },
     tags: {
-        type: [String]
+        type: [String],
     },
     pdfFile: {
         type: [String],
-        required: true
+        required: true,
     },
     datePosted: {
         type: Date,
-        required: true
+        required: true,
     },
     price: {
         type: Number,
-        required: true
+        required: true,
     },
     rating: {
         type: Number,
-        required: true
+        required: true,
     },
     numOrders: {
         type: Number,
-        required: true
-    }
+        required: true,
+    },
 });
 
-const RecipeCollection = mongoose.model('RecipeCollection', RecipeCollectionSchema);
+const RecipeCollection = mongoose.model(
+    "RecipeCollection",
+    RecipeCollectionSchema
+);
 
 module.exports = RecipeCollection;
