@@ -7,8 +7,8 @@
     "start": "node app.js",
     "app": "nodemon app.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "format": "prettier --write '**/*.js'",
-    "lint": "prettier --check '**/*.js'"
+    "format": "prettier --write \"*.js\"",
+    "lint": "eslint \"*.js\" --quiet"
   },
   "keywords": [],
   "author": "",
