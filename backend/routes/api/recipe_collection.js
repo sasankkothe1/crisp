@@ -5,12 +5,14 @@ const router = express.Router();
 
 const RecipeCollection = require('../../model/RecipeCollection');
 
+const { protect, admin } = require('../../middleware/auth');
+
 // Get all collections
 router.get('/', (req, res) => {
     let collections = RecipeCollection.find();
 
     if (req.query.populate) {
-        const populates = (typeof req.query.populate === "string" ? [req.query.populate] : req.query.populate);
+        const populates = (Array.isArray(req.query.populate) ? req.query.populate : [req.query.populate]);
 
         console.log(populates);
 
@@ -26,10 +28,12 @@ router.get('/', (req, res) => {
 });
 
 // Add new collection
-// TODO: propagate to user
-router.post('/', (req, res) => {
-    const recipeCollection = new RecipeCollection(req.body);
-    recipeCollection._id = new mongoose.Types.ObjectId();
+// Auth: User 
+router.post('/', protect, (req, res) => {
+    const recipeCollection = new RecipeCollection(Object.assign(req.body, { 
+        _id: new mongoose.Types.ObjectId(),
+        postedBy: req.user._id
+    }));
 
     recipeCollection.save()
         .then(data => res.sendStatus(201))
@@ -37,11 +41,12 @@ router.post('/', (req, res) => {
 });
 
 // Get specific collection
-router.get('/:recipe_collection', (req, res) => {
-    let collection = RecipeCollection.findOne({ _id: req.params.recipe_collection });
+// Auth: None
+router.get('/:id', protect, (req, res) => {
+    let collection = RecipeCollection.findOne({ _id: req.params.id });
 
     if (req.query.populate) {
-        const populates = (typeof req.query.populate === "string" ? [req.query.populate] : req.query.populate);
+        const populates = (Array.isArray(req.query.populate) ? req.query.populate : [req.query.populate]);
 
         for (field of populates) {
             console.log(field);
@@ -55,24 +60,27 @@ router.get('/:recipe_collection', (req, res) => {
 });
 
 // Edit specific collection
-router.put('/:recipe_collection', (req, res) => {
-    const recipeCollection = new RecipeCollection(req.body);
-    RecipeCollection.findByIdAndUpdate(
-        req.params.recipe_collection, 
-        recipeCollection,
-        (err, recipeCollection) => {
-            if (err) {
-                res.status(502).send({ message: err.message });
-            } else {
-                res.sendStatus(200);
-            }
-        });
+// Auth: User
+router.put('/:id', protect, (req, res) => {
+    RecipeCollection.findOneAndUpdate({
+        _id: req.params.id, 
+        postedBy: req.user._id
+    }, req.body, (err, recipeCollection) => {
+        if (err) {
+            res.status(502).send({ message: err.message });
+        } else {
+            res.sendStatus(200);
+        }
+    });
 });
 
 // Remove specific collection
-// TODO: propagate to user
-router.delete('/:recipe_collection', (req, res) => {
-    RecipeCollection.findByIdAndDelete(req.params.recipe_collection, (err, recipeCollection) => {
+// Auth: User
+router.delete('/:id', protect, (req, res) => {
+    RecipeCollection.findOneAndDelete({ 
+        _id: req.params.id,
+        postedBy: req.user._id
+    }, (err, recipeCollection) => {
         if (err) {
             res.status(404).send({ message: err.message });
         } else {

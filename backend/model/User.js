@@ -84,15 +84,15 @@ UserSchema.methods.getSignedToken = function () {
 };
 
 UserSchema.virtual("isUser").get(function () {
-    return this.role == "User";
+    return this.role === "User";
 });
 
 UserSchema.virtual("isPartner").get(function () {
-    return this.role == "Partner";
+    return this.role === "Partner";
 });
 
 UserSchema.virtual("isAdmin").get(function () {
-    return this.role == "Admin";
+    return this.role === "Admin";
 });
 
 const User = mongoose.model("User", UserSchema);
