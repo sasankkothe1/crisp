@@ -27,7 +27,7 @@ const RecipeCollectionSchema = new mongoose.Schema({
     },
     datePosted: {
         type: Date,
-        required: true,
+        default: Date.now,
     },
     price: {
         type: Number,
