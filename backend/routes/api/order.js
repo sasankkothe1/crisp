@@ -17,7 +17,7 @@ router.get("/", protect, admin, (req, res) => {
             ? req.query.populate
             : [req.query.populate];
 
-        for (field of populates) {
+        for (const field of populates) {
             console.log(field);
             orders = orders.populate(field);
         }
@@ -57,8 +57,8 @@ router.get("/:id", protect, (req, res) => {
             ? req.query.populate
             : [req.query.populate];
 
-        for (field of populates) {
-            orders = orders.populate(field);
+        for (const field of populates) {
+            order = order.populate(field);
         }
     }
 

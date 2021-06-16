@@ -7,7 +7,7 @@ const router = express.Router();
 
 const RecipeCollection = require("../../model/RecipeCollection");
 
-const { protect, admin } = require("../../middleware/auth");
+const { protect } = require("../../middleware/auth");
 
 const mimetypes = [
     "image/png",
@@ -34,8 +34,7 @@ router.get("/", (req, res) => {
 
         console.log(populates);
 
-        for (field of populates) {
-            console.log(field);
+        for (const field of populates) {
             collections = collections.populate(field);
         }
     }
@@ -82,9 +81,9 @@ router.get("/:id", protect, (req, res) => {
             ? req.query.populate
             : [req.query.populate];
 
-        for (field of populates) {
+        for (const field of populates) {
             console.log(field);
-            collections = collections.populate(field);
+            collection = collection.populate(field);
         }
     }
 

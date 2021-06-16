@@ -119,9 +119,9 @@ const update = async (req, res) => {
             });
         }
 
+        let mediaFiles = event.media;
         if (req.file !== undefined) {
             let url = req.protocol + "://" + req.get("host") + "/";
-            let mediaFiles = event.media;
 
             if (req.files.length > 0) {
                 for (var i = 0; i < req.files.length; i++)
