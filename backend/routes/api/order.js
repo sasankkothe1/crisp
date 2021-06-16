@@ -31,17 +31,20 @@ router.get("/", protect, admin, (req, res) => {
 // Add new order
 // Auth: User
 router.post("/", protect, (req, res) => {
-    Order.create({ 
-        ...req.body,
-        _id: new mongoose.Types.ObjectId(),
-        orderedBy: req.user._id,
-    }, (err, order) => {
-        if (err) {
-            res.status(502).send({ message: err.message });
-        } else {
-            res.status(201).send({ id: order._id });
+    Order.create(
+        {
+            ...req.body,
+            _id: new mongoose.Types.ObjectId(),
+            orderedBy: req.user._id,
+        },
+        (err, order) => {
+            if (err) {
+                res.status(502).send({ message: err.message });
+            } else {
+                res.status(201).send({ id: order._id });
+            }
         }
-    });
+    );
 });
 
 // Get specific order

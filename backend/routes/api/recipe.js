@@ -17,29 +17,15 @@ const mimetypes = [
     "video/MP2T",
 ];
 
-const upload = require('../../middleware/upload')(mimetypes);
+const upload = require("../../middleware/upload")(mimetypes);
 
-router.post(
-    "/",
-    protect,
-    upload.array("media"),
-    RecipeController.create
-);
+router.post("/", protect, upload.array("media"), RecipeController.create);
 router.get("/", RecipeController.listRecipes);
 router.get("/new", RecipeController.listNewRecipes);
-router.get(
-    "/postedBy/:id",
-    protect,
-    RecipeController.listRecipesByUserID
-);
+router.get("/postedBy/:id", protect, RecipeController.listRecipesByUserID);
 router.get("/:cuisine", RecipeController.listRecipesByCuisine);
 router.get("/:id", protect, RecipeController.read);
-router.put(
-    "/:id",
-    protect,
-    upload.array("media"),
-    RecipeController.update
-);
+router.put("/:id", protect, upload.array("media"), RecipeController.update);
 router.delete("/:id", protect, RecipeController.remove);
 
 module.exports = router;

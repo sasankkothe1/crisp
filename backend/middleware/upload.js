@@ -11,27 +11,24 @@ const storage = multer.diskStorage({
     },
 });
 
-const upload = function(mimetypes) {
-	return multer({
-		storage: storage,
-		fileFilter: (req, file, next) => {
-			if (
-				!file ||
-				!mimetypes.includes(file.mimetype)
-			) {
-				return next(
-					new Error(
-						"Incorrent file format, only media types are currently supported."
-					)
-				);
-			} else {
-				next(null, true);
-			}
-		},
-		limits: {
-			fileSize: 1024 * 1024 * 10,
-		}
-	});
+const upload = function (mimetypes) {
+    return multer({
+        storage: storage,
+        fileFilter: (req, file, next) => {
+            if (!file || !mimetypes.includes(file.mimetype)) {
+                return next(
+                    new Error(
+                        "Incorrent file format, only media types are currently supported."
+                    )
+                );
+            } else {
+                next(null, true);
+            }
+        },
+        limits: {
+            fileSize: 1024 * 1024 * 10,
+        },
+    });
 };
 
 module.exports = upload;

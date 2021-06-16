@@ -21,7 +21,7 @@ const mimetypes = [
     "video/MP2T",
 ];
 
-const upload = require('../../middleware/upload')(mimetypes);
+const upload = require("../../middleware/upload")(mimetypes);
 
 // Get all collections
 router.get("/", (req, res) => {
@@ -50,18 +50,26 @@ router.get("/", (req, res) => {
 
 // TODO: how to upload the pdf as well?
 router.post("/", protect, upload.array("media"), (req, res) => {
-    RecipeCollection.create({
-        ...req.body,
-        _id: new mongoose.Types.ObjectId(),
-        postedBy: req.user._id,
-        media: req.files?.map(file => `${req.protocol}://${req.get("host")}/public/uploads/${file.filename}`)
-    }, (err, recipeCollection) => {
-        if (err) {
-            res.status(502).send({ message: err.message });
-        } else {
-            res.status(201).send({ id: recipeCollection._id });
+    RecipeCollection.create(
+        {
+            ...req.body,
+            _id: new mongoose.Types.ObjectId(),
+            postedBy: req.user._id,
+            media: req.files?.map(
+                (file) =>
+                    `${req.protocol}://${req.get("host")}/public/uploads/${
+                        file.filename
+                    }`
+            ),
+        },
+        (err, recipeCollection) => {
+            if (err) {
+                res.status(502).send({ message: err.message });
+            } else {
+                res.status(201).send({ id: recipeCollection._id });
+            }
         }
-    });
+    );
 });
 
 // Get specific collection
@@ -93,7 +101,12 @@ router.put("/:id", protect, upload.array("media"), (req, res) => {
     };
 
     if (req.files?.length) {
-        newRecipeCollection.media = req.files.map(file => `${req.protocol}://${req.get("host")}/public/uploads/${file.filename}`);
+        newRecipeCollection.media = req.files.map(
+            (file) =>
+                `${req.protocol}://${req.get("host")}/public/uploads/${
+                    file.filename
+                }`
+        );
     }
 
     RecipeCollection.findOneAndUpdate(
@@ -125,23 +138,23 @@ router.delete("/:id", protect, (req, res) => {
             if (err) {
                 res.status(404).send({ message: err.message });
             } else {
-                recipeCollection?.media.forEach(media => {
+                recipeCollection?.media.forEach((media) => {
                     const filePath = `./public/uploads/${path.basename(media)}`;
-                    fs.access(filePath, fs.F_OK, err => {
+                    fs.access(filePath, fs.F_OK, (err) => {
                         if (err) {
                             console.log(err);
                             return;
                         }
-                        fs.unlink(filePath, err => {
+                        fs.unlink(filePath, (err) => {
                             if (err) {
                                 console.log(err);
                                 return;
                             }
-                        })
+                        });
                     });
                 });
                 if (recipeCollection) {
-                    res.status(200).send( { id: recipeCollection?._id });
+                    res.status(200).send({ id: recipeCollection?._id });
                 } else {
                     res.sendStatus(200);
                 }
