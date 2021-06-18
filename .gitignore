@@ -32,6 +32,8 @@ backend/.env.development.local
 backend/.env.test.local
 backend/.env.production.local
 
+backend/public/uploads
+
 frontend/npm-debug.log*
 frontend/yarn-debug.log*
 frontend/yarn-error.log*

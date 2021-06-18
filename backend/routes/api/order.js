@@ -17,7 +17,7 @@ router.get("/", protect, admin, (req, res) => {
             ? req.query.populate
             : [req.query.populate];
 
-        for (field of populates) {
+        for (const field of populates) {
             console.log(field);
             orders = orders.populate(field);
         }
@@ -31,17 +31,20 @@ router.get("/", protect, admin, (req, res) => {
 // Add new order
 // Auth: User
 router.post("/", protect, (req, res) => {
-    const order = new Order(
-        Object.assign(req.body, {
+    Order.create(
+        {
+            ...req.body,
             _id: new mongoose.Types.ObjectId(),
             orderedBy: req.user._id,
-        })
+        },
+        (err, order) => {
+            if (err) {
+                res.status(502).send({ message: err.message });
+            } else {
+                res.status(201).send({ id: order._id });
+            }
+        }
     );
-
-    order
-        .save()
-        .then((data) => res.status(201).send({ id: order._id }))
-        .catch((err) => res.status(502).send({ message: err.message }));
 });
 
 // Get specific order
@@ -54,9 +57,8 @@ router.get("/:id", protect, (req, res) => {
             ? req.query.populate
             : [req.query.populate];
 
-        for (field of populates) {
-            console.log(field);
-            orders = orders.populate(field);
+        for (const field of populates) {
+            order = order.populate(field);
         }
     }
 

@@ -1,11 +1,27 @@
 const mongoose = require("mongoose");
+const fs = require("fs");
+const path = require("path");
 
 const express = require("express");
 const router = express.Router();
 
 const RecipeCollection = require("../../model/RecipeCollection");
 
-const { protect, admin } = require("../../middleware/auth");
+const { protect } = require("../../middleware/auth");
+
+const mimetypes = [
+    "image/png",
+    "image/jpg",
+    "image/jpeg",
+    "image/gif",
+    "video/mp4",
+    "video/quicktime",
+    "video/x-ms-wmv",
+    "video/x-msvideo",
+    "video/MP2T",
+];
+
+const upload = require("../../middleware/upload")(mimetypes);
 
 // Get all collections
 router.get("/", (req, res) => {
@@ -18,8 +34,7 @@ router.get("/", (req, res) => {
 
         console.log(populates);
 
-        for (field of populates) {
-            console.log(field);
+        for (const field of populates) {
             collections = collections.populate(field);
         }
     }
@@ -31,18 +46,29 @@ router.get("/", (req, res) => {
 
 // Add new collection
 // Auth: User
-router.post("/", protect, (req, res) => {
-    const recipeCollection = new RecipeCollection(
-        Object.assign(req.body, {
+
+// TODO: how to upload the pdf as well?
+router.post("/", protect, upload.array("media"), (req, res) => {
+    RecipeCollection.create(
+        {
+            ...req.body,
             _id: new mongoose.Types.ObjectId(),
             postedBy: req.user._id,
-        })
+            media: req.files?.map(
+                (file) =>
+                    `${req.protocol}://${req.get("host")}/public/uploads/${
+                        file.filename
+                    }`
+            ),
+        },
+        (err, recipeCollection) => {
+            if (err) {
+                res.status(502).send({ message: err.message });
+            } else {
+                res.status(201).send({ id: recipeCollection._id });
+            }
+        }
     );
-
-    recipeCollection
-        .save()
-        .then((data) => res.sendStatus(201))
-        .catch((err) => res.status(502).send({ message: err.message }));
 });
 
 // Get specific collection
@@ -55,9 +81,9 @@ router.get("/:id", protect, (req, res) => {
             ? req.query.populate
             : [req.query.populate];
 
-        for (field of populates) {
+        for (const field of populates) {
             console.log(field);
-            collections = collections.populate(field);
+            collection = collection.populate(field);
         }
     }
 
@@ -68,17 +94,31 @@ router.get("/:id", protect, (req, res) => {
 
 // Edit specific collection
 // Auth: User
-router.put("/:id", protect, (req, res) => {
+router.put("/:id", protect, upload.array("media"), (req, res) => {
+    const newRecipeCollection = {
+        ...req.body,
+    };
+
+    if (req.files?.length) {
+        newRecipeCollection.media = req.files.map(
+            (file) =>
+                `${req.protocol}://${req.get("host")}/public/uploads/${
+                    file.filename
+                }`
+        );
+    }
+
     RecipeCollection.findOneAndUpdate(
         {
             _id: req.params.id,
             postedBy: req.user._id,
         },
-        req.body,
+        newRecipeCollection,
         (err, recipeCollection) => {
             if (err) {
                 res.status(502).send({ message: err.message });
             } else {
+                // TODO: remove outdated files (not really important for now though)
                 res.sendStatus(200);
             }
         }
@@ -97,7 +137,26 @@ router.delete("/:id", protect, (req, res) => {
             if (err) {
                 res.status(404).send({ message: err.message });
             } else {
-                res.sendStatus(200);
+                recipeCollection?.media.forEach((media) => {
+                    const filePath = `./public/uploads/${path.basename(media)}`;
+                    fs.access(filePath, fs.F_OK, (err) => {
+                        if (err) {
+                            console.log(err);
+                            return;
+                        }
+                        fs.unlink(filePath, (err) => {
+                            if (err) {
+                                console.log(err);
+                                return;
+                            }
+                        });
+                    });
+                });
+                if (recipeCollection) {
+                    res.status(200).send({ id: recipeCollection?._id });
+                } else {
+                    res.sendStatus(200);
+                }
             }
         }
     );
