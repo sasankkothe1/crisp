@@ -37,7 +37,7 @@ lint:
 push:
   stage: push
   variables:
-    IMAGE_TAG_BRANCH: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
+    IMAGE_TAG_BRANCH: $CI_REGISTRY_IMAGE/$CI_COMMIT_REF_SLUG:$CI_COMMIT_SHA
   script:
     - docker pull $IMAGE_TAG
     - docker tag $IMAGE_TAG $IMAGE_TAG_BRANCH
