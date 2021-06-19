@@ -40,7 +40,7 @@ push:
     IMAGE_TAG_BRANCH: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
   script:
     - docker pull $IMAGE_TAG
-    - docker rename $IMAGE_TAG $IMAGE_TAG_BRANCH
+    - docker tag $IMAGE_TAG $IMAGE_TAG_BRANCH
     - docker push $IMAGE_TAG_BRANCH
   only:
     - develop
