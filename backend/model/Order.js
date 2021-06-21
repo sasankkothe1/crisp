@@ -13,17 +13,17 @@ const OrderSchema = new mongoose.Schema({
     },
     type: {
         type: String,
-        enum: ["Subscription", "RecipeCollections"],
+        enum: ["Subscription", "RecipeCollection"],
         required: () => {
-            return this.type && this.recipeCollections ^ this.subscription;
+            return this.type && this.recipeCollection ^ this.subscription;
         },
     },
     subscription: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
     },
-    recipeCollections: {
-        type: [mongoose.Schema.Types.ObjectId],
+    recipeCollection: {
+        type: mongoose.Schema.Types.ObjectId,
         ref: "RecipeCollection",
     },
     totalAmount: {
