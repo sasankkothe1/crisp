@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 const User = require("../model/User");
 const ErrorResponse = require("../utils/errorResponse");
 
-exports.protect = async (req, res, next) => {
+exports.isAuthenticated = async (req, res, next) => {
     let token;
 
     if (
@@ -37,7 +37,7 @@ exports.protect = async (req, res, next) => {
     }
 };
 
-exports.admin = async (req, res, next) => {
+exports.isAdmin = async (req, res, next) => {
     try {
         if (!req.user) {
             return next(

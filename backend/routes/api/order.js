@@ -5,11 +5,11 @@ const router = express.Router();
 
 const Order = require("../../model/Order");
 
-const { protect, admin } = require("../../middleware/auth");
+const { isAuthenticated, isAdmin } = require("../../middleware/auth");
 
 // Get all orders
 // Auth: Admin
-router.get("/", protect, admin, (req, res) => {
+router.get("/", isAuthenticated, isAdmin, (req, res) => {
     let orders = Order.find();
 
     if (req.query.populate) {
@@ -30,7 +30,7 @@ router.get("/", protect, admin, (req, res) => {
 
 // Add new order
 // Auth: User
-router.post("/", protect, (req, res) => {
+router.post("/", isAuthenticated, (req, res) => {
     Order.create(
         {
             ...req.body,
@@ -49,7 +49,7 @@ router.post("/", protect, (req, res) => {
 
 // Get specific order
 // Auth: User
-router.get("/:id", protect, (req, res) => {
+router.get("/:id", isAuthenticated, (req, res) => {
     let order = Order.findOne({ _id: req.params.id, orderedBy: req.user._id });
 
     if (req.query.populate) {
@@ -69,7 +69,7 @@ router.get("/:id", protect, (req, res) => {
 
 // Edit specific order
 // Auth: User
-router.put("/:id", protect, (req, res) => {
+router.put("/:id", isAuthenticated, (req, res) => {
     Order.findOneAndUpdate(
         {
             _id: req.params.id,
@@ -88,7 +88,7 @@ router.put("/:id", protect, (req, res) => {
 
 // Remove specific order
 // Auth: Admin
-router.delete("/:id", protect, admin, (req, res) => {
+router.delete("/:id", isAuthenticated, isAdmin, (req, res) => {
     Order.findOneAndDelete(
         {
             _id: req.params.id,

@@ -44,12 +44,12 @@ const UserSchema = new mongoose.Schema({
         type: [{ type: mongoose.Schema.Types.ObjectId, ref: "Post" }],
         default: [],
     },
-    recipePosts: {
-        type: [{ type: mongoose.Schema.Types.ObjectId, ref: "Post" }],
+    recipes: {
+        type: [{ type: mongoose.Schema.Types.ObjectId, ref: "Recipe" }],
         default: [],
     },
-    eventPosts: {
-        type: [{ type: mongoose.Schema.Types.ObjectId, ref: "Post" }],
+    events: {
+        type: [{ type: mongoose.Schema.Types.ObjectId, ref: "Event" }],
         default: [],
     },
     following: {

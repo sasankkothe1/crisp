@@ -7,7 +7,7 @@ const router = express.Router();
 
 const RecipeCollection = require("../../model/RecipeCollection");
 
-const { protect } = require("../../middleware/auth");
+const { isAuthenticated } = require("../../middleware/auth");
 
 const mimetypes = [
     "image/png",
@@ -48,7 +48,7 @@ router.get("/", (req, res) => {
 // Auth: User
 
 // TODO: how to upload the pdf as well?
-router.post("/", protect, upload.array("media"), (req, res) => {
+router.post("/", isAuthenticated, upload.array("media"), (req, res) => {
     RecipeCollection.create(
         {
             ...req.body,
@@ -73,7 +73,7 @@ router.post("/", protect, upload.array("media"), (req, res) => {
 
 // Get specific collection
 // Auth: None
-router.get("/:id", protect, (req, res) => {
+router.get("/:id", isAuthenticated, (req, res) => {
     let collection = RecipeCollection.findOne({ _id: req.params.id });
 
     if (req.query.populate) {
@@ -94,7 +94,7 @@ router.get("/:id", protect, (req, res) => {
 
 // Edit specific collection
 // Auth: User
-router.put("/:id", protect, upload.array("media"), (req, res) => {
+router.put("/:id", isAuthenticated, upload.array("media"), (req, res) => {
     const newRecipeCollection = {
         ...req.body,
     };
@@ -127,7 +127,7 @@ router.put("/:id", protect, upload.array("media"), (req, res) => {
 
 // Remove specific collection
 // Auth: User
-router.delete("/:id", protect, (req, res) => {
+router.delete("/:id", isAuthenticated, (req, res) => {
     RecipeCollection.findOneAndDelete(
         {
             _id: req.params.id,
