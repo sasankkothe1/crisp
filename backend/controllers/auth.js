@@ -51,9 +51,9 @@ exports.login = async (req, res, next) => {
     }
 
     try {
-        const user = username
-            ? await User.findOne({ username }).select("+password")
-            : User.findOne({ email }).select("+password");
+        const user = await (username
+            ? User.findOne({ username }).select("+password")
+            : User.findOne({ email }).select("+password"));
 
         if (!user) {
             return next(new ErrorResponse("Invalid credentials", 401));
@@ -84,9 +84,9 @@ exports.adminLogin = async (req, res, next) => {
     }
 
     try {
-        const user = username
-            ? await User.findOne({ username }).select("+password")
-            : User.findOne({ email }).select("+password");
+        const user = await (username
+            ? User.findOne({ username }).select("+password")
+            : User.findOne({ email }).select("+password"));
 
         if (!user) {
             return next(new ErrorResponse("Invalid credentials", 401));
