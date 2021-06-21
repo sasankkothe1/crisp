@@ -44,7 +44,9 @@ launch:
     - docker run -p 4000:4000 --name $APP_NAME $IMAGE_TAG
     - sleep 60
     - STATUS=$(docker inspect -f {{.State.Status}} $APP_NAME)
-    - if [ $STATUS=="exited" ]; then docker logs $APP_NAME && exit 1; else echo "Successful launch!"; fi
+    - if [ $STATUS=="exited" ]; then docker logs $APP_NAME && exit 1; else echo "Successful launch"; fi
+    - apk add --no-cache curl
+    - curl http://docker:4000/
 
 push:
   stage: push
