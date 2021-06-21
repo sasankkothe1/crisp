@@ -19,17 +19,41 @@ exports.register = async (req, res, next) => {
     }
 };
 
-exports.login = async (req, res, next) => {
-    const { email, password } = req.body;
+exports.adminRegister = async (req, res, next) => {
+    const { firstName, lastName, username, email, password } = req.body;
 
-    if (!email || !password) {
+    try {
+        const user = await User.create({
+            firstName: firstName,
+            lastName: lastName,
+            role: "Admin",
+            username: username,
+            email: email,
+            password: password,
+        });
+
+        sendToken(user, 201, res);
+    } catch (error) {
+        next(error);
+    }
+};
+
+exports.login = async (req, res, next) => {
+    const { username, email, password } = req.body;
+
+    if (!(username || email) || !password) {
         return next(
-            new ErrorResponse("Please provide email and password", 400)
+            new ErrorResponse(
+                "Please provide email or username, and password",
+                400
+            )
         );
     }
 
     try {
-        const user = await User.findOne({ email }).select("+password");
+        const user = await (username
+            ? User.findOne({ username }).select("+password")
+            : User.findOne({ email }).select("+password"));
 
         if (!user) {
             return next(new ErrorResponse("Invalid credentials", 401));
@@ -38,6 +62,39 @@ exports.login = async (req, res, next) => {
         const isMatch = await user.matchPasswords(password);
 
         if (!isMatch) {
+            return next(new ErrorResponse("Invalid credentials", 401));
+        }
+
+        sendToken(user, 200, res);
+    } catch (error) {
+        return next(error);
+    }
+};
+
+exports.adminLogin = async (req, res, next) => {
+    const { username, email, password } = req.body;
+
+    if (!(username || email) || !password) {
+        return next(
+            new ErrorResponse(
+                "Please provide email or username, and password",
+                400
+            )
+        );
+    }
+
+    try {
+        const user = await (username
+            ? User.findOne({ username }).select("+password")
+            : User.findOne({ email }).select("+password"));
+
+        if (!user) {
+            return next(new ErrorResponse("Invalid credentials", 401));
+        }
+
+        const isMatch = await user.matchPasswords(password);
+
+        if (!isMatch || !user.isAdmin) {
             return next(new ErrorResponse("Invalid credentials", 401));
         }
 

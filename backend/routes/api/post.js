@@ -56,7 +56,7 @@ const upload = multer({
 
 router.post(
     "/",
-    middleware.protect,
+    middleware.isAuthenticated,
     upload.array("media"),
     PostController.create
 );
@@ -64,16 +64,16 @@ router.get("/", PostController.listPosts);
 router.get("/new", PostController.listNewPosts);
 router.get(
     "/postedBy/:id",
-    middleware.protect,
+    middleware.isAuthenticated,
     PostController.listPostsByUserID
 );
-router.get("/:id", middleware.protect, PostController.read);
+router.get("/:id", middleware.isAuthenticated, PostController.read);
 router.put(
     "/:id",
-    middleware.protect,
+    middleware.isAuthenticated,
     upload.array("media"),
     PostController.update
 );
-router.delete("/:id", middleware.protect, PostController.remove);
+router.delete("/:id", middleware.isAuthenticated, PostController.remove);
 
 module.exports = router;
