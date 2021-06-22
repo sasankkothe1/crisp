@@ -18,5 +18,5 @@ const connect = async (uri) => {
 
 // we can declare many functions in the program and then can export them here
 module.exports = {
-    connect
+    connect,
 };
