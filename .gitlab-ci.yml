@@ -43,7 +43,7 @@ launch:
     PORT: 4000
   script:
     - docker pull $IMAGE_TAG
-    - docker run -d -e MONGODB_URI=$MONGODB_URI -e PORT=$PORT -p $PORT:$PORT--name $APP_NAME $IMAGE_TAG
+    - docker run -d -e MONGODB_URI=$MONGODB_URI -e PORT=$PORT -p $PORT:$PORT --name $APP_NAME $IMAGE_TAG
     - sleep 60
     - STATUS=$(docker inspect -f {{.State.Status}} $APP_NAME)
     - if [[ "$STATUS" == "exited" ]]; then docker logs $APP_NAME && exit 1; else echo "Successful launch"; fi
