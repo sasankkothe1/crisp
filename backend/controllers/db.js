@@ -4,7 +4,6 @@ const mongoose = require("mongoose");
 // Async function is a promise based function and can be resolved either using ".then()" or "await" keyword
 const connect = async (uri) => {
     try {
-        console.log(uri);
         await mongoose.connect(uri, {
             useUnifiedTopology: true,
             useNewUrlParser: true,
