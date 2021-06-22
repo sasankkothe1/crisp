@@ -42,7 +42,7 @@ launch:
     MONGODB_URI: $CI_MONGODB_URI
   script:
     - docker pull $IMAGE_TAG
-    - docker run -p 4000:4000 --name $APP_NAME $IMAGE_TAG
+    - docker run -e MONGODB_URI=$MONGODB_URI -p 4000:4000 --name $APP_NAME $IMAGE_TAG
     - sleep 60
     - STATUS=$(docker inspect -f {{.State.Status}} $APP_NAME)
     - if [ $STATUS=="exited" ]; then docker logs $APP_NAME && exit 1; else echo "Successful launch"; fi
