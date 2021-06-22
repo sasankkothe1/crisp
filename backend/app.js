@@ -1,11 +1,12 @@
 require("dotenv").config();
 const express = require("express");
-const connectDB = require("./config/db");
 const routes = require("./routes");
 const errorHandler = require("./middleware/error");
 
+const DatabaseController = require("./controllers/db");
+
 // Connect DB
-connectDB();
+DatabaseController.connect(process.env.MONGODB_URI);
 
 // adding express to our app
 const app = express();
