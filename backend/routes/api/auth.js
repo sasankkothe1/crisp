@@ -33,6 +33,6 @@ router.route("/forgotpassword").post(forgotpassword);
 
 // Perform Password Reset
 // Auth: Unauthenticated (reachable through password reset email)
-router.route("/resetpassword:resetToken").post(resetpassword);
+router.route("/resetpassword/:resetToken").post(resetpassword);
 
 module.exports = router;
