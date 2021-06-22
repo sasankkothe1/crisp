@@ -39,6 +39,7 @@ launch:
   stage: launch
   variables:
     APP_NAME: crisp
+    MONGODB_URI: $CI_MONGODB_URI
   script:
     - docker pull $IMAGE_TAG
     - docker run -p 4000:4000 --name $APP_NAME $IMAGE_TAG
