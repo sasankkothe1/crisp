@@ -22,6 +22,7 @@ const create = async (req, res) => {
     }
     let post = {
         ...req.body,
+        postedBy: req.user._id,
         media: mediaFiles,
     };
 

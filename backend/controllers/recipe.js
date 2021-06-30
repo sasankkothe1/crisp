@@ -16,23 +16,48 @@ const create = async (req, res) => {
     let url = req.protocol + "://" + req.get("host") + "/";
     let mediaFiles = [];
 
-    if (req.files.length > 0) {
+    if (req.files?.length > 0) {
         for (var i = 0; i < req.files.length; i++)
             mediaFiles.push(url + req.files[i].filename);
     }
     let recipe = {
         ...req.body,
+        postedBy: req.user._id,
         media: mediaFiles,
     };
 
+    const session = await RecipeModel.startSession();
+    session.startTransaction();
+
     RecipeModel.create(recipe)
-        .then((recipe) => res.status(201).json(recipe))
-        .catch((error) =>
+        .then((recipe) => {
+            req.user.recipes.push(recipe._id);
+            req.user.save(async (error) => {
+                if (error) {
+                    throw error;
+                } else {
+                    try {
+                        await session.commitTransaction();
+                        res.status(201).json(recipe);
+                    } catch (error) {
+                        res.status(500).json({
+                            error: "Internal server error",
+                            message: error.message,
+                        });
+                    } finally {
+                        session.endSession();
+                    }
+                }
+            });
+        })
+        .catch(async (error) => {
+            await session.abortTransaction();
+            session.endSession();
             res.status(500).json({
                 error: "Internal server error",
                 message: error.message,
-            })
-        );
+            });
+        });
 };
 
 const listRecipes = (req, res) => {
