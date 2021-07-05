@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const VerifiedPartnerSchema = new mongoose.Schema({
     recipeCollections: {
@@ -15,9 +15,12 @@ const VerifiedPartnerSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "PartnerManager",
         required: true,
-    }
+    },
 });
 
-const VerifiedPartner = mongoose.model('VerifiedPartner', VerifiedPartnerSchema);
+const VerifiedPartner = mongoose.model(
+    "VerifiedPartner",
+    VerifiedPartnerSchema
+);
 
 module.exports = { VerifiedPartner };

@@ -1,20 +1,20 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const BankDetailsSchema = new mongoose.Schema({
     nameOfTheBank: {
         type: String,
-        required: true
+        required: true,
     },
     BIC: {
         type: String,
-        required: true
+        required: true,
     },
     IBAN: {
         type: String,
-        required: true
-    }
+        required: true,
+    },
 });
 
-const BankDetails = mongoose.model('BankDetails', BankDetailsSchema);
+const BankDetails = mongoose.model("BankDetails", BankDetailsSchema);
 
 module.exports = { BankDetails };

@@ -1,21 +1,21 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const PartnerManagerSchema = new mongoose.Schema({
     partnerManagerName: {
         type: String,
-        required: true
+        required: true,
     },
     partnerManagerEmail: {
         type: String,
-        required: true
+        required: true,
     },
     assignedTo: {
         type: [mongoose.Schema.Types.ObjectId],
         ref: "User",
         required: true,
-    }
+    },
 });
 
-const PartnerManager = mongoose.model('PartnerManager', PartnerManagerSchema);
+const PartnerManager = mongoose.model("PartnerManager", PartnerManagerSchema);
 
 module.exports = { PartnerManager };

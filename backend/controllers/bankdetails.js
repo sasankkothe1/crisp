@@ -8,25 +8,27 @@ const create = async (req, res) => {
         });
 
     let post = {
-        ...req.body
-    }
-    await BankDetails.create(post)
-}
+        ...req.body,
+    };
+    await BankDetails.create(post);
+};
 
 const read = (req, res) => {
-    BankDetails.find(req.params.id).exec().then((bankdetails) => {
-        if (!bankdetails)
-            return res.status(404).json({
-                error: "Not Found",
-                message: "BankDetails not found",
-            });
-        else return res.status(200).json(bankdetails);
-    })
-}
+    BankDetails.find(req.params.id)
+        .exec()
+        .then((bankdetails) => {
+            if (!bankdetails)
+                return res.status(404).json({
+                    error: "Not Found",
+                    message: "BankDetails not found",
+                });
+            else return res.status(200).json(bankdetails);
+        });
+};
 
 const update = async (req, res) => {
     try {
-        let result = await BankDetails.findOne({_id: req.params.id}).exec();
+        let result = await BankDetails.findOne({ _id: req.params.id }).exec();
 
         if (!result) {
             return res.status(404).json({
@@ -58,8 +60,7 @@ const update = async (req, res) => {
 const remove = async (req, res) => {
     let result;
     try {
-        result = await BankDetails.findOne({_id: req.params.id})
-            .exec();
+        result = await BankDetails.findOne({ _id: req.params.id }).exec();
         if (!result) {
             return res.status(404).json({
                 error: "Not found",
@@ -74,7 +75,7 @@ const remove = async (req, res) => {
     }
 
     await result.remove();
-    res.status(200).json({message: "BankDetails Deleted."});
+    res.status(200).json({ message: "BankDetails Deleted." });
 };
 
 module.exports = {
@@ -82,9 +83,4 @@ module.exports = {
     read,
     update,
     remove,
-
 };
-
-
-
-
