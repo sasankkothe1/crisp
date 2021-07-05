@@ -10,11 +10,12 @@ const PartnerManagerSchema = new mongoose.Schema({
         required: true
     },
     assignedTo: {
-        type: [String],
-        required: true
+        type: [mongoose.Schema.Types.ObjectId],
+        ref: "User",
+        required: true,
     }
 });
 
 const PartnerManager = mongoose.model('PartnerManager', PartnerManagerSchema);
 
-module.exports = PartnerManager;
+module.exports = { PartnerManager };

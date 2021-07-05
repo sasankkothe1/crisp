@@ -2,19 +2,22 @@ const mongoose = require('mongoose');
 
 const VerifiedPartnerSchema = new mongoose.Schema({
     recipeCollections: {
-        type: [String],
-        required: true
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "RecipeCollection",
+        required: true,
     },
     bankDetails: {
-        type: String,
-        required: true
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "BankDetails",
+        required: true,
     },
     partnerManager: {
-        type: String,
-        required: true
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "PartnerManager",
+        required: true,
     }
 });
 
 const VerifiedPartner = mongoose.model('VerifiedPartner', VerifiedPartnerSchema);
 
-module.exports = VerifiedPartner;
+module.exports = { VerifiedPartner };

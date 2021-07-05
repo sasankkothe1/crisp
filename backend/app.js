@@ -1,25 +1,31 @@
-const connectDB = require('./config/db');
+require("dotenv").config();
+const express = require("express");
+const routes = require("./routes");
+const errorHandler = require("./middleware/error");
 
-// importing express module
-const express = require('express');
+const DatabaseController = require("./controllers/db");
 
-// routes
-const posts = require('./routes/api/post');
+// Connect DB
+DatabaseController.connect(process.env.MONGODB_URI);
 
 // adding express to our app
 const app = express();
 
-connectDB();
+// use uploads in public folder
+// in this way, we can refer to an image with a link like http://localhost:4000/<filename> or http://localhost:4000/<filename>
+app.use(express.static("./public/uploads"));
 
-// when server is running, get request with url '/' will return "Hello world. <-- for testing purposes"
-app.get('/', (req, res) => res.send("Hello World"));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // use Routes
-// app.use('/api/posts', posts);
+app.use("/api", routes.api);
 
-// setting a port to run the server. Usually it is 4000. But can be set to any port
-const port = 4000;
+// Error Handler (Should be last piece of middleware)
+app.use(errorHandler);
 
-// listen() function will be triggered when the server is started
-// will be running on http://localhost:4000/
+// when server is running, get request with url '/' will return "Hello world. <-- for testing purposes"
+app.get("/", (req, res) => res.send("Hello World"));
+
+const port = process.env.PORT || 4000;
 app.listen(port, () => console.log(`Server is running on port ${port}`));

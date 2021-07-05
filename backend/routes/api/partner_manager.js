@@ -3,19 +3,32 @@
 const express = require('express');
 const router = express.Router();
 
-// Load PartnerManager model
-const PartnerManager = require('../../models/PartnerManager');
+const PartnerManagerController = require('../../controllers/partner_manager');
 
-// @route GET api/partner_manager/test
-// @description tests partner_manager route
-// @access Public
-router.get('/test', (req, res) => res.send('partner_manager route testing!'));
+const middleware = require("../../middleware/auth");
 
-// @route GET api/partner_manager
-// @description Get all partner managers
-// @access Public
-router.get('/', (req, res) => {
-    PartnerManager.find()
-        .then(PartnerManager => res.json(PartnerManager))
-        .catch(err => res.status(404).json({ noPartnerManagerfound: 'No Partner Manager found' }));
-});
+router.post(
+    "/",
+    middleware.isAdmin,
+    PartnerManagerController.create
+);
+
+router.put(
+    "/:id",
+    middleware.isAdmin,
+    PartnerManagerController.assign
+);
+
+router.put(
+    "/:id",
+    middleware.isAdmin,
+    PartnerManagerController.removeAssign
+);
+
+router.delete(
+    "/:id",
+    middleware.isAdmin,
+    PartnerManagerController.remove
+);
+
+module.exports = router;
