@@ -9,7 +9,9 @@ const api = express
     .use("/recipe_collections", require("./api/recipe_collection"))
     .use("/users", require("./api/user"))
     .use("/auth", require("./api/auth"))
-    .use("/private", require("./api/private"));
+    .use("/private", require("./api/private"))
+    .use("/bankdetails", require("./api/bank_details"))
+    .use("/partnerManager", require("./api/partner_manager"));
 
 module.exports = {
     api,
