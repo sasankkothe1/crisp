@@ -14,6 +14,7 @@ variables:
   IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
 
 before_script:
+  - cp $CD_DOCKER_COMPOSE_ENV .env
   - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
 
 build:

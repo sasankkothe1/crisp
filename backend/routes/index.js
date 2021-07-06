@@ -2,6 +2,7 @@ const express = require("express");
 
 const api = express
     .Router()
+    .use("/", (req, res) => { res.send("Welcome to the /api !"); })
     .use("/orders", require("./api/order"))
     .use("/posts", require("./api/post"))
     .use("/events", require("./api/event"))
