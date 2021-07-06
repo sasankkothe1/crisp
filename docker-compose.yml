@@ -19,7 +19,7 @@ services:
     environment:
       - PORT=$FRONTEND_PORT
     ports:
-      - "3000:$FRONTEND_PORT"
+      - "$FRONTEND_PORT"
     restart: always
   backend:
     build: ./backend
@@ -29,5 +29,5 @@ services:
     environment:
       - PORT=$BACKEND_PORT
     ports:
-      - "4000:$BACKEND_PORT"
+      - "$BACKEND_PORT"
     restart: always
