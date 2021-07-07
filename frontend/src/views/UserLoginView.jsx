@@ -1,7 +1,13 @@
 import React from "react";
+import { Banner } from "../components/Banner";
 
 function UserLoginView() {
-    return <div>UserLoginView</div>;
+    return (
+        <>
+            <Banner />
+            <div>UserLoginView</div>
+        </>
+    );
 }
 
 export default UserLoginView;

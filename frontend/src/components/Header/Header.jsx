@@ -86,7 +86,6 @@ const Header = () => {
                 <Link to="/">
                     <img src={Logo} className={classes.logo} />
                 </Link>
-
                 <TextField
                     className={classes.searchBar}
                     placeholder="Search…"
