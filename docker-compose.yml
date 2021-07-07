@@ -13,6 +13,7 @@ services:
       - frontend
   frontend: 
     build: ./frontend
+    image: $CI_REGISTRY_IMAGE/frontend:latest
     container_name: crisp-frontend
     depends_on: 
       - backend
@@ -23,6 +24,7 @@ services:
     restart: always
   backend:
     build: ./backend
+    image: $CI_REGISTRY_IMAGE/backend:latest
     container_name: crisp-backend
     env_file:
       - ./backend/.env
