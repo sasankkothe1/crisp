@@ -1,15 +1,41 @@
 import React from "react";
-import { BrowserRouter } from "react-router-dom";
+import { BrowserRouter, Switch, Route, Redirect } from "react-router-dom";
+import { makeStyles } from "@material-ui/core";
 import Header from "./components/Header/Header";
-//import Header2 from "./components/Header2/Header2";
+import UserLoginView from "./views/UserLoginView";
+import RegisterView from "./views/RegisterView";
 
-import "./App.css";
+const useStyles = makeStyles((theme) => ({
+    content: {
+        marginTop: theme.spacing(10),
+    },
+}));
 
 function App() {
+    const classes = useStyles();
+
     return (
         <BrowserRouter>
             <div className="App">
-                <Header />
+                <header>
+                    <Header />
+                </header>
+                <main className={classes.content}>
+                    <Switch>
+                        <Route exact path="/">
+                            <div>Home</div>
+                        </Route>
+                        <Route exact path="/login">
+                            <UserLoginView />
+                        </Route>
+                        <Route exact path="/register">
+                            <RegisterView />
+                        </Route>
+                        <Route
+                            render={() => <Redirect to={{ pathname: "/" }} />}
+                        />
+                    </Switch>
+                </main>
             </div>
         </BrowserRouter>
     );
