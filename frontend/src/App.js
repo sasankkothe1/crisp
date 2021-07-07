@@ -4,6 +4,7 @@ import { makeStyles } from "@material-ui/core";
 import Header from "./components/Header/Header";
 import UserLoginView from "./views/UserLoginView";
 import RegisterView from "./views/RegisterView";
+import Banner from "./components/Banner/Banner";
 
 const useStyles = makeStyles((theme) => ({
     content: {
@@ -23,6 +24,7 @@ function App() {
                 <main className={classes.content}>
                     <Switch>
                         <Route exact path="/">
+                            <Banner />
                             <div>Home</div>
                         </Route>
                         <Route exact path="/login">
