@@ -3,7 +3,7 @@ stages:
   - rules
   - launch
   - push
-  #- deploy
+  - deploy
 
 image: docker:20.10.7
 
@@ -16,7 +16,6 @@ variables:
 
 before_script:
   - cp $CD_DOCKER_COMPOSE_ENV .env
-  - cp $CD_BACKEND_ENV ./backend/.env
   - echo "CI_REGISTRY_IMAGE=$CI_REGISTRY_IMAGE" >> .env
   - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
 
@@ -56,21 +55,24 @@ launch:
 push:
   stage: push
   script:
-    - apk add --no-cache docker-compose
+    - apk --update add docker-compose
     - docker-compose build
     - docker-compose push 
   only:
-    - feature/deploy
     - develop
-    - main
 
-#deploy:
-#  stage: deploy
-#  image: alpine:latest
-#  script:
-#    - chmod og= $CD_ID_RSA
-#    - apk update && apk add openssh-client
-#    - ssh -i $CD_ID_RSA -o StrictHostKeyChecking=no $CD_USER@$CD_SERVER_IP "cd ~/crisp/prototype"
-#  only:
-#    - feature/deploy
-#    - develop
+deploy:
+  stage: deploy
+  script:
+    - apk update 
+    - apk add openssh-client
+    - apk add docker-compose
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY" | ssh-add -
+    - mkdir -p ~/.ssh
+    - ssh-keyscan -H "$CD_SERVER_IP" >> ~/.ssh/known_hosts
+    - docker-compose -H "ssh://$CD_USER@$CD_SERVER_IP" down
+    - docker-compose -H "ssh://$CD_USER@$CD_SERVER_IP" pull
+    - docker-compose -H "ssh://$CD_USER@$CD_SERVER_IP" up -d
+  only:
+    - develop
