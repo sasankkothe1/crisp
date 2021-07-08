@@ -18,18 +18,19 @@ services:
     depends_on: 
       - backend
     environment:
-      - PORT=$FRONTEND_PORT
+      - PORT=3000
     ports:
-      - "$FRONTEND_PORT"
+      - "3000"
     restart: always
   backend:
     build: ./backend
     image: $CI_REGISTRY_IMAGE/backend:latest
     container_name: crisp-backend
-    env_file:
-      - ./backend/.env
     environment:
-      - PORT=$BACKEND_PORT
+      - PORT=4000
+      - MONGODB_URI=$CD_MONGODB_URI
+      - JWT_SECRET=$CD_JWT_SECRET
+      - JWT_EXPIRE=$CD_JWT_EXPIRE
     ports:
-      - "$BACKEND_PORT"
+      - "4000"
     restart: always

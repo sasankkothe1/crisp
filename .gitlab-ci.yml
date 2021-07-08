@@ -1,9 +1,9 @@
 stages:
-  - build
-  - rules
-  - launch
+  #- build
+  #- rules
+  #- launch
   - push
-  #- deploy
+  - deploy
 
 image: docker:20.10.7
 
@@ -16,42 +16,41 @@ variables:
 
 before_script:
   - cp $CD_DOCKER_COMPOSE_ENV .env
-  - cp $CD_BACKEND_ENV ./backend/.env
   - echo "CI_REGISTRY_IMAGE=$CI_REGISTRY_IMAGE" >> .env
   - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
 
-build:
-  stage: build
-  script:
-    - docker build -t $IMAGE_TAG ./backend
-    - docker push $IMAGE_TAG
+# build:
+#   stage: build
+#   script:
+#     - docker build -t $IMAGE_TAG ./backend
+#     - docker push $IMAGE_TAG
 
-check_format:
-  stage: rules
-  script:
-    - docker pull $IMAGE_TAG
-    - docker run --entrypoint '/bin/sh' $IMAGE_TAG -c 'npm run check_format'
-  allow_failure: true
+# check_format:
+#   stage: rules
+#   script:
+#     - docker pull $IMAGE_TAG
+#     - docker run --entrypoint '/bin/sh' $IMAGE_TAG -c 'npm run check_format'
+#   allow_failure: true
 
-lint:
-  stage: rules
-  script:
-    - docker pull $IMAGE_TAG
-    - docker run --entrypoint '/bin/sh' $IMAGE_TAG -c 'npm run lint'
+# lint:
+#   stage: rules
+#   script:
+#     - docker pull $IMAGE_TAG
+#     - docker run --entrypoint '/bin/sh' $IMAGE_TAG -c 'npm run lint'
   
-launch:
-  stage: launch
-  variables:
-    APP_NAME: crisp
-    PORT: 4000
-  script:
-    - docker pull $IMAGE_TAG
-    - docker run -d -e MONGODB_URI=$CI_MONGODB_URI -e PORT=$PORT -p $PORT:$PORT --name $APP_NAME $IMAGE_TAG
-    - sleep 60
-    - STATUS=$(docker inspect -f {{.State.Status}} $APP_NAME)
-    - if [[ "$STATUS" == "exited" ]]; then docker logs $APP_NAME && exit 1; else echo "Successful launch"; fi
-    - apk add --no-cache curl
-    - curl http://docker:$PORT/
+# launch:
+#   stage: launch
+#   variables:
+#     APP_NAME: crisp
+#     PORT: 4000
+#   script:
+#     - docker pull $IMAGE_TAG
+#     - docker run -d -e MONGODB_URI=$CI_MONGODB_URI -e PORT=$PORT -p $PORT:$PORT --name $APP_NAME $IMAGE_TAG
+#     - sleep 60
+#     - STATUS=$(docker inspect -f {{.State.Status}} $APP_NAME)
+#     - if [[ "$STATUS" == "exited" ]]; then docker logs $APP_NAME && exit 1; else echo "Successful launch"; fi
+#     - apk add --no-cache curl
+#     - curl http://docker:$PORT/
 
 push:
   stage: push
@@ -60,17 +59,24 @@ push:
     - docker-compose build
     - docker-compose push 
   only:
-    - feature/deploy
+    - feature/magic
     - develop
-    - main
 
-#deploy:
-#  stage: deploy
-#  image: alpine:latest
-#  script:
-#    - chmod og= $CD_ID_RSA
-#    - apk update && apk add openssh-client
-#    - ssh -i $CD_ID_RSA -o StrictHostKeyChecking=no $CD_USER@$CD_SERVER_IP "cd ~/crisp/prototype"
-#  only:
-#    - feature/deploy
-#    - develop
+deploy:
+  stage: deploy
+  image: alpine:latest
+  script:
+    - chmod og= $CD_ID_RSA
+    - apk --update add openssh-client
+    - eval $(ssh-agent -s)
+    - ssh-add <(echo "$CD_ID_RSA")
+
+    - ssh $CD_USER@$CD_SERVER_IP "mkdir -p ~/deploy && cd ~/deploy"
+    - scp .env docker-compose.yml nginx.conf $CD_USER@$CD_SERVER_IP:~/deploy/
+    - ssh $CD_USER@$CD_SERVER_IP "docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY"
+    - ssh $CD_USER@$CD_SERVER_IP "docker-compose down"
+    - ssh $CD_USER@$CD_SERVER_IP "docker-compose pull"
+    - ssh $CD_USER@$CD_SERVER_IP "docker-compose up -d"
+  only:
+    - develop
+    - feature/magic
