@@ -69,6 +69,7 @@ deploy:
     - apk add docker-compose
     - eval $(ssh-agent -s)
     - echo "$SSH_PRIVATE_KEY" | ssh-add -
+    - mkdir -p ~/.ssh
     - ssh-keyscan -H "$CD_SERVER_IP" >> ~/.ssh/known_hosts
     - docker-compose -H "ssh://$CD_USER@$CD_SERVER_IP" down
     - docker-compose -H "ssh://$CD_USER@$CD_SERVER_IP" pull
