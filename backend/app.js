@@ -1,5 +1,6 @@
 require("dotenv").config();
 const express = require("express");
+const cors = require("cors");
 const routes = require("./routes");
 const errorHandler = require("./middleware/error");
 
@@ -10,6 +11,9 @@ DatabaseController.connect(process.env.MONGODB_URI);
 
 // adding express to our app
 const app = express();
+
+// enable CORS for a all routes
+app.use(cors());
 
 // use uploads in public folder
 // in this way, we can refer to an image with a link like http://localhost:4000/<filename> or http://localhost:4000/<filename>

@@ -1,5 +1,7 @@
 import React, { useState, useCallback } from "react";
-import { withRouter, useHistory, Link } from "react-router-dom";
+import PropTypes from "prop-types";
+import { withRouter, Link } from "react-router-dom";
+import { connect } from "react-redux";
 import {
     AppBar,
     InputAdornment,
@@ -19,6 +21,7 @@ import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
 import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
 import SearchIcon from "@material-ui/icons/Search";
 import Logo from "../../assets/logo.png";
+import { logout } from "../../redux/actions";
 
 const useStyles = makeStyles((theme) => ({
     header: {
@@ -48,9 +51,8 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const Header = () => {
+const Header = ({ history, dispatch }) => {
     const classes = useStyles();
-    const history = useHistory();
 
     const [anchorEl, setAnchorEl] = useState(null);
     const [searchValue, setSearchValue] = useState("");
@@ -58,16 +60,16 @@ const Header = () => {
     const [openAuth, setOpenAuth] = useState(false);
 
     const handleMenu = (event) => {
-        setAnchorEl(event.currentTarget);
         const openMenu = event.currentTarget.getAttribute("aria-controls");
         setOpenAdd(openMenu === "menu-list-add");
         setOpenAuth(openMenu === "menu-list-auth");
+        setAnchorEl(event.currentTarget);
     };
 
     const handleClose = () => {
-        setAnchorEl(null);
         setOpenAdd(false);
         setOpenAuth(false);
+        setAnchorEl(null);
     };
 
     const redirect = (path) => {
@@ -79,6 +81,13 @@ const Header = () => {
         const link = `/search?text=${searchValue}`;
         history.push(encodeURI(link));
     }, [history]);
+
+    const onLogout = (e) => {
+        e.preventDefault();
+        handleClose();
+        dispatch(logout());
+        history.push("/");
+    };
 
     return (
         <AppBar className={classes.header} positioning="static">
@@ -113,7 +122,6 @@ const Header = () => {
                         aria-controls="menu-list-add"
                         aria-haspopup="true"
                         onClick={handleMenu}
-                        color="black"
                     >
                         <AddCircleOutlineIcon className={classes.icon} />
                     </IconButton>
@@ -155,9 +163,8 @@ const Header = () => {
                         )}
                     </Popper>
                     <IconButton
-                        aria-label="account of current user"
+                        aria-label="recipe collection shop"
                         aria-haspopup="true"
-                        color="black"
                     >
                         <ShoppingCartIcon className={classes.icon} />
                     </IconButton>
@@ -166,7 +173,6 @@ const Header = () => {
                         aria-controls="menu-list-auth"
                         aria-haspopup="true"
                         onClick={handleMenu}
-                        color="black"
                     >
                         <AccountCircle className={classes.icon} />
                     </IconButton>
@@ -188,31 +194,43 @@ const Header = () => {
                                     <ClickAwayListener
                                         onClickAway={handleClose}
                                     >
-                                        <MenuList
-                                            autoFocusItem={openAuth}
-                                            id="menu-list-auth"
-                                        >
-                                            <MenuItem
-                                                onClick={() =>
-                                                    redirect("/login")
-                                                }
+                                        {window.localStorage["jwtToken"] ? (
+                                            <MenuList
+                                                autoFocusItem={openAuth}
+                                                id="menu-list-auth"
                                             >
-                                                Login
-                                            </MenuItem>
-                                            <MenuItem
-                                                onClick={() =>
-                                                    redirect("/register")
-                                                }
+                                                <MenuItem
+                                                    onClick={() =>
+                                                        redirect("/profile")
+                                                    }
+                                                >
+                                                    My Profile
+                                                </MenuItem>
+                                                <MenuItem onClick={onLogout}>
+                                                    Logout
+                                                </MenuItem>
+                                            </MenuList>
+                                        ) : (
+                                            <MenuList
+                                                autoFocusItem={openAuth}
+                                                id="menu-list-auth"
                                             >
-                                                Register
-                                            </MenuItem>
-                                            {/* <MenuItem onClick={handleClose}>
-                                                My Profile
-                                            </MenuItem>
-                                            <MenuItem onClick={handleClose}>
-                                                Logout
-                                            </MenuItem> */}
-                                        </MenuList>
+                                                <MenuItem
+                                                    onClick={() =>
+                                                        redirect("/login")
+                                                    }
+                                                >
+                                                    Login
+                                                </MenuItem>
+                                                <MenuItem
+                                                    onClick={() =>
+                                                        redirect("/register")
+                                                    }
+                                                >
+                                                    Register
+                                                </MenuItem>
+                                            </MenuList>
+                                        )}
                                     </ClickAwayListener>
                                 </Paper>
                             </Grow>
@@ -224,4 +242,9 @@ const Header = () => {
     );
 };
 
-export default withRouter(Header);
+Header.propTypes = {
+    history: History,
+    dispatch: PropTypes.func,
+};
+
+export default connect()(withRouter(Header));
