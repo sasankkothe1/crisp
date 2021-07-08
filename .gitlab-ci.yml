@@ -87,7 +87,6 @@ deploy:
 =======
 >>>>>>> 6415e13 (wip)
   script:
-    - chmod og= $CD_ID_RSA
     - apk --update add openssh-client
     - apk add docker-compose
     - eval $(ssh-agent -s)
