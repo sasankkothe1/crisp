@@ -6,6 +6,8 @@ import UserLoginView from "./views/UserLoginView";
 import RegisterView from "./views/RegisterView";
 import HomeView from "./views/HomeView";
 
+import "./App.css"
+
 const useStyles = makeStyles((theme) => ({
     content: {
         marginTop: theme.spacing(10),

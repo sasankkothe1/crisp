@@ -1,3 +1,8 @@
 .main-container {
     margin-top: 80px;
+    height: 100%;
+}
+
+.App {
+    height: 100%;
 }

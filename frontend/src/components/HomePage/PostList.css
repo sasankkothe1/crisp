@@ -1,14 +1,49 @@
+.post-container {
+    display: flex;
+    flex-direction: column;
+}
+
 .post-list-container {
     display: flex;
     flex-direction: column;
-    background-color: wheat;
     height: 100%;
     overflow-y: scroll;
-    flex-grow: 7;
+    flex-grow: 2;
+    padding: 2em 10em 0 10em;
 }
 
-.hello {
-    height: 30%;
-    border: solid;
-    border-color: aquamarine;
+.post {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.post-container-header {
+    display: flex;
+    background-color: wheat;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.post-container-media {
+    display: flex;
+    width: 500px;
+    overflow-y: scroll;
+}
+
+.post-media {
+    margin-left: 5px;
+}
+
+.media-container {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+}
+
+.description-container {
+    width: 50vw;
+    word-break: break-all;
+    margin-left: 5em;
 }
