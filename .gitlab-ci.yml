@@ -68,6 +68,7 @@ push:
 deploy:
   stage: deploy
 <<<<<<< HEAD
+<<<<<<< HEAD
   script:
     - apk update 
     - apk add openssh-client
@@ -83,18 +84,18 @@ deploy:
     - develop
 =======
   image: alpine:latest
+=======
+>>>>>>> 6415e13 (wip)
   script:
     - chmod og= $CD_ID_RSA
     - apk --update add openssh-client
+    - apk add docker-compose
     - eval $(ssh-agent -s)
     - ssh-add <(echo "$CD_ID_RSA")
 
-    - ssh $CD_USER@$CD_SERVER_IP "mkdir -p ~/deploy && cd ~/deploy"
-    - scp .env docker-compose.yml nginx.conf $CD_USER@$CD_SERVER_IP:~/deploy/
-    - ssh $CD_USER@$CD_SERVER_IP "docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY"
-    - ssh $CD_USER@$CD_SERVER_IP "docker-compose down"
-    - ssh $CD_USER@$CD_SERVER_IP "docker-compose pull"
-    - ssh $CD_USER@$CD_SERVER_IP "docker-compose up -d"
+    - docker-compose -H "ssh://$CD_USER@$CD_SERVER_IP" down
+    - docker-compose -H "ssh://$CD_USER@$CD_SERVER_IP" pull
+    - docker-compose -H "ssh://$CD_USER@$CD_SERVER_IP" up -d
   only:
     - develop
     - feature/magic
