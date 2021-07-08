@@ -1,11 +1,10 @@
 version: '3'
 services:
   nginx:
-    image: nginx:1.21.1
+    build: ./nginx
+    image: $CI_REGISTRY_IMAGE/nginx:latest
     container_name: nginx-proxy
     hostname: nginx-proxy 
-    volumes: 
-      - ./nginx.conf:/etc/nginx/nginx.conf
     ports:
       - "80:80"
     depends_on:
