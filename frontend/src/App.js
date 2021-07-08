@@ -4,7 +4,7 @@ import { makeStyles } from "@material-ui/core";
 import Header from "./components/Header/Header";
 import UserLoginView from "./views/UserLoginView";
 import RegisterView from "./views/RegisterView";
-import PostView from "./views/PostView";
+import PostView from "./views/Post/PostView";
 
 const useStyles = makeStyles((theme) => ({
     content: {
