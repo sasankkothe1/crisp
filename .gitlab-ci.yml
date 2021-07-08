@@ -68,7 +68,8 @@ deploy:
     - apk --update add openssh-client
     - apk add docker-compose
     - eval $(ssh-agent -s)
-    - echo "$CD_ID_RSA" | ssh-add - 
+    - echo "$SSH_PRIVATE_KEY"
+    - echo "$SSH_PRIVATE_KEY" | ssh-add - 
     - docker-compose -H "ssh://$CD_USER@$CD_SERVER_IP" down
     - docker-compose -H "ssh://$CD_USER@$CD_SERVER_IP" pull
     - docker-compose -H "ssh://$CD_USER@$CD_SERVER_IP" up -d
