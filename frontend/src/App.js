@@ -6,7 +6,7 @@ import UserLoginView from "./views/UserLoginView";
 import RegisterView from "./views/RegisterView";
 import HomeView from "./views/HomeView";
 
-import "./App.css"
+import "./App.css";
 
 const useStyles = makeStyles((theme) => ({
     content: {
@@ -20,7 +20,6 @@ function App() {
     return (
         <BrowserRouter>
             <div className="App">
-
                 <Header />
 
                 <div className={`${classes.content} main-container`}>
