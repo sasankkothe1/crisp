@@ -1,0 +1,14 @@
+.post-list-container {
+    display: flex;
+    flex-direction: column;
+    background-color: wheat;
+    height: 100%;
+    overflow-y: scroll;
+    flex-grow: 7;
+}
+
+.hello {
+    height: 30%;
+    border: solid;
+    border-color: aquamarine;
+}

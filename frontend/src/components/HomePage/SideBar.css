@@ -1,0 +1,4 @@
+.sidebar-container {
+    background-color: rgb(206, 147, 36);
+    flex-grow: 3;
+}

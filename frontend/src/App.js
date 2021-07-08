@@ -4,7 +4,7 @@ import { makeStyles } from "@material-ui/core";
 import Header from "./components/Header/Header";
 import UserLoginView from "./views/UserLoginView";
 import RegisterView from "./views/RegisterView";
-import Banner from "./components/Banner/Banner";
+import HomeView from "./views/HomeView";
 
 const useStyles = makeStyles((theme) => ({
     content: {
@@ -18,14 +18,13 @@ function App() {
     return (
         <BrowserRouter>
             <div className="App">
-                <header>
-                    <Header />
-                </header>
-                <main className={classes.content}>
+
+                <Header />
+
+                <div className={`${classes.content} main-container`}>
                     <Switch>
                         <Route exact path="/">
-                            <Banner />
-                            <div>Home</div>
+                            <HomeView />
                         </Route>
                         <Route exact path="/login">
                             <UserLoginView />
@@ -37,7 +36,7 @@ function App() {
                             render={() => <Redirect to={{ pathname: "/" }} />}
                         />
                     </Switch>
-                </main>
+                </div>
             </div>
         </BrowserRouter>
     );
