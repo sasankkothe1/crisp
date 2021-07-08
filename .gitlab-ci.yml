@@ -65,7 +65,6 @@ before_script:
 deploy:
   stage: deploy
   script:
-    - chmod og= $CD_ID_RSA
     - apk --update add openssh-client
     - apk add docker-compose
     - eval $(ssh-agent -s)
