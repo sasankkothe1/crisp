@@ -13,10 +13,6 @@ import Button from "@material-ui/core/Button";
 
 const useStyles = makeStyles(() => ({
 	sidebar: {
-		display: "flex",
-		flexDirection: "column",
-		flexFrow: 3,
-		width: 1,
 	},
 	header: {
 		fontSize: "small"
@@ -34,6 +30,15 @@ export default function ShopSidebar() {
 
 	const applyFilters = () => {
 		alert(`minValue = ${minValue}, maxValue = ${maxValue}, meal = ${meal}`);
+	};
+
+	const handleMealClick = (event) => {
+		console.log(event.target.value);
+		if (event.target.value == meal) {
+			setMeal("");
+		} else {
+			setMeal(event.target.value);
+		}
 	};
 
     return (
@@ -60,9 +65,9 @@ export default function ShopSidebar() {
 			</div>
 			<h5 className={classes.header}>Meal</h5>
 			<FormControl component="fieldset">
-				<RadioGroup value={meal} onChange={ (event) => setMeal(event.target.value || "{empty}") }>
-					<FormControlLabel value="breakfast" control={<Radio />} label="Breakfast" />
-					<FormControlLabel value="dinner" control={<Radio />} label="Dinner" />
+				<RadioGroup value={meal}>
+					<FormControlLabel value="breakfast" control={<Radio onClick={handleMealClick}/>} label="Breakfast" />
+					<FormControlLabel value="dinner" control={<Radio onClick={handleMealClick}/>} label="Dinner" />
 				</RadioGroup>
 			</FormControl>
 			<Button variant="contained" color="primary" onClick={applyFilters}>
