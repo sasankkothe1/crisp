@@ -7,6 +7,7 @@ import thunkMiddleware from "redux-thunk";
 import Header from "./components/Header/Header";
 import UserLoginView from "./views/UserLoginView";
 import RegisterView from "./views/RegisterView";
+import PostView from "./views/Post/PostView";
 import reducers from "./redux/reducers";
 import HomeView from "./views/HomeView";
 
@@ -16,7 +17,10 @@ const useStyles = makeStyles((theme) => ({
     app: {},
     content: {
         marginTop: theme.spacing(10),
+        display: "flex",
+        justifyContent: "center",
     },
+    contentContainer: {},
 }));
 
 function App() {
@@ -42,6 +46,9 @@ function App() {
                             </Route>
                             <Route exact path="/register">
                                 <RegisterView />
+                            </Route>
+                            <Route exact path="/addPost">
+                                <PostView />
                             </Route>
                             <Route
                                 render={() => (
