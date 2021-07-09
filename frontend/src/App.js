@@ -9,6 +9,7 @@ import UserLoginView from "./views/UserLoginView";
 import RegisterView from "./views/RegisterView";
 import reducers from "./redux/reducers";
 import HomeView from "./views/HomeView";
+import ShopView from "./views/ShopView";
 
 import "./App.css";
 
@@ -42,6 +43,9 @@ function App() {
                             </Route>
                             <Route exact path="/register">
                                 <RegisterView />
+                            </Route>
+                            <Route exact path="/shop">
+                                <ShopView />
                             </Route>
                             <Route
                                 render={() => (
