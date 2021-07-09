@@ -148,7 +148,11 @@ const Header = ({ history, dispatch }) => {
                                                 autoFocusItem={openAdd}
                                                 id="menu-list-add"
                                             >
-                                                <MenuItem onClick={handleClose}>
+                                                <MenuItem
+                                                    onClick={() =>
+                                                        redirect("/addPost")
+                                                    }
+                                                >
                                                     Add Post
                                                 </MenuItem>
                                                 <MenuItem onClick={handleClose}>
