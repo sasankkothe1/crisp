@@ -4,17 +4,9 @@ import { useForm } from "react-hook-form";
 
 import "./PostView.css";
 
-import {
-    Button,
-
-    // FormControl,
-    // InputLabel,
-    // MenuItem,
-    // Select,
-    styled,
-    TextField,
-} from "@material-ui/core";
+import { Button, styled, TextField, IconButton } from "@material-ui/core";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
+import DeleteIcon from "@material-ui/icons/Delete";
 import { Form } from "react-bootstrap";
 
 //TODO: complete the post and copy paste it to the event and recipe
@@ -124,40 +116,57 @@ export default function PostView() {
                         </label>
                     </div>
                     <div className="upload-preview-container">
-                        {uploadedImages.map((item) => (
-                            <div
-                                className="image-preview-container"
-                                key={item["name"]}
-                                style={{
-                                    border: "1px solid gray",
-                                }}
-                            >
-                                <img
-                                    className="preview"
-                                    src={[item["preview"]]}
-                                />{" "}
-                                <div className="remove-image-button">
-                                    <button
-                                        onClick={(e) =>
-                                            removeImage(e, item["name"])
-                                        }
-                                    >
-                                        Delete
-                                    </button>
+                        {uploadedImages.length ? (
+                            uploadedImages.map((item) => (
+                                <div
+                                    className="image-preview-container"
+                                    key={item["name"]}
+                                    style={{
+                                        border: "1px solid gray",
+                                    }}
+                                >
+                                    <img
+                                        className="preview"
+                                        src={[item["preview"]]}
+                                    />{" "}
+                                    <div className="remove-image-button">
+                                        <IconButton
+                                            onClick={(e) =>
+                                                removeImage(e, item["name"])
+                                            }
+                                            aria-label="delete"
+                                        >
+                                            <DeleteIcon fontSize="large" />
+                                        </IconButton>
+                                    </div>
                                 </div>
-                            </div>
-                        ))}
+                            ))
+                        ) : (
+                            <h4 className="no-media">No media</h4>
+                        )}
                     </div>
                 </div>
 
                 <Form.Group controlId="typeOfSolution">
-                    <Form.Control {...register("contentType")} as="select">
+                    <Form.Control
+                        className="premium-dropdown"
+                        {...register("contentType")}
+                        as="select"
+                    >
                         <option>Not Premium</option>
                         <option>Premium</option>
                     </Form.Control>
                 </Form.Group>
-
-                <input type="submit" />
+                <div className="submit-button-container">
+                    <Button
+                        className="submit-button"
+                        type="submit"
+                        variant="contained"
+                        color="primary"
+                    >
+                        Submit
+                    </Button>
+                </div>
             </form>
         </div>
     );

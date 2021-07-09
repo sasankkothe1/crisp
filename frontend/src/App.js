@@ -9,12 +9,10 @@ import PostView from "./views/Post/PostView";
 const useStyles = makeStyles((theme) => ({
     content: {
         marginTop: theme.spacing(10),
-        display: 'flex',
-        justifyContent: 'center'
+        display: "flex",
+        justifyContent: "center",
     },
-    contentContainer: {
-
-    }
+    contentContainer: {},
 }));
 
 function App() {
@@ -42,7 +40,9 @@ function App() {
                                 <PostView />
                             </Route>
                             <Route
-                                render={() => <Redirect to={{ pathname: "/" }} />}
+                                render={() => (
+                                    <Redirect to={{ pathname: "/" }} />
+                                )}
                             />
                         </Switch>
                     </div>

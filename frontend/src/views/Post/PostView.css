@@ -28,6 +28,11 @@
 .upload-preview-container {
     width: 100%;
     overflow-y: scroll;
+    border: solid;
+    border-width: 0.5px;
+    border-color: rgba(0, 0, 0, 0.23);
+    border-radius: 5px;
+    margin-left: 1em;
 }
 
 .preview {
@@ -39,4 +44,24 @@
 .remove-image-button {
     display: flex;
     justify-content: center;
+}
+
+.premium-dropdown {
+    margin: 8px;
+    margin-top: 1em;
+}
+
+.submit-button-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.no-media {
+    position: relative;
+    top: 40%;
+    left: 35%;
+}
+.submit-button {
+    background: #e8a72e;
 }
