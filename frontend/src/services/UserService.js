@@ -2,7 +2,7 @@ import axios from "axios";
 
 export default class UserService {
     static baseURL() {
-        return "http://localhost:4000/api/auth";
+        return "/api/auth";
     }
 
     static extractUser(token) {
