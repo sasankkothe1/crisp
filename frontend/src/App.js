@@ -8,6 +8,9 @@ import Header from "./components/Header/Header";
 import UserLoginView from "./views/UserLoginView";
 import RegisterView from "./views/RegisterView";
 import reducers from "./redux/reducers";
+import HomeView from "./views/HomeView";
+
+import "./App.css";
 
 const useStyles = makeStyles((theme) => ({
     app: {},
@@ -32,7 +35,7 @@ function App() {
                     <main className={classes.content}>
                         <Switch>
                             <Route exact path="/">
-                                <div>Home</div>
+                                <HomeView />
                             </Route>
                             <Route exact path="/login">
                                 <UserLoginView />

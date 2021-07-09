@@ -90,155 +90,163 @@ const Header = ({ history, dispatch }) => {
     };
 
     return (
-        <AppBar className={classes.header} positioning="static">
-            <Toolbar className={classes.toolbar}>
-                <Link to="/">
-                    <img src={Logo} className={classes.logo} />
-                </Link>
-
-                <TextField
-                    className={classes.searchBar}
-                    placeholder="Search…"
-                    InputProps={{
-                        endAdornment: (
-                            <InputAdornment position="end">
-                                <IconButton
-                                    onClick={onClickSearch}
-                                    color="inherit"
+        <div>
+            <AppBar className={classes.header} positioning="static">
+                <Toolbar className={classes.toolbar}>
+                    <Link to="/">
+                        <img src={Logo} className={classes.logo} />
+                    </Link>
+                    <TextField
+                        className={classes.searchBar}
+                        placeholder="Search…"
+                        InputProps={{
+                            endAdornment: (
+                                <InputAdornment position="end">
+                                    <IconButton
+                                        onClick={onClickSearch}
+                                        color="inherit"
+                                    >
+                                        <SearchIcon />
+                                    </IconButton>
+                                </InputAdornment>
+                            ),
+                            "aria-label": "search",
+                        }}
+                        onChange={(event) => {
+                            setSearchValue(event.target.value);
+                        }}
+                    />
+                    <div className={classes.buttonGroup}>
+                        <IconButton
+                            aria-label="add post, event, or recipe"
+                            aria-controls="menu-list-add"
+                            aria-haspopup="true"
+                            onClick={handleMenu}
+                            color="black"
+                        >
+                            <AddCircleOutlineIcon className={classes.icon} />
+                        </IconButton>
+                        <Popper
+                            open={openAdd}
+                            anchorEl={anchorEl}
+                            role={undefined}
+                            transition
+                            disablePortal
+                        >
+                            {({ TransitionProps }) => (
+                                <Grow
+                                    {...TransitionProps}
+                                    style={{
+                                        transformOrigin: "center bottom",
+                                    }}
                                 >
-                                    <SearchIcon />
-                                </IconButton>
-                            </InputAdornment>
-                        ),
-                        "aria-label": "search",
-                    }}
-                    onChange={(event) => {
-                        setSearchValue(event.target.value);
-                    }}
-                />
-                <div className={classes.buttonGroup}>
-                    <IconButton
-                        aria-label="add post, event, or recipe"
-                        aria-controls="menu-list-add"
-                        aria-haspopup="true"
-                        onClick={handleMenu}
-                    >
-                        <AddCircleOutlineIcon className={classes.icon} />
-                    </IconButton>
-                    <Popper
-                        open={openAdd}
-                        anchorEl={anchorEl}
-                        role={undefined}
-                        transition
-                        disablePortal
-                    >
-                        {({ TransitionProps }) => (
-                            <Grow
-                                {...TransitionProps}
-                                style={{
-                                    transformOrigin: "center bottom",
-                                }}
-                            >
-                                <Paper>
-                                    <ClickAwayListener
-                                        onClickAway={handleClose}
-                                    >
-                                        <MenuList
-                                            autoFocusItem={openAdd}
-                                            id="menu-list-add"
+                                    <Paper>
+                                        <ClickAwayListener
+                                            onClickAway={handleClose}
                                         >
-                                            <MenuItem onClick={handleClose}>
-                                                Add Post
-                                            </MenuItem>
-                                            <MenuItem onClick={handleClose}>
-                                                Add Recipe
-                                            </MenuItem>
-                                            <MenuItem onClick={handleClose}>
-                                                Add Event
-                                            </MenuItem>
-                                        </MenuList>
-                                    </ClickAwayListener>
-                                </Paper>
-                            </Grow>
-                        )}
-                    </Popper>
-                    <IconButton
-                        aria-label="recipe collection shop"
-                        aria-haspopup="true"
-                    >
-                        <ShoppingCartIcon className={classes.icon} />
-                    </IconButton>
-                    <IconButton
-                        aria-label="account of current user"
-                        aria-controls="menu-list-auth"
-                        aria-haspopup="true"
-                        onClick={handleMenu}
-                    >
-                        <AccountCircle className={classes.icon} />
-                    </IconButton>
-                    <Popper
-                        open={openAuth}
-                        anchorEl={anchorEl}
-                        role={undefined}
-                        transition
-                        disablePortal
-                    >
-                        {({ TransitionProps }) => (
-                            <Grow
-                                {...TransitionProps}
-                                style={{
-                                    transformOrigin: "center bottom",
-                                }}
-                            >
-                                <Paper>
-                                    <ClickAwayListener
-                                        onClickAway={handleClose}
-                                    >
-                                        {window.localStorage["jwtToken"] ? (
                                             <MenuList
-                                                autoFocusItem={openAuth}
-                                                id="menu-list-auth"
+                                                autoFocusItem={openAdd}
+                                                id="menu-list-add"
                                             >
-                                                <MenuItem
-                                                    onClick={() =>
-                                                        redirect("/profile")
-                                                    }
-                                                >
-                                                    My Profile
+                                                <MenuItem onClick={handleClose}>
+                                                    Add Post
                                                 </MenuItem>
-                                                <MenuItem onClick={onLogout}>
-                                                    Logout
+                                                <MenuItem onClick={handleClose}>
+                                                    Add Recipe
+                                                </MenuItem>
+                                                <MenuItem onClick={handleClose}>
+                                                    Add Event
                                                 </MenuItem>
                                             </MenuList>
-                                        ) : (
-                                            <MenuList
-                                                autoFocusItem={openAuth}
-                                                id="menu-list-auth"
-                                            >
-                                                <MenuItem
-                                                    onClick={() =>
-                                                        redirect("/login")
-                                                    }
+                                        </ClickAwayListener>
+                                    </Paper>
+                                </Grow>
+                            )}
+                        </Popper>
+                        <IconButton
+                            aria-label="account of current user"
+                            aria-haspopup="true"
+                            color="black"
+                        >
+                            <ShoppingCartIcon className={classes.icon} />
+                        </IconButton>
+                        <IconButton
+                            aria-label="account of current user"
+                            aria-controls="menu-list-auth"
+                            aria-haspopup="true"
+                            onClick={handleMenu}
+                            color="black"
+                        >
+                            <AccountCircle className={classes.icon} />
+                        </IconButton>
+                        <Popper
+                            open={openAuth}
+                            anchorEl={anchorEl}
+                            role={undefined}
+                            transition
+                            disablePortal
+                        >
+                            {({ TransitionProps }) => (
+                                <Grow
+                                    {...TransitionProps}
+                                    style={{
+                                        transformOrigin: "center bottom",
+                                    }}
+                                >
+                                    <Paper>
+                                        <ClickAwayListener
+                                            onClickAway={handleClose}
+                                        >
+                                            {window.localStorage["jwtToken"] ? (
+                                                <MenuList
+                                                    autoFocusItem={openAuth}
+                                                    id="menu-list-auth"
                                                 >
-                                                    Login
-                                                </MenuItem>
-                                                <MenuItem
-                                                    onClick={() =>
-                                                        redirect("/register")
-                                                    }
+                                                    <MenuItem
+                                                        onClick={() =>
+                                                            redirect("/profile")
+                                                        }
+                                                    >
+                                                        My Profile
+                                                    </MenuItem>
+                                                    <MenuItem
+                                                        onClick={onLogout}
+                                                    >
+                                                        Logout
+                                                    </MenuItem>
+                                                </MenuList>
+                                            ) : (
+                                                <MenuList
+                                                    autoFocusItem={openAuth}
+                                                    id="menu-list-auth"
                                                 >
-                                                    Register
-                                                </MenuItem>
-                                            </MenuList>
-                                        )}
-                                    </ClickAwayListener>
-                                </Paper>
-                            </Grow>
-                        )}
-                    </Popper>
-                </div>
-            </Toolbar>
-        </AppBar>
+                                                    <MenuItem
+                                                        onClick={() =>
+                                                            redirect("/login")
+                                                        }
+                                                    >
+                                                        Login
+                                                    </MenuItem>
+                                                    <MenuItem
+                                                        onClick={() =>
+                                                            redirect(
+                                                                "/register"
+                                                            )
+                                                        }
+                                                    >
+                                                        Register
+                                                    </MenuItem>
+                                                </MenuList>
+                                            )}
+                                        </ClickAwayListener>
+                                    </Paper>
+                                </Grow>
+                            )}
+                        </Popper>
+                    </div>
+                </Toolbar>
+            </AppBar>
+        </div>
     );
 };
 

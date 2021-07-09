@@ -1,0 +1,26 @@
+.sidebar-events-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.eventList {
+    height: 300px;
+    overflow-x: scroll;
+}
+
+.eventList-element {
+    margin-top: 0.5em;
+    display: flex;
+    justify-content: space-evenly;
+    flex-direction: row;
+    border-bottom: 1px solid black;
+}
+
+.eventList-header {
+    font-size: small;
+}
+
+.event-title {
+    font-size: x-small;
+}
