@@ -197,31 +197,47 @@ const Header = ({ history, dispatch }) => {
                                         <ClickAwayListener
                                             onClickAway={handleClose}
                                         >
-                                            <MenuList
-                                                autoFocusItem={openAuth}
-                                                id="menu-list-auth"
-                                            >
-                                                <MenuItem
-                                                    onClick={() =>
-                                                        redirect("/login")
-                                                    }
+                                            {window.localStorage["jwtToken"] ? (
+                                                <MenuList
+                                                    autoFocusItem={openAuth}
+                                                    id="menu-list-auth"
                                                 >
-                                                    Login
-                                                </MenuItem>
-                                                <MenuItem
-                                                    onClick={() =>
-                                                        redirect("/register")
-                                                    }
+                                                    <MenuItem
+                                                        onClick={() =>
+                                                            redirect("/profile")
+                                                        }
+                                                    >
+                                                        My Profile
+                                                    </MenuItem>
+                                                    <MenuItem
+                                                        onClick={onLogout}
+                                                    >
+                                                        Logout
+                                                    </MenuItem>
+                                                </MenuList>
+                                            ) : (
+                                                <MenuList
+                                                    autoFocusItem={openAuth}
+                                                    id="menu-list-auth"
                                                 >
-                                                    Register
-                                                </MenuItem>
-                                                {/* <MenuItem onClick={handleClose}>
-                                                My Profile
-                                            </MenuItem>
-                                            <MenuItem onClick={handleClose}>
-                                                Logout
-                                            </MenuItem> */}
-                                            </MenuList>
+                                                    <MenuItem
+                                                        onClick={() =>
+                                                            redirect("/login")
+                                                        }
+                                                    >
+                                                        Login
+                                                    </MenuItem>
+                                                    <MenuItem
+                                                        onClick={() =>
+                                                            redirect(
+                                                                "/register"
+                                                            )
+                                                        }
+                                                    >
+                                                        Register
+                                                    </MenuItem>
+                                                </MenuList>
+                                            )}
                                         </ClickAwayListener>
                                     </Paper>
                                 </Grow>
