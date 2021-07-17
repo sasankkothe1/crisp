@@ -1,49 +1,8 @@
-.post-container {
-    display: flex;
-    flex-direction: column;
-}
-
-.post-list-container {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    overflow-y: scroll;
-    flex-grow: 2;
-    padding: 2em 10em 0 10em;
-}
-
 .post {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
-
-.post-container-header {
-    display: flex;
-    background-color: wheat;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.post-container-media {
-    display: flex;
-    width: 500px;
     overflow-y: scroll;
-}
-
-.post-media {
-    margin-left: 5px;
-}
-
-.media-container {
+    padding: 2em 10em 0 10em;
     display: flex;
-    width: 100%;
-    justify-content: center;
-}
-
-.description-container {
-    width: 50vw;
-    word-break: break-all;
-    margin-left: 5em;
+    flex-direction: row;
+    flex-wrap: wrap;
+    flex-shrink: 1;
 }

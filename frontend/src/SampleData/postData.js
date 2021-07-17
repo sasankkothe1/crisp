@@ -115,7 +115,7 @@ export const postData = [
             },
             {
                 type: "video",
-                URL: "https://www.youtube.com/watch?v=H9154xIoYTA",
+                URL: "http://localhost:4000/samplevideo.mp4",
             },
         ],
         tags: ["Indian", "chicken"],
