@@ -12,8 +12,12 @@ export default function HomeView() {
         <div>
             <Banner />
             <div className="homeView-container">
-                <PostsList data={postData} />
-                <SideBar />
+                <div className="homeView-postList">
+                    <PostsList data={postData} />
+                </div>
+                <div className="homeView-sideBar">
+                    <SideBar />
+                </div>
             </div>
         </div>
     );

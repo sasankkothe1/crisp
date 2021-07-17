@@ -3,3 +3,12 @@
     flex-direction: row;
     height: 100%;
 }
+
+.homeView-postList {
+    flex-grow: 2;
+}
+
+.homeView-sideBar {
+    width: 30%;
+    flex-grow: 1;
+}

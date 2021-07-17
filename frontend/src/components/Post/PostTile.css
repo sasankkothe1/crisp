@@ -1,0 +1,29 @@
+.post-tile-container {
+    display: flex;
+    flex-direction: column;
+    width: 25vw;
+    margin: 1em;
+}
+
+.post-tile-header {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+    background-color: wheat;
+}
+
+.post-tile-header-left {
+    display: flex;
+    align-items: center;
+}
+
+.post-tile-content-video {
+    position: relative;
+    padding-top: 56.25%;
+}
+
+.react-player {
+    position: absolute;
+    top: 3em;
+    left: 0;
+}
