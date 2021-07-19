@@ -171,7 +171,7 @@ const Header = ({ history, dispatch }) => {
                             aria-label="account of current user"
                             aria-haspopup="true"
                             color="black"
-                            onClick={ () => redirect("/shop") }
+                            onClick={() => redirect("/shop")}
                         >
                             <ShoppingCartIcon className={classes.icon} />
                         </IconButton>

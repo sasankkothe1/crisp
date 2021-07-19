@@ -5,63 +5,58 @@ import { makeStyles } from "@material-ui/core";
 import PersonIcon from "@material-ui/icons/Person";
 import StarRatings from "react-star-ratings";
 
-import EuroIcon from '@material-ui/icons/Euro';
+import EuroIcon from "@material-ui/icons/Euro";
 
 const useStyles = makeStyles(() => ({
     shopItemContainer: {
         display: "flex",
         flexDirection: "column",
-		width: "25vw",
-		margin: "1em"
+        width: "25vw",
+        margin: "1em",
     },
-	shopItemHeader: {
-		display: "flex",
-		justifyContent: "space-between",
-		flexDirection: "row",
-		backgroundColor: "wheat"
-	},
-	shopItemHeaderLeft: {
+    shopItemHeader: {
+        display: "flex",
+        justifyContent: "space-between",
         flexDirection: "row",
-		display: "flex",
-		alignItems: "center"
-	},
-	shopItemHeaderRight: {
+        backgroundColor: "wheat",
+    },
+    shopItemHeaderLeft: {
         flexDirection: "row",
-		display: "flex",
-		alignItems: "center"
-	},
+        display: "flex",
+        alignItems: "center",
+    },
+    shopItemHeaderRight: {
+        flexDirection: "row",
+        display: "flex",
+        alignItems: "center",
+    },
     shopItemPrice: {
         flexDirection: "row",
         display: "flex",
-        alignItems: "left"
+        alignItems: "left",
     },
-    shopItemContent: {
-    }
+    shopItemContent: {},
 }));
 
 export default function ShopItem(props) {
-	const classes = useStyles();
+    const classes = useStyles();
 
-	const { data } = props;
+    const { data } = props;
 
-	return (
-		<div className={classes.shopItemContainer}>
+    return (
+        <div className={classes.shopItemContainer}>
             <div className={classes.shopItemHeader}>
                 <div className={classes.shopItemHeaderLeft}>
                     <PersonIcon fontSize="small" />
                     <div>
-                        <h6>
-                            {data["postedBy"]}
-                        </h6>
+                        <h6>{data["postedBy"]}</h6>
                     </div>
                 </div>
                 <div className={classes.shopItemHeaderRight}>
                     <div className={classes.shopItemPrice}>
                         <EuroIcon />
                         <div>
-                            <h6>
-                                {data["price"]}
-                            </h6>
+                            <h6>{data["price"]}</h6>
                         </div>
                     </div>
                     <div>
@@ -74,9 +69,7 @@ export default function ShopItem(props) {
                     </div>
                 </div>
             </div>
-            <div className={classes.shopItemContent}>
-                {data["description"]}
-            </div>
-		</div>
-	);
+            <div className={classes.shopItemContent}>{data["description"]}</div>
+        </div>
+    );
 }

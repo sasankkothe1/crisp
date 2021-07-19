@@ -32,19 +32,27 @@ export default function ShopView() {
 
     useEffect(() => {
         console.log(recipeType, meal, minPrice, maxPrice);
-        setRCD(recipeCollectionsData.filter(recipeCollection => {
-            console.log(recipeCollection);
-            if (recipeType && !recipeCollection['tags'].includes(recipeType)) {
-                return false;
-            }
-            if (meal && recipeCollection['meal'] != meal) {
-                return false;
-            }
-            if (minPrice > recipeCollection['price'] || recipeCollection['price'] > maxPrice) {
-                return false;
-            }
-            return true;
-        }));
+        setRCD(
+            recipeCollectionsData.filter((recipeCollection) => {
+                console.log(recipeCollection);
+                if (
+                    recipeType &&
+                    !recipeCollection["tags"].includes(recipeType)
+                ) {
+                    return false;
+                }
+                if (meal && recipeCollection["meal"] != meal) {
+                    return false;
+                }
+                if (
+                    minPrice > recipeCollection["price"] ||
+                    recipeCollection["price"] > maxPrice
+                ) {
+                    return false;
+                }
+                return true;
+            })
+        );
     }, [recipeType, buttonClicked]);
 
     const sidebarProps = {
@@ -53,12 +61,12 @@ export default function ShopView() {
         setMinPrice: setMinPrice,
         setMaxPrice: setMaxPrice,
         buttonClicked: buttonClicked,
-        setButtonClicked: setButtonClicked
+        setButtonClicked: setButtonClicked,
     };
 
     return (
         <div>
-            <ShopHeader setRecipeType={setRecipeType}/>
+            <ShopHeader setRecipeType={setRecipeType} />
             <div className={classes.shop}>
                 <div>
                     <ShopSidebar {...sidebarProps} />
