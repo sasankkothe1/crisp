@@ -2,7 +2,7 @@ import axios from "axios";
 
 export default class UserService {
     static baseURL() {
-        return "/api/auth";
+        return `${process.env.REACT_APP_BACKEND_URL}/auth`;
     }
 
     static extractUser(token) {
@@ -10,11 +10,9 @@ export default class UserService {
         let base64 = base64Url.replace("-", "+").replace("_", "/");
         let userJson = JSON.parse(window.atob(base64));
         return {
-            user: {
-                _id: userJson._id,
-                username: userJson.username,
-                role: userJson.role,
-            },
+            _id: userJson._id,
+            username: userJson.username,
+            role: userJson.role,
         };
     }
 
