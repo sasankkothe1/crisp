@@ -10,12 +10,12 @@ import ReactPlayer from "react-player";
 import "./PostTile.css";
 
 export default function PostTile(props) {
-    const { data } = props;
+    const { data, onClick } = props;
 
     const { media } = data;
 
     return (
-        <div className="post-tile-container">
+        <div className="post-tile-container" onClick={onClick}>
             <div className="post-tile-header">
                 <div className="post-tile-header-left">
                     <PersonIcon fontSize="small" />

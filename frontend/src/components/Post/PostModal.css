@@ -1,0 +1,18 @@
+.post-modal-body {
+    display: flex;
+    flex-direction: row;
+}
+
+.post-modal-content-description {
+    max-height: 500px;
+    overflow-y: scroll;
+}
+
+.modal-dialog-centered {
+    min-height: 700px;
+}
+
+.post-modal-content-date {
+    font-size: x-small;
+    color: grey;
+}

@@ -1,6 +1,11 @@
 const mongoose = require("mongoose");
 
 const EventSchema = new mongoose.Schema({
+    typeOfPost: {
+        type: String,
+        required: true,
+        default: "event",
+    },
     postedBy: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",

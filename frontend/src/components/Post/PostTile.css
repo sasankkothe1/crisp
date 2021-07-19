@@ -3,6 +3,12 @@
     flex-direction: column;
     width: 25vw;
     margin: 1em;
+    transition: transform 0.2s;
+}
+
+.post-tile-container:hover {
+    cursor: pointer;
+    transform: scale(1.05);
 }
 
 .post-tile-header {

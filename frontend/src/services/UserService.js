@@ -2,7 +2,8 @@ import axios from "axios";
 
 export default class UserService {
     static baseURL() {
-        return "/api/auth";
+        // return "/api/auth";
+        return `${process.env.REACT_APP_BACKEND_URL}/auth`;
     }
 
     static extractUser(token) {
