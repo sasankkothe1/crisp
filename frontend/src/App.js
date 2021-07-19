@@ -10,6 +10,7 @@ import RegisterView from "./views/RegisterView";
 import PostView from "./views/Post/PostView";
 import reducers from "./redux/reducers";
 import HomeView from "./views/HomeView";
+import ShopView from "./views/ShopView";
 
 import "./App.css";
 
@@ -49,6 +50,9 @@ function App() {
                             </Route>
                             <Route exact path="/addPost">
                                 <PostView />
+                            </Route>
+                            <Route exact path="/shop">
+                                <ShopView />
                             </Route>
                             <Route
                                 render={() => (
