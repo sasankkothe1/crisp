@@ -1,6 +1,11 @@
 const mongoose = require("mongoose");
 
 const RecipeSchema = new mongoose.Schema({
+    typeOfPost: {
+        type: String,
+        required: true,
+        default: "recipe",
+    },
     postedBy: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
