@@ -13,6 +13,8 @@ import Button from "@material-ui/core/Button";
 
 const useStyles = makeStyles(() => ({
 	sidebar: {
+		width: "30%",
+		flexGrow: 1
 	},
 	header: {
 		fontSize: "small"
@@ -20,26 +22,40 @@ const useStyles = makeStyles(() => ({
 }));
 
 
-export default function ShopSidebar() {
+export default function ShopSidebar(props) {
 	const classes = useStyles();
 
-    const [minValue, setMinValue] = useState(0);
-    const [maxValue, setMaxValue] = useState(999999999);
-
-	const [meal, setMeal] = React.useState("");
-
 	const applyFilters = () => {
-		alert(`minValue = ${minValue}, maxValue = ${maxValue}, meal = ${meal}`);
+		props.setButtonClicked(!props.buttonClicked);	
 	};
 
 	const handleMealClick = (event) => {
 		console.log(event.target.value);
-		if (event.target.value == meal) {
-			setMeal("");
+		if (event.target.value == props.meal) {
+			props.setMeal("");
 		} else {
-			setMeal(event.target.value);
+			props.setMeal(event.target.value);
 		}
 	};
+
+	const mealFilter = [
+		{
+			'value': 'breakfast',
+			'caption': 'Breakfast'
+		},
+		{
+			'value': 'dinner',
+			'caption': 'Dinner'
+		},
+		{
+			'value': 'lunch',
+			'caption': 'Lunch',
+		},
+		{
+			'value': 'snacks',
+			'caption': 'Snacks'
+		}
+	];
 
     return (
         <div className={classes.sidebar}>
@@ -49,25 +65,34 @@ export default function ShopSidebar() {
 					type="number"
 					name="min"
 					placeholder="From"
-					onBlur={(event) =>
-						setMinValue(parseInt(event.target.value) || 0)
-					}
+					onBlur={(event) => {
+						let price = parseFloat(event.target.value);
+						if (!price || price < 0) {
+							price = 0;
+						}
+						props.setMinPrice(price);
+					}}
 				/>
 				<span> ... </span>
 				<Input
 					type="number"
 					name="min"
 					placeholder="To"
-					onBlur={(event) =>
-						setMaxValue(parseInt(event.target.value) || 999999999)
-					}
+					onBlur={(event) => {
+						let price = parseFloat(event.target.value);
+						if (!price || price < 0) {
+							price = 0;
+						}
+						props.setMaxPrice(price);
+					}}
 				/>
 			</div>
 			<h5 className={classes.header}>Meal</h5>
 			<FormControl component="fieldset">
-				<RadioGroup value={meal}>
-					<FormControlLabel value="breakfast" control={<Radio onClick={handleMealClick}/>} label="Breakfast" />
-					<FormControlLabel value="dinner" control={<Radio onClick={handleMealClick}/>} label="Dinner" />
+				<RadioGroup value={props.meal}>
+					{mealFilter.map((filter, i) => (
+						<FormControlLabel key={i} value={filter['value']} control={<Radio onClick={handleMealClick}/>} label={filter['caption']} />
+					))}
 				</RadioGroup>
 			</FormControl>
 			<Button variant="contained" color="primary" onClick={applyFilters}>

@@ -1,78 +1,66 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 
 import { Toolbar, makeStyles, IconButton, Grid } from "@material-ui/core";
-
-//import LocalPizzaIcon from '@material-ui/icons/LocalPizza';
-//import FastfoodIcon from '@material-ui/icons/Fastfood';
-//import LocalBarIcon from '@material-ui/icons/LocalBar';
-//import LinkIcon from '@material-ui/icons/Link';
-
-//import * as MuiIcons from '@material-ui/icons';
 
 import Icon from '@material-ui/core/Icon';
 
 const useStyles = makeStyles((theme) => ({
     divContainer: {
-        width: 100
+        width: "100%",
+        flexGrow: 1
     },
     shopToolbar: {
+        width: "100%",
         flexGrow: 1,
-        justifyContent: "space-between",
+        justifyContent: "flex",
         backgroundColor: "#FFA500",
     },
     icon: {
         fontSize: theme.spacing(4),
+        fontFamily: "Material Icons!important"
     },
 }));
 
 
-const ShopHeader = () => {
+const ShopHeader = (props) => {
     const classes = useStyles();
-
-    const [type, setType] = useState("");
-
-    useEffect(() => {
-        if (type) {
-            alert(`${type}? Good choice!`);
-        }
-    }, [type]);
 
     const icons = [
         {
-            'icon': 'LocalPizzaIcon',
+            'icon': 'local_pizza_icon',
             'caption': 'Pizza',
             'type': 'pizza'
         },
         {
-            'icon': 'FastfoodIcon',
+            'icon': 'fastfood_icon',
             'caption': 'Fast Food',
             'type': 'fastfood'
         },
         {
-            'icon': 'LocalBarIcon',
-            'caption': 'Alcohol Drinks',
+            'icon': 'local_bar_icon',
+            'caption': 'Drinks',
             'type': 'drinks'
         },
         {
-            'icon': 'ChildFriendly',
+            'icon': 'child_friendly',
             'caption': 'Children',
             'type': 'children'
         },
         {
-            'icon': 'EmojiFoodBeverage',
-            'caption': 'Alcohol-Free Drinks',
+            'icon': 'emoji_food_beverage',
+            'caption': 'AF Drinks',
             'type': 'nadrinks'
         }
     ];
 
     return (
-        <div>
+        <div className={classes.divContainer}>
             <Toolbar className={classes.shopToolBar}>
                 {icons.map((icon, i) =>( 
                     <Grid key={i} container direction="column" alignItems="center">
                         <Grid item>
-                            <IconButton>
-                                <Icon onClick={() => setType(icon['type'])} className={classes.icon}>{icon['icon']}</Icon>
+                            <IconButton onClick={() => props.setRecipeType(icon['type'])} >
+                                <Icon className={classes.icon}>{icon['icon']}</Icon>
                             </IconButton>
                         </Grid>
                         <Grid item>
