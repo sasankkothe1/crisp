@@ -12,40 +12,60 @@ services:
 
 variables:
   DOCKER_TLS_CERTDIR: "/certs"
-  IMAGE_TAG: $CI_REGISTRY_IMAGE/$CI_COMMIT_REF_SLUG/backend:$CI_COMMIT_SHA
+  BACKEND_IMAGE_TAG: $CI_REGISTRY_IMAGE/$CI_COMMIT_REF_SLUG/backend:$CI_COMMIT_SHA
+  FRONTEND_IMAGE_TAG: $CI_REGISTRY_IMAGE/$CI_COMMIT_REF_SLUG/frontend:$CI_COMMIT_SHA
 
 before_script:
   - cp $CD_DOCKER_COMPOSE_ENV .env
   - echo "CI_REGISTRY_IMAGE=$CI_REGISTRY_IMAGE" >> .env
   - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
 
-build:
+build_backend:
   stage: build
   script:
-    - docker build -t $IMAGE_TAG ./backend
-    - docker push $IMAGE_TAG
+    - docker build -t $BACKEND_IMAGE_TAG ./backend
+    - docker push $BACKEND_IMAGE_TAG
 
-check_format:
+build_frontend:
+  stage: build
+  script:
+    - docker build -t $FRONTEND_IMAGE_TAG ./frontend
+    - docker push $FRONTEND_IMAGE_TAG
+
+check_format_backend:
   stage: rules
   script:
-    - docker pull $IMAGE_TAG
-    - docker run --entrypoint '/bin/sh' $IMAGE_TAG -c 'npm run check_format'
+    - docker pull $BACKEND_IMAGE_TAG
+    - docker run --entrypoint '/bin/sh' $BACKEND_IMAGE_TAG -c 'npm run check_format'
   allow_failure: true
 
-lint:
+check_format_frontend:
   stage: rules
   script:
-    - docker pull $IMAGE_TAG
-    - docker run --entrypoint '/bin/sh' $IMAGE_TAG -c 'npm run lint'
+    - docker pull $FRONTEND_IMAGE_TAG
+    - docker run --entrypoint '/bin/sh' $FRONTEND_IMAGE_TAG -c 'npm run check_format'
+  allow_failure: true
+
+lint_backend:
+  stage: rules
+  script:
+    - docker pull $BACKEND_IMAGE_TAG
+    - docker run --entrypoint '/bin/sh' $BACKEND_IMAGE_TAG -c 'npm run lint'
+
+lint_frontend:
+  stage: rules
+  script:
+    - docker pull $FRONTEND_IMAGE_TAG
+    - docker run --entrypoint '/bin/sh' $FRONTEND_IMAGE_TAG -c 'npm run lint'
   
-launch:
+launch_backend:
   stage: launch
   variables:
     APP_NAME: crisp
     PORT: 4000
   script:
-    - docker pull $IMAGE_TAG
-    - docker run -d -e MONGODB_URI=$CI_MONGODB_URI -e PORT=$PORT -p $PORT:$PORT --name $APP_NAME $IMAGE_TAG
+    - docker pull $BACKEND_IMAGE_TAG
+    - docker run -d -e MONGODB_URI=$CI_MONGODB_URI -e PORT=$PORT -p $PORT:$PORT --name $APP_NAME $BACKEND_IMAGE_TAG
     - sleep 60
     - STATUS=$(docker inspect -f {{.State.Status}} $APP_NAME)
     - if [[ "$STATUS" == "exited" ]]; then docker logs $APP_NAME && exit 1; else echo "Successful launch"; fi
