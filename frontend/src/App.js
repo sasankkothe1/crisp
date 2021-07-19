@@ -10,6 +10,7 @@ import RegisterView from "./views/RegisterView";
 import PostView from "./views/Post/PostView";
 import reducers from "./redux/reducers";
 import HomeView from "./views/HomeView";
+import ProfileView from "./views/ProfileView";
 
 import "./App.css";
 
@@ -23,11 +24,11 @@ const useStyles = makeStyles((theme) => ({
     contentContainer: {},
 }));
 
+// create store for redux
+export const store = createStore(reducers, applyMiddleware(thunkMiddleware));
+
 function App() {
     const classes = useStyles();
-
-    // create store for redux
-    const store = createStore(reducers, applyMiddleware(thunkMiddleware));
 
     return (
         <BrowserRouter>
@@ -46,6 +47,9 @@ function App() {
                             </Route>
                             <Route exact path="/register">
                                 <RegisterView />
+                            </Route>
+                            <Route exact path="/profile">
+                                <ProfileView />
                             </Route>
                             <Route exact path="/addPost">
                                 <PostView />

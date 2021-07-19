@@ -23,6 +23,8 @@ import SearchIcon from "@material-ui/icons/Search";
 import Logo from "../../assets/logo.png";
 import { logout } from "../../redux/actions";
 
+import { isLoggedIn } from "../../services/utils";
+
 const useStyles = makeStyles((theme) => ({
     header: {
         flexGrow: 1,
@@ -201,7 +203,7 @@ const Header = ({ history, dispatch }) => {
                                         <ClickAwayListener
                                             onClickAway={handleClose}
                                         >
-                                            {window.localStorage["jwtToken"] ? (
+                                            {isLoggedIn() ? (
                                                 <MenuList
                                                     autoFocusItem={openAuth}
                                                     id="menu-list-auth"
