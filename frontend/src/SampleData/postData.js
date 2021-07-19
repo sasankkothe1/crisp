@@ -305,9 +305,16 @@ export const recipeData = [
         ingredientsList: [
             { ingredientName: "rice", ingredientQuantity: "1 cups" },
             { ingredientName: "water", ingredientQuantity: "2 cups" },
-            { ingredientName: "salt", ingredientQuantity: "2 tbsp" }
+            { ingredientName: "salt", ingredientQuantity: "2 tbsp" },
         ],
-        instructions: ['Take a bowl', 'Wash the rice and place it in the bowl', 'For one measure of rice, pour 2 measures of water', 'Add salt accoring to taste', 'let it boil for 15 mins', 'Enjoy the tasty salt rice with some curd'],
+        instructions: [
+            "Take a bowl",
+            "Wash the rice and place it in the bowl",
+            "For one measure of rice, pour 2 measures of water",
+            "Add salt accoring to taste",
+            "let it boil for 15 mins",
+            "Enjoy the tasty salt rice with some curd",
+        ],
         cuisine: "Asian",
     },
     {
@@ -333,9 +340,16 @@ export const recipeData = [
         ingredientsList: [
             { ingredientName: "rice", ingredientQuantity: "1 cups" },
             { ingredientName: "water", ingredientQuantity: "2 cups" },
-            { ingredientName: "salt", ingredientQuantity: "2 tbsp" }
+            { ingredientName: "salt", ingredientQuantity: "2 tbsp" },
         ],
-        instructions: ['Take a bowl', 'Wash the rice and place it in the bowl', 'For one measure of rice, pour 2 measures of water', 'Add salt accoring to taste', 'let it boil for 15 mins', 'Enjoy the tasty salt rice with some curd'],
+        instructions: [
+            "Take a bowl",
+            "Wash the rice and place it in the bowl",
+            "For one measure of rice, pour 2 measures of water",
+            "Add salt accoring to taste",
+            "let it boil for 15 mins",
+            "Enjoy the tasty salt rice with some curd",
+        ],
         cuisine: "Asian",
     },
     {
@@ -369,9 +383,16 @@ export const recipeData = [
         ingredientsList: [
             { ingredientName: "rice", ingredientQuantity: "1 cups" },
             { ingredientName: "water", ingredientQuantity: "2 cups" },
-            { ingredientName: "salt", ingredientQuantity: "2 tbsp" }
+            { ingredientName: "salt", ingredientQuantity: "2 tbsp" },
         ],
-        instructions: ['Take a bowl', 'Wash the rice and place it in the bowl', 'For one measure of rice, pour 2 measures of water', 'Add salt accoring to taste', 'let it boil for 15 mins', 'Enjoy the tasty salt rice with some curd'],
+        instructions: [
+            "Take a bowl",
+            "Wash the rice and place it in the bowl",
+            "For one measure of rice, pour 2 measures of water",
+            "Add salt accoring to taste",
+            "let it boil for 15 mins",
+            "Enjoy the tasty salt rice with some curd",
+        ],
         cuisine: "Asian",
     },
     {
@@ -397,9 +418,16 @@ export const recipeData = [
         ingredientsList: [
             { ingredientName: "rice", ingredientQuantity: "1 cups" },
             { ingredientName: "water", ingredientQuantity: "2 cups" },
-            { ingredientName: "salt", ingredientQuantity: "2 tbsp" }
+            { ingredientName: "salt", ingredientQuantity: "2 tbsp" },
         ],
-        instructions: ['Take a bowl', 'Wash the rice and place it in the bowl', 'For one measure of rice, pour 2 measures of water', 'Add salt accoring to taste', 'let it boil for 15 mins', 'Enjoy the tasty salt rice with some curd'],
+        instructions: [
+            "Take a bowl",
+            "Wash the rice and place it in the bowl",
+            "For one measure of rice, pour 2 measures of water",
+            "Add salt accoring to taste",
+            "let it boil for 15 mins",
+            "Enjoy the tasty salt rice with some curd",
+        ],
         cuisine: "Asian",
     },
     {
@@ -437,9 +465,16 @@ export const recipeData = [
         ingredientsList: [
             { ingredientName: "rice", ingredientQuantity: "1 cups" },
             { ingredientName: "water", ingredientQuantity: "2 cups" },
-            { ingredientName: "salt", ingredientQuantity: "2 tbsp" }
+            { ingredientName: "salt", ingredientQuantity: "2 tbsp" },
         ],
-        instructions: ['Take a bowl', 'Wash the rice and place it in the bowl', 'For one measure of rice, pour 2 measures of water', 'Add salt accoring to taste', 'let it boil for 15 mins', 'Enjoy the tasty salt rice with some curd'],
+        instructions: [
+            "Take a bowl",
+            "Wash the rice and place it in the bowl",
+            "For one measure of rice, pour 2 measures of water",
+            "Add salt accoring to taste",
+            "let it boil for 15 mins",
+            "Enjoy the tasty salt rice with some curd",
+        ],
         cuisine: "Asian",
     },
 ];
