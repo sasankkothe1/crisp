@@ -160,7 +160,11 @@ const Header = ({ history, dispatch }) => {
                                                 <MenuItem onClick={handleClose}>
                                                     Add Recipe
                                                 </MenuItem>
-                                                <MenuItem onClick={handleClose}>
+                                                <MenuItem
+                                                    onClick={() =>
+                                                        redirect("/addEvent")
+                                                    }
+                                                >
                                                     Add Event
                                                 </MenuItem>
                                             </MenuList>

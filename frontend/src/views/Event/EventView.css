@@ -1,0 +1,93 @@
+.post-form-container {
+    width: 1000px;
+}
+
+.image-preview-container {
+    height: 100%;
+}
+
+.button-in-media-container {
+    position: sticky;
+}
+
+.event-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    height: 250px;
+}
+
+.event-details-container {
+    display: flex;
+    border: solid;
+    flex-direction: column;
+    border-width: 0.5px;
+    border-color: rgba(0, 0, 0, 0.23);
+    width: 100%;
+    border-radius: 5px;
+    margin-left: 8px;
+}
+
+.event-details-container > label {
+    position: relative;
+    font-size: xx-small;
+    top: -7px;
+    left: 20px;
+    width: 62px;
+    background-color: white;
+}
+
+.event-date-container {
+    margin-left: 0.4em;
+    margin-right: 0.4em;
+}
+
+.event-date {
+    width: 100%;
+}
+
+.event-location {
+    width: 100%;
+    display: flex;
+}
+
+.upload-preview-container {
+    width: 100%;
+    overflow-y: scroll;
+    border: solid;
+    border-width: 0.5px;
+    border-color: rgba(0, 0, 0, 0.23);
+    border-radius: 5px;
+    margin-left: 1em;
+}
+
+.preview {
+    width: 100%;
+    height: 80%;
+    object-fit: contain;
+}
+
+.remove-image-button {
+    display: flex;
+    justify-content: center;
+}
+
+.premium-dropdown {
+    margin: 8px;
+    margin-top: 1em;
+}
+
+.submit-button-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.no-media {
+    position: relative;
+    top: 40%;
+    left: 35%;
+}
+.submit-button {
+    background: #e8a72e;
+}
