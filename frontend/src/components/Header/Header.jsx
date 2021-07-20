@@ -157,7 +157,11 @@ const Header = ({ history, dispatch }) => {
                                                 >
                                                     Add Post
                                                 </MenuItem>
-                                                <MenuItem onClick={handleClose}>
+                                                <MenuItem
+                                                    onClick={() =>
+                                                        redirect("/addRecipe")
+                                                    }
+                                                >
                                                     Add Recipe
                                                 </MenuItem>
                                                 <MenuItem

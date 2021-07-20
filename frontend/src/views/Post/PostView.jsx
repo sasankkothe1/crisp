@@ -60,6 +60,7 @@ export default function PostView() {
                 onSubmit={handleSubmit(addPost)}
             >
                 <TextField
+                    key={"post-title"}
                     {...register("title")}
                     id="outlined-full-width"
                     label="Title"
@@ -74,6 +75,7 @@ export default function PostView() {
                 />
 
                 <TextField
+                    key={"post-description"}
                     {...register("description")}
                     multiline
                     rows={4}

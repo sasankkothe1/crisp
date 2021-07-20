@@ -6,7 +6,7 @@ import MomentUtils from "@date-io/moment";
 import {
     MuiPickersUtilsProvider,
     DatePicker,
-    KeyboardTimePicker,
+    TimePicker,
 } from "@material-ui/pickers";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import DeleteIcon from "@material-ui/icons/Delete";
@@ -61,6 +61,22 @@ export default function AddEventView() {
         console.log(eventDate.toISOString());
         console.log(startTime.toISOString());
         console.log(endTime.toISOString());
+        const formData = new FormData();
+        formData.append("title", data.title);
+        formData.append("description", data.description);
+        if (data.contentType === "Premium")
+            formData.append("premiumStatus", true);
+        else formData.append("premiumStatus", false);
+        if (uploadedImages.length > 0) {
+            for (var i = 0; i < uploadedImages.length; i++) {
+                formData.append("media", uploadedImages[i]["file"]);
+            }
+        }
+        formData.append("eventLocation", data.eventLocation);
+
+        for (var pair of formData.entries()) {
+            console.log(pair[0] + ", " + pair[1]);
+        }
     };
 
     const Input = styled("input")({
@@ -73,6 +89,7 @@ export default function AddEventView() {
                 onSubmit={handleSubmit(addPost)}
             >
                 <TextField
+                    key={"event-title"}
                     {...register("title")}
                     id="outlined-full-width"
                     label="Title"
@@ -87,6 +104,7 @@ export default function AddEventView() {
                 />
 
                 <TextField
+                    key={"event-description"}
                     {...register("description")}
                     multiline
                     rows={4}
@@ -137,7 +155,7 @@ export default function AddEventView() {
                         <div className="event-time-container">
                             <MuiPickersUtilsProvider utils={MomentUtils}>
                                 <Grid container justifyContent="space-around">
-                                    <KeyboardTimePicker
+                                    <TimePicker
                                         {...register("startTime")}
                                         margin="normal"
                                         id="time-picker"
@@ -148,7 +166,7 @@ export default function AddEventView() {
                                             "aria-label": "change time",
                                         }}
                                     />
-                                    <KeyboardTimePicker
+                                    <TimePicker
                                         {...register("endTime")}
                                         margin="normal"
                                         id="time-picker"

@@ -8,6 +8,7 @@ import Header from "./components/Header/Header";
 import UserLoginView from "./views/UserLoginView";
 import RegisterView from "./views/RegisterView";
 import PostView from "./views/Post/PostView";
+import AddRecipeView from "./views/Recipe/AddRecipeView";
 import AddEventView from "./views/Event/AddEventView";
 import reducers from "./redux/reducers";
 import HomeView from "./views/HomeView";
@@ -54,6 +55,9 @@ function App() {
                             </Route>
                             <Route exact path="/addPost">
                                 <PostView />
+                            </Route>
+                            <Route exact path="/addRecipe">
+                                <AddRecipeView />
                             </Route>
                             <Route exact path="/addEvent">
                                 <AddEventView />
