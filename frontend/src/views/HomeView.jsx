@@ -1,23 +1,37 @@
 import React from "react";
-import Banner from "../components/Banner/Banner";
+import { makeStyles } from "@material-ui/core";
 import PostsList from "../components/HomePage/PostsList";
 import SideBar from "../components/HomePage/SideBar";
 
 import { postData } from "../SampleData/postData";
 
-import "./HomeView.css";
+const useStyles = makeStyles((theme) => ({
+    homeViewContainer: {
+        display: "flex",
+        flexDirection: "row",
+        height: "100%",
+        marginTop: theme.spacing(-2),
+    },
+    homeViewPostList: {
+        flexGrow: 2,
+    },
+
+    homeViewSideBar: {
+        width: "30%",
+        flexGrow: 1,
+    },
+}));
 
 export default function HomeView() {
+    const classes = useStyles();
+
     return (
-        <div>
-            <Banner />
-            <div className="homeView-container">
-                <div className="homeView-postList">
-                    <PostsList data={postData} />
-                </div>
-                <div className="homeView-sideBar">
-                    <SideBar />
-                </div>
+        <div className={classes.homeViewContainer}>
+            <div className={classes.homeViewPostList}>
+                <PostsList data={postData} />
+            </div>
+            <div className={classes.homeViewSideBar}>
+                <SideBar />
             </div>
         </div>
     );
