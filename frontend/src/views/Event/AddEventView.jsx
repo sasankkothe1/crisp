@@ -1,21 +1,31 @@
 import React, { useState } from "react";
 
 import { useForm } from "react-hook-form";
-
-import "./PostView.css";
-
-import { Button, styled, TextField, IconButton } from "@material-ui/core";
+import { Button, styled, TextField, IconButton, Grid } from "@material-ui/core";
+import MomentUtils from "@date-io/moment";
+import {
+    MuiPickersUtilsProvider,
+    DatePicker,
+    KeyboardTimePicker,
+} from "@material-ui/pickers";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import DeleteIcon from "@material-ui/icons/Delete";
 import { Form } from "react-bootstrap";
 
-//TODO: complete the post and copy paste it to the event and recipe
+import "./EventView.css";
 
-export default function PostView() {
+export default function AddEventView() {
     const { handleSubmit, register } = useForm();
 
     const [charactersLeft, setCharactersLeft] = useState(500);
     const [uploadedImages, setUploadedImages] = useState([]);
+    const [eventDate, setEventDate] = useState(null);
+    const [startTime, setStartTime] = useState(null);
+    const [endTime, setEndTime] = useState(null);
+
+    const handleEventDate = (date) => setEventDate(date);
+    const handleStartTime = (date) => setStartTime(date);
+    const handleEndTime = (date) => setEndTime(date);
 
     const handleFileOnChange = (e) => {
         e.preventDefault();
@@ -44,10 +54,13 @@ export default function PostView() {
     };
 
     const addPost = (data) => {
-        //FIXME add the date and uploadImages to the form data
+        //FIXME add data, uploadedImages, eventDate and startTime and endTime to the formdata
         //TODO Implement FormData
         console.log(data);
         console.log(uploadedImages);
+        console.log(eventDate.toISOString());
+        console.log(startTime.toISOString());
+        console.log(endTime.toISOString());
     };
 
     const Input = styled("input")({
@@ -99,25 +112,90 @@ export default function PostView() {
                     }}
                 />
 
-                <div className="upload-container">
-                    <div className="upload-button-container">
-                        <label htmlFor="contained-button-file">
-                            <Input
-                                id="contained-button-file"
-                                multiple
-                                type="file"
-                                onChange={handleFileOnChange}
+                <div className="event-container">
+                    <div className="event-details-container">
+                        <label>Event Details</label>
+                        <div className="event-date-container">
+                            <MuiPickersUtilsProvider utils={MomentUtils}>
+                                <DatePicker
+                                    {...register("startDate")}
+                                    className="event-date"
+                                    variant="inline"
+                                    format="DD/MM/YYYY"
+                                    margin="normal"
+                                    id="date-picker-inline"
+                                    label="Event is on"
+                                    value={eventDate}
+                                    onChange={handleEventDate}
+                                    emptyLabel="Event Date"
+                                    KeyboardButtonProps={{
+                                        "aria-label": "change date",
+                                    }}
+                                />
+                            </MuiPickersUtilsProvider>
+                        </div>
+                        <div className="event-time-container">
+                            <MuiPickersUtilsProvider utils={MomentUtils}>
+                                <Grid container justifyContent="space-around">
+                                    <KeyboardTimePicker
+                                        {...register("startTime")}
+                                        margin="normal"
+                                        id="time-picker"
+                                        label="From"
+                                        value={startTime}
+                                        onChange={handleStartTime}
+                                        KeyboardButtonProps={{
+                                            "aria-label": "change time",
+                                        }}
+                                    />
+                                    <KeyboardTimePicker
+                                        {...register("endTime")}
+                                        margin="normal"
+                                        id="time-picker"
+                                        label="To"
+                                        value={endTime}
+                                        onChange={handleEndTime}
+                                        KeyboardButtonProps={{
+                                            "aria-label": "change time",
+                                        }}
+                                    />
+                                </Grid>
+                            </MuiPickersUtilsProvider>
+                        </div>
+                        <div className="event-location">
+                            <TextField
+                                {...register("eventLocation")}
+                                id="outlined-full-width"
+                                label="location"
+                                style={{ margin: 8 }}
+                                placeholder="Enter the location (please provide the online link)"
+                                fullWidth
+                                margin="normal"
+                                InputLabelProps={{
+                                    shrink: true,
+                                }}
+                                variant="outlined"
                             />
-                            <Button
-                                variant="contained"
-                                component="span"
-                                startIcon={<CloudUploadIcon />}
-                            >
-                                Upload
-                            </Button>
-                        </label>
+                        </div>
                     </div>
                     <div className="upload-preview-container">
+                        <div className="button-in-media-container">
+                            <label htmlFor="contained-button-file">
+                                <Input
+                                    id="contained-button-file"
+                                    multiple
+                                    type="file"
+                                    onChange={handleFileOnChange}
+                                />
+                                <Button
+                                    variant="contained"
+                                    component="span"
+                                    startIcon={<CloudUploadIcon />}
+                                >
+                                    Upload
+                                </Button>
+                            </label>
+                        </div>
                         {uploadedImages.length ? (
                             uploadedImages.map((item) => (
                                 <div
