@@ -24,7 +24,7 @@ export default function user(state = getUser(), action) {
         case "LOGIN_SUCCESS":
             return { ...action.user };
         case "LOGIN_FAILURE":
-            return { error: "Password or username incorrect." };
+            return { error: "Incorrect Credentials" };
         case "LOGIN_RESET":
             return {};
         case "LOGOUT":

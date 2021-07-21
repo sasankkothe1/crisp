@@ -2,8 +2,7 @@ import axios from "axios";
 
 export default class UserService {
     static baseURL() {
-        // return "/api/auth";
-        return `${process.env.REACT_APP_BACKEND_URL}/auth`;
+        return `${process.env.REACT_APP_BACKEND_URL}`;
     }
 
     static extractUser(token) {
@@ -17,9 +16,11 @@ export default class UserService {
         };
     }
 
+    // Authentication Queries
+
     static async register(firstName, lastName, username, email, password) {
         try {
-            const res = await axios.post(`${UserService.baseURL()}/register`, {
+            const res = await axios.post(`${UserService.baseURL()}/auth/register`, {
                 firstName: firstName,
                 lastName: lastName,
                 username: username,
@@ -40,7 +41,7 @@ export default class UserService {
 
     static async login(user, pass) {
         try {
-            const res = await axios.post(`${UserService.baseURL()}/login`, {
+            const res = await axios.post(`${UserService.baseURL()}/auth/login`, {
                 username: user,
                 password: pass,
             });
@@ -58,5 +59,17 @@ export default class UserService {
 
     static logout() {
         window.localStorage.removeItem("jwtToken");
+    }
+
+    // Profile Queries
+
+    static async getUserDetails(userID) {
+        try {
+            const res = await axios.get(`${UserService.baseURL()}/users/getUserDetails/${userID}`);
+
+            return res.data;
+        } catch (error) {
+            return error;
+        }
     }
 }

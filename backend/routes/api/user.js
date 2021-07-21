@@ -1,9 +1,15 @@
 const express = require("express");
 const router = express.Router();
 
+const {
+    getUserDetails
+} = require("../../controllers/user");
+
 const User = require("../../model/User");
 
-router.get("/", (req, res) => {
+router.get("/getUserDetails/:id", getUserDetails)
+
+/* router.get("/", (req, res) => {
     User.find()
         .then((users) => res.json(users))
         .catch((err) => res.status(404).send({ message: err.message }));
@@ -24,6 +30,6 @@ router.put("/:id", (req, res) => {
             }
         }
     );
-});
+}); */
 
 module.exports = router;

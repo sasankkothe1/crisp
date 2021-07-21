@@ -50,17 +50,26 @@ function UserLoginView({ history, dispatch }) {
         if (user._id) {
             history.push("/");
         }
-    }, [user, history]);
+    }, []);
+
+    useEffect(() => {
+        console.log(user);
+
+        if (user?._id) {
+            history.push("/");
+        } else if (user?.error) {
+            setLoginError(user.error);
+        }
+    }, [user]);
 
     const [username, setUsername] = React.useState("");
     const [password, setPassword] = React.useState("");
 
     const [loginError, setLoginError] = React.useState("");
 
-    const onLogin = (e) => {
+    const onLogin = async (e) => {
         e.preventDefault();
         dispatch(login(username, password));
-        history.push("/");
     };
 
     const onChangeUsername = (e) => {
@@ -120,7 +129,7 @@ function UserLoginView({ history, dispatch }) {
                         <Button
                             className={classes.loginButton}
                             variant="contained"
-                            color="primary"
+                            color="secondary"
                             onClick={onLogin}
                             disabled={username === "" || password === ""}
                             type="submit"
