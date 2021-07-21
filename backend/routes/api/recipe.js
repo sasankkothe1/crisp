@@ -20,7 +20,7 @@ const mimetypes = [
 const upload = require("../../middleware/upload")(mimetypes);
 
 router.post(
-    "/",
+    "/addRecipe",
     isAuthenticated,
     upload.array("media"),
     RecipeController.create

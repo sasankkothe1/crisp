@@ -12,7 +12,21 @@ const create = async (req, res) => {
             error: "Bad Request",
             message: "The request body is empty",
         });
-
+    if (req.body.title === "undefined")
+        return res.status(400).json({
+            error: "Bad Request",
+            message: "The title is empty",
+        });
+    if (req.body.description === "undefined")
+        return res.status(400).json({
+            error: "Bad Request",
+            message: "The description is empty",
+        });
+    if (req.body.premiumStatus === undefined)
+        return res.status(400).json({
+            error: "Bad Request",
+            message: "The premium status is empty",
+        });
     let url = req.protocol + "://" + req.get("host") + "/";
     let mediaFiles = [];
 

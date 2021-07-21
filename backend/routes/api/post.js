@@ -55,7 +55,7 @@ const upload = multer({
 });
 
 router.post(
-    "/",
+    "/addPost",
     middleware.isAuthenticated,
     upload.array("media"),
     PostController.create
