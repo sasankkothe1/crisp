@@ -20,13 +20,16 @@ export default class UserService {
 
     static async register(firstName, lastName, username, email, password) {
         try {
-            const res = await axios.post(`${UserService.baseURL()}/auth/register`, {
-                firstName: firstName,
-                lastName: lastName,
-                username: username,
-                email: email,
-                password: password,
-            });
+            const res = await axios.post(
+                `${UserService.baseURL()}/auth/register`,
+                {
+                    firstName: firstName,
+                    lastName: lastName,
+                    username: username,
+                    email: email,
+                    password: password,
+                }
+            );
 
             if ("token" in res.data) {
                 window.localStorage["jwtToken"] = res.data.token;
@@ -41,10 +44,13 @@ export default class UserService {
 
     static async login(user, pass) {
         try {
-            const res = await axios.post(`${UserService.baseURL()}/auth/login`, {
-                username: user,
-                password: pass,
-            });
+            const res = await axios.post(
+                `${UserService.baseURL()}/auth/login`,
+                {
+                    username: user,
+                    password: pass,
+                }
+            );
 
             if ("token" in res.data) {
                 window.localStorage["jwtToken"] = res.data.token;
@@ -65,7 +71,9 @@ export default class UserService {
 
     static async getUserDetails(userID) {
         try {
-            const res = await axios.get(`${UserService.baseURL()}/users/getUserDetails/${userID}`);
+            const res = await axios.get(
+                `${UserService.baseURL()}/users/getUserDetails/${userID}`
+            );
 
             return res.data;
         } catch (error) {

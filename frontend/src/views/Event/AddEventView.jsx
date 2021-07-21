@@ -13,15 +13,16 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import { Form } from "react-bootstrap";
 
 import "./EventView.css";
+import moment from "moment";
 
 export default function AddEventView() {
     const { handleSubmit, register } = useForm();
 
     const [charactersLeft, setCharactersLeft] = useState(500);
     const [uploadedImages, setUploadedImages] = useState([]);
-    const [eventDate, setEventDate] = useState(null);
-    const [startTime, setStartTime] = useState(null);
-    const [endTime, setEndTime] = useState(null);
+    const [eventDate, setEventDate] = useState(new moment());
+    const [startTime, setStartTime] = useState(new moment());
+    const [endTime, setEndTime] = useState(new moment());
 
     const handleEventDate = (date) => setEventDate(date);
     const handleStartTime = (date) => setStartTime(date);
@@ -54,13 +55,14 @@ export default function AddEventView() {
     };
 
     const addPost = (data) => {
-        //FIXME add data, uploadedImages, eventDate and startTime and endTime to the formdata
-        //TODO Implement FormData
-        console.log(data);
-        console.log(uploadedImages);
-        console.log(eventDate.toISOString());
-        console.log(startTime.toISOString());
-        console.log(endTime.toISOString());
+        // convert the date of the startTime to the event Date (as the startTime and end time contain today's day)
+        startTime.date(eventDate.date());
+        startTime.month(eventDate.month());
+        startTime.year(eventDate.year());
+        // convert the date of the endTime to the event Date (as the startTime and end time contain today's day)
+        endTime.date(eventDate.date());
+        endTime.month(eventDate.month());
+        endTime.year(eventDate.year());
         const formData = new FormData();
         formData.append("title", data.title);
         formData.append("description", data.description);
@@ -73,7 +75,9 @@ export default function AddEventView() {
             }
         }
         formData.append("eventLocation", data.eventLocation);
-
+        formData.append("eventDate", eventDate.toISOString());
+        formData.append("startTime", startTime.toISOString());
+        formData.append("endTime", endTime.toISOString());
         for (var pair of formData.entries()) {
             console.log(pair[0] + ", " + pair[1]);
         }
