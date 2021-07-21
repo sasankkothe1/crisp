@@ -8,6 +8,8 @@ import ShopItemsList from "../components/Shop/ShopItemsList";
 
 import { recipeCollectionsData } from "../SampleData/recipeCollectionsData";
 
+import recipeCollectionService from "../services/RecipeCollectionService";
+
 const useStyles = makeStyles(() => ({
     shop: {
         display: "flex",
@@ -28,11 +30,14 @@ export default function ShopView() {
 
     const [meal, setMeal] = useState("");
 
-    const [rcd, setRCD] = useState(recipeCollectionsData);
+    const [rcd, setRCD] = useState([]);
 
-    useEffect(() => {
+    useEffect(async () => {
         console.log(recipeType, meal, minPrice, maxPrice);
-        setRCD(
+        const res = await recipeCollectionService.getRecipeCollections(recipeType, meal, minPrice, maxPrice);
+        setRCD(res.data);
+
+        /*
             recipeCollectionsData.filter((recipeCollection) => {
                 console.log(recipeCollection);
                 if (
@@ -53,6 +58,8 @@ export default function ShopView() {
                 return true;
             })
         );
+        */
+
     }, [recipeType, buttonClicked]);
 
     const sidebarProps = {

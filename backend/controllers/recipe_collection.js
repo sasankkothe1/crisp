@@ -3,6 +3,8 @@ const fs = require("fs");
 const path = require("path");
 
 const RecipeCollection = require("../model/RecipeCollection");
+const Order = require("../model/Order");
+
 
 const getRecipeCollections = (req, res) => {
     let collections = RecipeCollection.find();
@@ -20,7 +22,30 @@ const getRecipeCollections = (req, res) => {
     }
 
     collections
-        .then((recipeCollections) => res.json(recipeCollections))
+        .then((recipeCollections) => {
+            console.log(recipeCollections);
+            //recipeCollections = JSON.parse(JSON.stringify(recipeCollections));
+            if (req.user) {
+                Order.find({ 
+                    orderedBy: req.user._id, 
+                    type: "RecipeCollection"
+                }).then(orders => {
+                    let orderKeys = new Set();
+                    orders.forEach(order => orderKeys.add(order.recipeCollection.toString()));
+
+                    console.log(orderKeys);
+                    
+                    recipeCollections.forEach(recipeCollection => {
+                        console.log(recipeCollection._id);
+                        if (orderKeys.has(recipeCollection._id.toString())) {
+                            console.log(true);
+                        } else {
+                        }
+                    });
+                }).catch();
+            }
+            res.json(recipeCollections);
+        })
         .catch((err) => res.status(404).send({ message: err.message }));
 };
 
@@ -62,7 +87,28 @@ const getRecipeCollection = (req, res) => {
     }
 
     collection
-        .then((recipeCollection) => res.json(recipeCollection))
+        .then((recipeCollection) => {
+            recipeCollection = JSON.parse(JSON.stringify(recipeCollection));
+            if (req.user) {
+                Order.find({ 
+                    orderedBy: req.user._id, 
+                    type: "RecipeCollection"
+                }).then(orders => {
+                    let orderKeys = new Set();
+                    orders.forEach(order => orderKeys.add(order.recipeCollection.toString()));
+
+                    console.log(orderKeys);
+                    
+                    const purchased = orderKeys.has(recipeCollection['_id']);
+
+                    recipeCollection['purchased'] = purchased;
+
+                    console.log(recipeCollection);
+                }).catch();
+            }
+            console.log(recipeCollection);
+            res.send(recipeCollection);
+        })
         .catch((err) => res.status(404).send({ message: err.message }));
 };
 

@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const { isAuthenticated } = require("../../middleware/auth");
+const { isAuthenticated, authenticateIfPossible } = require("../../middleware/auth");
 
 const mimetypes = [
     "image/png",
@@ -21,7 +21,11 @@ const upload = require("../../middleware/upload")(mimetypes);
 const RecipeCollectionController = require("../../controllers/recipe_collection");
 
 // Get all collections
-router.get("/", RecipeCollectionController.getRecipeCollections);
+router.get(
+    "/", 
+    authenticateIfPossible,
+    RecipeCollectionController.getRecipeCollections
+);
 
 // Add new collection
 // Auth: User
@@ -38,7 +42,7 @@ router.post(
 // Auth: None
 router.get(
     "/:id",
-    isAuthenticated,
+    authenticateIfPossible,
     RecipeCollectionController.getRecipeCollection
 );
 
