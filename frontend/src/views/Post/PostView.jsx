@@ -9,8 +9,6 @@ import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import DeleteIcon from "@material-ui/icons/Delete";
 import { Form } from "react-bootstrap";
 
-//TODO: complete the post and copy paste it to the event and recipe
-
 export default function PostView() {
     const { handleSubmit, register } = useForm();
 
@@ -44,10 +42,21 @@ export default function PostView() {
     };
 
     const addPost = (data) => {
-        //FIXME add the date and uploadImages to the form data
-        //TODO Implement FormData
-        console.log(data);
-        console.log(uploadedImages);
+        const formData = new FormData();
+        formData.append("title", data.title);
+        formData.append("description", data.description);
+        if (data.contentType === "Premium")
+            formData.append("premiumStatus", true);
+        else formData.append("premiumStatus", false);
+        if (uploadedImages.length > 0) {
+            for (var i = 0; i < uploadedImages.length; i++) {
+                formData.append("media", uploadedImages[i]["file"]);
+            }
+        }
+
+        for (var pair of formData.entries()) {
+            console.log(pair[0] + ", " + pair[1]);
+        }
     };
 
     const Input = styled("input")({
