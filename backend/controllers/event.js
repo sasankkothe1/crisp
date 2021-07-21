@@ -12,7 +12,41 @@ const create = async (req, res) => {
             error: "Bad Request",
             message: "The request body is empty",
         });
-
+    if (req.body.title === "undefined")
+        return res.status(400).json({
+            error: "Bad Request",
+            message: "The title is empty",
+        });
+    if (req.body.description === "undefined")
+        return res.status(400).json({
+            error: "Bad Request",
+            message: "The description is empty",
+        });
+    if (req.body.eventDate === "undefined")
+        return res.status(400).json({
+            error: "Bad Request",
+            message: "The event date is empty",
+        });
+    if (req.body.startTime === "undefined")
+        return res.status(400).json({
+            error: "Bad Request",
+            message: "The start Time is empty",
+        });
+    if (req.body.endTime === "undefined")
+        return res.status(400).json({
+            error: "Bad Request",
+            message: "The end time is empty",
+        });
+    if (req.body.eventLocation === undefined)
+        return res.status(400).json({
+            error: "Bad Request",
+            message: "The event location is empty",
+        });
+    if (req.body.premiumStatus === undefined)
+        return res.status(400).json({
+            error: "Bad Request",
+            message: "The premium status is empty",
+        });
     let url = req.protocol + "://" + req.get("host") + "/";
     let mediaFiles = [];
 

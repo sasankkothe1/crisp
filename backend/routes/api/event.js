@@ -19,12 +19,11 @@ const mimetypes = [
 const upload = require("../../middleware/upload")(mimetypes);
 
 router.post(
-    "/",
+    "/addEvent",
     isAuthenticated,
     upload.array("media"),
     EventController.create
 );
-router.get("/test", EventController.test);
 router.get("/", EventController.listEvents);
 router.get("/new", EventController.listNewEvents);
 router.get(

@@ -8,6 +8,7 @@ import { Button, styled, TextField, IconButton } from "@material-ui/core";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import DeleteIcon from "@material-ui/icons/Delete";
 import { Form } from "react-bootstrap";
+import PostService from "../../services/PostService";
 
 export default function PostView() {
     const { handleSubmit, register } = useForm();
@@ -53,10 +54,9 @@ export default function PostView() {
                 formData.append("media", uploadedImages[i]["file"]);
             }
         }
-
-        for (var pair of formData.entries()) {
-            console.log(pair[0] + ", " + pair[1]);
-        }
+        PostService.addPost(formData).then((res) => {
+            console.log(res);
+        });
     };
 
     const Input = styled("input")({

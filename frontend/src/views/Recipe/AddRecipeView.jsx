@@ -7,6 +7,7 @@ import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import AddIcon from "@material-ui/icons/Add";
 import DeleteIcon from "@material-ui/icons/Delete";
 import { Form } from "react-bootstrap";
+import RecipeService from "../../services/RecipeService";
 
 import "./RecipeView.css";
 
@@ -103,17 +104,23 @@ export default function AddRecipeView() {
             formData.append("premiumStatus", true);
         else formData.append("premiumStatus", false);
         if (uploadedImages.length > 0) {
-            for (var i = 0; i < uploadedImages.length; i++) {
+            for (let i = 0; i < uploadedImages.length; i++) {
                 formData.append("media", uploadedImages[i]["file"]);
             }
         }
-        formData.append("ingredientsList", ingredientsList);
-        formData.append("instructions", instructionsList);
+
+        formData.append("ingredientsList", JSON.stringify(ingredientsList));
+        if (instructionsList.length > 0) {
+            for (let i = 0; i < instructionsList.length; i++) {
+                formData.append("instructions", instructionsList[i]);
+            }
+        }
+
         formData.append("cuisine", data.cuisine);
 
-        for (var pair of formData.entries()) {
-            console.log(pair[0] + ", " + pair[1]);
-        }
+        RecipeService.addRecipe(formData).then((res) => {
+            console.log(res);
+        });
     };
 
     const Input = styled("input")({

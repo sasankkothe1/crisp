@@ -14,6 +14,7 @@ import { Form } from "react-bootstrap";
 
 import "./EventView.css";
 import moment from "moment";
+import EventService from "../../services/EventService";
 
 export default function AddEventView() {
     const { handleSubmit, register } = useForm();
@@ -78,9 +79,9 @@ export default function AddEventView() {
         formData.append("eventDate", eventDate.toISOString());
         formData.append("startTime", startTime.toISOString());
         formData.append("endTime", endTime.toISOString());
-        for (var pair of formData.entries()) {
-            console.log(pair[0] + ", " + pair[1]);
-        }
+        EventService.addEvent(formData).then((res) => {
+            console.log(res);
+        });
     };
 
     const Input = styled("input")({
