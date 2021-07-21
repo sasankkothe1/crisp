@@ -71,9 +71,14 @@ export default function ShopView() {
         setButtonClicked: setButtonClicked,
     };
 
+    const headerProps = {
+        recipeType: recipeType,
+        setRecipeType: setRecipeType
+    };
+
     return (
         <div>
-            <ShopHeader setRecipeType={setRecipeType} />
+            <ShopHeader {...headerProps} />
             <div className={classes.shop}>
                 <div>
                     <ShopSidebar {...sidebarProps} />
