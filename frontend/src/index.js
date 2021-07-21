@@ -3,11 +3,19 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
-import { ThemeProvider, createMuiTheme } from "@material-ui/core/styles";
+import { ThemeProvider, createTheme } from "@material-ui/core/styles";
 
-const theme = createMuiTheme({
+const theme = createTheme({
     typography: {
         fontFamily: ["Coming soon", "cursive"].join(","),
+    },
+    palette: {
+        primary: {
+            main: "#E49501",
+        },
+        secondary: {
+            main: "#F9EACE",
+        },
     },
 });
 

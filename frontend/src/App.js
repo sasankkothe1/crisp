@@ -11,7 +11,7 @@ import AddRecipeView from "./views/Recipe/AddRecipeView";
 import AddEventView from "./views/Event/AddEventView";
 import reducers from "./redux/reducers";
 import HomeView from "./views/HomeView";
-import ProfileView from "./views/ProfileView";
+import ProfileView from "./views/Profile/ProfileView";
 
 // create store for redux
 export const store = createStore(reducers, applyMiddleware(thunkMiddleware));
