@@ -16,7 +16,8 @@ export default function SideBarEvents() {
     const handleClose = () => setShow(false);
 
     useEffect(() => {
-        EventService.allEvents().then((res) => {
+        EventService.sideBarEvents().then((res) => {
+            console.log(res);
             setEvents(res);
         });
 

@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const mongoosePaginate = require("mongoose-paginate-v2");
 
 const RecipeSchema = new mongoose.Schema({
     typeOfPost: {
@@ -56,6 +57,7 @@ const RecipeSchema = new mongoose.Schema({
     },
 });
 
+RecipeSchema.plugin(mongoosePaginate)
 const RecipeModel = mongoose.model("Recipe", RecipeSchema);
 
 module.exports = { RecipeModel };

@@ -33,12 +33,6 @@ export default function PostsList(props) {
         setShow(true);
     };
 
-    if (data.length > 0) {
-        data.map((el) => {
-            console.log("from map : ", el);
-        });
-    }
-
     const handlePaginationChange = (_event, value) => {
         fetchPage(value);
     };

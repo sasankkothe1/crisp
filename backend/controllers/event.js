@@ -94,7 +94,7 @@ const create = async (req, res) => {
         });
 };
 
-const listEvents = (req, res) => {
+const listSideBarEvents = (req, res) => {
     EventModel.find({})
         .populate("postedBy")
         .exec()
@@ -106,6 +106,50 @@ const listEvents = (req, res) => {
                 });
             else return res.status(200).json(events);
         });
+}
+
+
+const listEvents = (req, res) => {
+    EventModel.paginate(
+        {},
+        { limit: req.query.limit, page: req.query.page, sort: "-datePosted", populate: "postedBy" }
+    )
+        .then((events) => {
+            if (!events) {
+                return res.status(400).json({
+                    error: "Not Found",
+                    message: "No Posts Found",
+                });
+            } else {
+                return res.status(200).json(events)
+            }
+        })
+        .catch((error) => {
+            res.status(500).json({
+                error: "Internal server error",
+                message: error.message,
+            })
+        })
+};
+
+const listEventsByUserID = (req, res) => {
+    EventModel.paginate({ postedBy: req.params.id }, { limit: req.query.limit, page: req.query.page, sort: "-datePosted", populate: "postedBy" })
+        .then((events) => {
+            if (!events) {
+                return res.status(400).json({
+                    error: "Not Found",
+                    message: "No Events Found",
+                });
+            } else {
+                return res.status(200).json(events)
+            }
+        })
+        .catch((error) =>
+            res.status(500).json({
+                error: "Internal server error",
+                message: error.message,
+            })
+        );
 };
 
 const listNewEvents = (req, res) => {
@@ -127,17 +171,6 @@ const listSoonEndingEvents = (req, res) => {
         .sort("endDate")
         .populate("postedBy")
         .exec()
-        .then((events) => res.status(200).json(events))
-        .catch((error) =>
-            res.status(500).json({
-                error: "Internal server error",
-                message: error.message,
-            })
-        );
-};
-
-const listEventsByUserID = (req, res) => {
-    EventModel.find({ postedBy: req.params.id })
         .then((events) => res.status(200).json(events))
         .catch((error) =>
             res.status(500).json({
@@ -270,4 +303,5 @@ module.exports = {
     update,
     remove,
     test,
+    listSideBarEvents
 };

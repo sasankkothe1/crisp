@@ -20,6 +20,8 @@ import UserService from "../../services/UserService";
 // import { postData } from "../../SampleData/postData";
 
 import PostService from "../../services/PostService";
+import EventService from "../../services/EventService";
+import RecipeService from "../../services/RecipeService";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -168,7 +170,7 @@ function ProfileView({ history }) {
                         >
                             <PostsList
                                 limit={16}
-                                fetchMethod={PostService.allPosts}
+                                fetchMethod={RecipeService.allRecipesByUserID}
                                 fetchParams={{}}
                             />
                         </TabPanel>
@@ -179,7 +181,7 @@ function ProfileView({ history }) {
                         >
                             <PostsList
                                 limit={16}
-                                fetchMethod={PostService.allPosts}
+                                fetchMethod={PostService.allPostByUserID}
                                 fetchParams={{}}
                             />
                         </TabPanel>
@@ -190,7 +192,7 @@ function ProfileView({ history }) {
                         >
                             <PostsList
                                 limit={16}
-                                fetchMethod={PostService.allPosts}
+                                fetchMethod={EventService.allEventsByUserID}
                                 fetchParams={{}}
                             />
                         </TabPanel>
