@@ -40,7 +40,7 @@ export default function PostTile(props) {
                     <Carousel showThumbs={false} showArrows={true}>
                         {data["media"].map((el) =>
                             el.split(".")[el.split(".").length] !== "mp4" ? (
-                                <div>
+                                <div className="post-tile-content-image">
                                     <img src={el} />
                                 </div>
                             ) : (
