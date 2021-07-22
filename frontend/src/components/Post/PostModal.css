@@ -1,7 +1,6 @@
 .post-modal-body {
     display: flex;
     flex-direction: row;
-
 }
 
 .post-modal-content-description {
@@ -32,6 +31,8 @@
     flex-grow: 2;
 }
 
-.carousel-image{
-    justify-content: center;
+
+.post-modal-event-details {
+    display: flex;
+    flex-direction: column;
 }

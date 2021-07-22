@@ -24,4 +24,14 @@ export default class EventService {
             };
         }
     }
+
+    static async allEvents() {
+        let res = null
+        try {
+            res = await axios.get(`${EventService.baseURL()}/events/`)
+            return res.data
+        } catch (error) {
+            return { status: error.response.status, message: error.response.data.message }
+        }
+    }
 }

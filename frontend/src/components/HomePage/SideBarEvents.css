@@ -15,6 +15,13 @@
     justify-content: space-evenly;
     flex-direction: row;
     border-bottom: 1px solid black;
+
+    transition: transform 0.2s;
+}
+
+.eventList-element:hover {
+    cursor: pointer;
+    transform: scale(1.05);
 }
 
 .eventList-header {
