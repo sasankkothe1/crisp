@@ -24,6 +24,7 @@ router.post(
     upload.array("media"),
     EventController.create
 );
+router.get("/sideBarEvents", EventController.listSideBarEvents)
 router.get("/", EventController.listEvents);
 router.get("/new", EventController.listNewEvents);
 router.get(

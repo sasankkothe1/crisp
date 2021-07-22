@@ -11,7 +11,6 @@ import "./PostTile.css";
 
 export default function PostTile(props) {
     const { data, onClick } = props;
-
     const { media } = data;
 
     return (
