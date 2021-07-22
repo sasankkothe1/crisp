@@ -20,7 +20,7 @@ export default function PostTile(props) {
         <div className="post-tile-container" onClick={onClick}>
             <div className="post-tile-header">
                 <div className="post-tile-header-left">
-                    <PersonIcon fontSize="small" />
+                    <PersonIcon fontSize="small" ml="2rem" />
                     <div>
                         <h6 className="post-tile-header-user">
                             {data["postedBy"]["firstName"]}

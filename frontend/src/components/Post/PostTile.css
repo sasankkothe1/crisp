@@ -23,6 +23,11 @@
     background-color: wheat;
 }
 
+.post-tile-header-user{
+    margin-top: 13px;
+    margin-left: 10px;
+}
+
 .post-tile-header-left {
     display: flex;
     align-items: center;
@@ -37,4 +42,13 @@
     position: absolute;
     top: 3em;
     left: 0;
+}
+
+.MuiSvgIcon-fontSizeSmall{
+    margin-left: 10px;
+}
+
+.star-ratings{
+    margin-top: 8px;
+    margin-right: 10px;
 }
