@@ -7,27 +7,34 @@ export default class PostService {
     }
 
     static async addPost(post) {
-        let res = null
-        let token = getToken()
-        let headers = { Authorization: `Bearer ${token}` }
+        let res = null;
+        let token = getToken();
+        let headers = { Authorization: `Bearer ${token}` };
         try {
             res = await axios.post(
-                `${PostService.baseURL()}/posts/addPost`, post, { headers }
+                `${PostService.baseURL()}/posts/addPost`,
+                post,
+                { headers }
             );
-            return res.status
-        }
-        catch (error) {
-            return { status: error.response.status, message: error.response.data.message }
+            return res.status;
+        } catch (error) {
+            return {
+                status: error.response.status,
+                message: error.response.data.message,
+            };
         }
     }
 
     static async allPosts() {
-        let res = null
+        let res = null;
         try {
-            res = await axios.get(`${PostService.baseURL()}/posts/`)
-            return res.data
+            res = await axios.get(`${PostService.baseURL()}/posts/`);
+            return res.data;
         } catch (error) {
-            return { status: error.response.status, message: error.response.data.message }
+            return {
+                status: error.response.status,
+                message: error.response.data.message,
+            };
         }
     }
 }
