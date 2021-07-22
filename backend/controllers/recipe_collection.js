@@ -5,6 +5,10 @@ const path = require("path");
 const RecipeCollection = require("../model/RecipeCollection");
 const Order = require("../model/Order");
 
+const AWS = require("aws-sdk");
+
+AWS.config.update({region: 'eu-central-1'});
+
 
 const getRecipeCollections = (req, res) => {
     let collections = RecipeCollection.find();
@@ -55,12 +59,8 @@ const createRecipeCollection = (req, res) => {
             ...req.body,
             _id: new mongoose.Types.ObjectId(),
             postedBy: req.user._id,
-            media: req.files?.map(
-                (file) =>
-                    `${req.protocol}://${req.get("host")}/public/uploads/${
-                        file.filename
-                    }`
-            ),
+            media: req.files?.media?.map((file) => file.location),
+            pdfFile: req.files?.pdfFile.map((file) => file.location)[0]
         },
         (err, recipeCollection) => {
             if (err) {
@@ -117,13 +117,14 @@ const editRecipeCollection = (req, res) => {
         ...req.body,
     };
 
-    if (req.files?.length) {
+    if (req.files?.media?.length) {
         newRecipeCollection.media = req.files.map(
-            (file) =>
-                `${req.protocol}://${req.get("host")}/public/uploads/${
-                    file.filename
-                }`
+            (file) => file.location
         );
+    }
+
+    if (req.files?.pdfFile?.length) {
+        newRecipeCollection.pdfFile = req.pdfFile.map((file) => file.location)[0];
     }
 
     RecipeCollection.findOneAndUpdate(

@@ -3,6 +3,7 @@ const router = express.Router();
 
 const { isAuthenticated, authenticateIfPossible } = require("../../middleware/auth");
 
+/*
 const mimetypes = [
     "image/png",
     "image/jpg",
@@ -14,9 +15,9 @@ const mimetypes = [
     "video/x-msvideo",
     "video/MP2T",
     // TODO: add pdf
-];
+];*/
 
-const upload = require("../../middleware/upload")(mimetypes);
+const { uploadS3 } = require("../../middleware/upload");
 
 const RecipeCollectionController = require("../../controllers/recipe_collection");
 
@@ -34,7 +35,15 @@ router.get(
 router.post(
     "/",
     isAuthenticated,
-    upload.array("media"),
+    uploadS3.fields([
+        {
+            name: 'media'
+        },
+        {
+            name: 'pdfFile',
+            maxCount: 1,
+        }
+    ]),
     RecipeCollectionController.createRecipeCollection
 );
 
@@ -51,7 +60,7 @@ router.get(
 router.put(
     "/:id",
     isAuthenticated,
-    upload.array("media"),
+    //upload.array("media"),
     RecipeCollectionController.editRecipeCollection
 );
 

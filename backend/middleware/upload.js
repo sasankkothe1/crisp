@@ -1,6 +1,28 @@
 const multer = require("multer");
 const { v4: uuidv4 } = require("uuid");
 
+const multerS3 = require("multer-s3");
+
+const AWS = require('aws-sdk');
+AWS.config.update({
+    region: 'eu-central-1'
+});
+
+const s3 = new AWS.S3();
+
+const uploadS3 = multer({
+    storage: multerS3({
+        s3: s3,
+        bucket: 'sebis-ggr',
+        acl: 'public-read',
+        contentType: multerS3.AUTO_CONTENT_TYPE, 
+        key: function (req, file, cb) {
+            const fileType = file.originalname.toLowerCase().split(".").slice(-1)[0];
+            cb(null, `${Date.now().toString()}.${fileType}`);
+        }
+    })
+});
+
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, "./public/uploads/");
@@ -31,4 +53,7 @@ const upload = function (mimetypes) {
     });
 };
 
-module.exports = upload;
+module.exports = {
+    upload2: upload,
+    uploadS3
+};
