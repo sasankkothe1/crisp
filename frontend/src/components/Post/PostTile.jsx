@@ -28,7 +28,8 @@ export default function PostTile(props) {
                     </div>
                 </div>
                 <div className="post-tile-header-right">
-                    <StarRatings className={"post-tile-ratings"}
+                    <StarRatings
+                        className={"post-tile-ratings"}
                         starRatedColor="black"
                         rating={parseInt(data["rating"]) / 2}
                         starDimension="20px"

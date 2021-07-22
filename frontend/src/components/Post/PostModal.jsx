@@ -1,8 +1,8 @@
 /* eslint-disable indent */
 /* eslint-disable react/prop-types */
 import React from "react";
-import {Col, Container, Modal, Row} from "react-bootstrap";
-import {Carousel} from "react-responsive-carousel";
+import { Col, Container, Modal, Row } from "react-bootstrap";
+import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import StarRatings from "react-star-ratings";
 import ReactPlayer from "react-player";
@@ -10,27 +10,32 @@ import moment from "moment-timezone";
 
 import "./PostModal.css";
 
-export default function PostModal({data}) {
+export default function PostModal({ data }) {
     return (
         <div>
             <Modal.Header className="post-modal-header" closeButton>
-                <div className={"post-modal-header-left"}>{data["title"] && <Modal.Title>{data["title"]}</Modal.Title>}
+                <div className={"post-modal-header-left"}>
+                    {data["title"] && (
+                        <Modal.Title>{data["title"]}</Modal.Title>
+                    )}
                     {data["rating"] !== 0 ? (
-                        <StarRatings className={"post-modal-ratings"}
-                                     starRatedColor="black"
-                                     rating={parseInt(data["rating"]) / 2}
-                                     starDimension="20px"
-                                     starSpacing="2px"
+                        <StarRatings
+                            className={"post-modal-ratings"}
+                            starRatedColor="black"
+                            rating={parseInt(data["rating"]) / 2}
+                            starDimension="20px"
+                            starSpacing="2px"
                         />
                     ) : (
-                        <StarRatings className={"post-modal-ratings"}
-                                     starRatedColor="black"
-                                     rating={0}
-                                     starDimension="20px"
-                                     starSpacing="2px"
+                        <StarRatings
+                            className={"post-modal-ratings"}
+                            starRatedColor="black"
+                            rating={0}
+                            starDimension="20px"
+                            starSpacing="2px"
                         />
-                    )}</div>
-
+                    )}
+                </div>
             </Modal.Header>
             <Modal.Body>
                 <div className="show-grid">
@@ -47,9 +52,15 @@ export default function PostModal({data}) {
                                                 {data["media"].map((el) =>
                                                     el.split(".")[
                                                         el.split(".").length
-                                                        ] !== "mp4" ? (
+                                                    ] !== "mp4" ? (
                                                         <div>
-                                                            <img className={"carousel-image"} src={el} spacing={0}/>
+                                                            <img
+                                                                className={
+                                                                    "carousel-image"
+                                                                }
+                                                                src={el}
+                                                                spacing={0}
+                                                            />
                                                         </div>
                                                     ) : (
                                                         <div className="post-tile-content-video">
