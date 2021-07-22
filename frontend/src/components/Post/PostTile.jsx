@@ -14,8 +14,6 @@ export default function PostTile(props) {
 
     const { media } = data;
 
-    console.log(data);
-
     return (
         <div className="post-tile-container" onClick={onClick}>
             <div className="post-tile-header">
