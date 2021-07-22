@@ -18,7 +18,7 @@ export default function PostTile(props) {
         <div className="post-tile-container" onClick={onClick}>
             <div className="post-tile-header">
                 <div className="post-tile-header-left">
-                    <PersonIcon fontSize="small" />
+                    <PersonIcon fontSize="small" ml="2rem" />
                     <div>
                         <h6 className="post-tile-header-user">
                             {data["postedBy"]["firstName"]}
@@ -27,6 +27,7 @@ export default function PostTile(props) {
                 </div>
                 <div className="post-tile-header-right">
                     <StarRatings
+                        className={"post-tile-ratings"}
                         starRatedColor="black"
                         rating={parseInt(data["rating"]) / 2}
                         starDimension="20px"

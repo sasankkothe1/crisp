@@ -14,22 +14,28 @@ export default function PostModal({ data, typeOfPost }) {
     return (
         <div>
             <Modal.Header className="post-modal-header" closeButton>
-                {data["title"] && <Modal.Title>{data["title"]}</Modal.Title>}
-                {data["rating"] !== 0 ? (
-                    <StarRatings
-                        starRatedColor="black"
-                        rating={parseInt(data["rating"]) / 2}
-                        starDimension="20px"
-                        starSpacing="2px"
-                    />
-                ) : (
-                    <StarRatings
-                        starRatedColor="black"
-                        rating={0}
-                        starDimension="20px"
-                        starSpacing="2px"
-                    />
-                )}
+                <div className={"post-modal-header-left"}>
+                    {data["title"] && (
+                        <Modal.Title>{data["title"]}</Modal.Title>
+                    )}
+                    {data["rating"] !== 0 ? (
+                        <StarRatings
+                            className={"post-modal-ratings"}
+                            starRatedColor="black"
+                            rating={parseInt(data["rating"]) / 2}
+                            starDimension="20px"
+                            starSpacing="2px"
+                        />
+                    ) : (
+                        <StarRatings
+                            className={"post-modal-ratings"}
+                            starRatedColor="black"
+                            rating={0}
+                            starDimension="20px"
+                            starSpacing="2px"
+                        />
+                    )}
+                </div>
             </Modal.Header>
             <Modal.Body>
                 <div className="show-grid">

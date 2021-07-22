@@ -17,6 +17,21 @@
     color: grey;
 }
 
+.post-modal-header{
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+    width: 100%;
+}
+
+.post-modal-header-left {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    flex-grow: 2;
+}
+
+
 .post-modal-event-details {
     display: flex;
     flex-direction: column;

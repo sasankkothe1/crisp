@@ -3,7 +3,6 @@ import { makeStyles } from "@material-ui/core";
 import PostsList from "../components/HomePage/PostsList";
 import SideBar from "../components/HomePage/SideBar";
 import PostService from "../services/PostService";
-// import { postData } from "../SampleData/postData";
 
 const useStyles = makeStyles((theme) => ({
     homeViewContainer: {
