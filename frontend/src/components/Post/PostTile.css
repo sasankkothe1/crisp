@@ -33,6 +33,11 @@
     align-items: center;
 }
 
+.post-tile-header-right {
+    margin-top: 8px;
+    margin-right: 10px;
+}
+
 .post-tile-content-video {
     position: relative;
     padding-top: 56.25%;
@@ -48,7 +53,4 @@
     margin-left: 10px;
 }
 
-.star-ratings{
-    margin-top: 8px;
-    margin-right: 10px;
-}
+

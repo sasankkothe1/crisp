@@ -1,6 +1,7 @@
 .post-modal-body {
     display: flex;
     flex-direction: row;
+
 }
 
 .post-modal-content-description {
@@ -15,4 +16,22 @@
 .post-modal-content-date {
     font-size: x-small;
     color: grey;
+}
+
+.post-modal-header{
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+    width: 100%;
+}
+
+.post-modal-header-left {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    flex-grow: 2;
+}
+
+.carousel-image{
+    justify-content: center;
 }

@@ -18,10 +18,13 @@
 }
 
 .eventList-header {
-    width: 100px;
     font-size: small;
 }
 
 .event-title {
     font-size: x-small;
+    margin-left: 10px;
+    margin-right: 10px;
+    width: 100%;
+    overflow: hidden;
 }
