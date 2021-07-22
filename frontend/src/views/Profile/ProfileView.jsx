@@ -42,6 +42,7 @@ const useStyles = makeStyles((theme) => ({
         marginTop: theme.spacing(5),
     },
     tabsContainer: {
+        zIndex: "auto",
         width: "fit-content",
         display: "flex",
     },
@@ -128,7 +129,7 @@ function ProfileView({ history }) {
             </Grid>
             <Grid item className={classes.botContainer}>
                 <AppBar
-                    position="static"
+                    position="sticky"
                     color="secondary"
                     className={classes.tabsContainer}
                 >

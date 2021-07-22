@@ -17,19 +17,18 @@ export default function SideBarEvents() {
 
     useEffect(() => {
         EventService.sideBarEvents().then((res) => {
-            console.log(res);
             setEvents(res);
         });
 
-        events.map((el) => {
-            console.log({
-                title: el["title"],
-                start: moment(el["startTime"])
-                    .tz("Europe/Berlin")
-                    .format("HH:mm"),
-                end: moment(el["endTime"]).tz("Europe/Berlin").format("HH:mm"),
-            });
-        });
+        // events.map((el) => {
+        //     console.log({
+        //         title: el["title"],
+        //         start: moment(el["startTime"])
+        //             .tz("Europe/Berlin")
+        //             .format("HH:mm"),
+        //         end: moment(el["endTime"]).tz("Europe/Berlin").format("HH:mm"),
+        //     });
+        // });
     }, []);
 
     const displayPost = (i) => {
