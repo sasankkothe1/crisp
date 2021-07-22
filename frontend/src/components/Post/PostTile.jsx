@@ -14,6 +14,8 @@ export default function PostTile(props) {
 
     const { media } = data;
 
+    console.log(data);
+
     return (
         <div className="post-tile-container" onClick={onClick}>
             <div className="post-tile-header">
@@ -21,7 +23,7 @@ export default function PostTile(props) {
                     <PersonIcon fontSize="small" />
                     <div>
                         <h6 className="post-tile-header-user">
-                            {data["postedBy"]}
+                            {data["postedBy"]["firstName"]}
                         </h6>
                     </div>
                 </div>
@@ -37,10 +39,10 @@ export default function PostTile(props) {
             <div className="post-tile-content">
                 {media.length && (
                     <Carousel showThumbs={false} showArrows={true}>
-                        {media.map((el) =>
-                            el["type"] === "image" ? (
+                        {data["media"].map((el) =>
+                            el.split(".")[el.split(".").length] !== "mp4" ? (
                                 <div>
-                                    <img src={el["URL"]} />
+                                    <img src={el} />
                                 </div>
                             ) : (
                                 <div className="post-tile-content-video">
@@ -51,7 +53,7 @@ export default function PostTile(props) {
                                         controls={true}
                                         height="100%"
                                         width="100%"
-                                        url={el["URL"]}
+                                        url={el}
                                     />
                                 </div>
                             )
