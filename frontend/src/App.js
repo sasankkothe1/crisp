@@ -31,7 +31,7 @@ function App() {
                         <Route exact path="/register">
                             <RegisterView />
                         </Route>
-                        <Route exact path="/profile">
+                        <Route exact path="/profile/:id?">
                             <ProfileView />
                         </Route>
                         <Route exact path="/addPost">

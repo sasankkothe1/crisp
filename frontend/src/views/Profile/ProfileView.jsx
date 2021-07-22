@@ -54,18 +54,27 @@ function ProfileView({ history }) {
 
     let { id } = useParams();
 
-    const currentUser = useSelector((state) => state.user);
+    const loggedInUser = useSelector((state) => state.user);
 
-    const [user, setUser] = useState();
+    const [profileUser, setProfileUser] = useState({});
+    const [isLoggedInUser, setIsLoggedInUser] = useState(false);
+    const [isFollowing, setIsFollowing] = useState(false);
     const [tabIndex, setTabIndex] = useState(0);
     const [data, setData] = useState([]);
 
     useEffect(async () => {
         if (id) {
-            setUser(await UserService.getUserDetails(id));
+            setProfileUser(await UserService.getUserDetails(id));
+            setIsLoggedInUser(id === loggedInUser._id);
+            if (id != loggedInUser._id) {
+                setIsFollowing(await UserService.isFollowing(id));
+            }
         } else {
-            if (currentUser._id) {
-                setUser(await UserService.getUserDetails(currentUser._id));
+            if (loggedInUser._id) {
+                setProfileUser(
+                    await UserService.getUserDetails(loggedInUser._id)
+                );
+                setIsLoggedInUser(true);
             } else {
                 history.push("/");
             }
@@ -86,19 +95,39 @@ function ProfileView({ history }) {
         setTabIndex(index);
     };
 
+    const onFollow = async (e) => {
+        e.preventDefault();
+
+        const res = await UserService.followUser(profileUser._id);
+        setIsFollowing(res);
+    };
+
+    const onUnfollow = async (e) => {
+        e.preventDefault();
+
+        const res = await UserService.unfollowUser(profileUser._id);
+        setIsFollowing(res);
+    };
+
     return (
         <Grid container className={classes.root}>
             <Grid item container className={classes.topContainer}>
                 <ProfileHeader
-                    recipeCount={user?.recipes.length || 0}
-                    following={user?.following || []}
-                    followers={user?.followers || []}
+                    counts={{
+                        recipeCount: 0,
+                        postCount: 0,
+                        eventCount: 0,
+                    }}
+                    isLoggedInUser={isLoggedInUser}
+                    isFollowing={isFollowing}
+                    onFollow={onFollow}
+                    onUnfollow={onUnfollow}
                 />
                 <ProfileDetails
                     user={{
-                        username: user?.username || "",
-                        firstName: user?.firstName || "",
-                        lastName: user?.lastName || "",
+                        username: profileUser?.username || "",
+                        firstName: profileUser?.firstName || "",
+                        lastName: profileUser?.lastName || "",
                     }}
                 />
             </Grid>
