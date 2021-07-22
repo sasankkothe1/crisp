@@ -2,7 +2,7 @@ import axios from "axios";
 import { getToken } from "./utils";
 export default class RecipeCollectionService {
     static baseURL() {
-        return "http://localhost:4000/api/recipe_collections";
+        return `${process.env.REACT_APP_BACKEND_URL}/recipe_collections`;
     }
 
     static async getRecipeCollection(id) {

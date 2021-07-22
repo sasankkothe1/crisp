@@ -10,12 +10,25 @@ import { recipeCollectionsData } from "../SampleData/recipeCollectionsData";
 
 import recipeCollectionService from "../services/RecipeCollectionService";
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
+    shopContainer: {
+        width:"1000px",
+        display: "flex",
+        flexDirection: "column"
+    },
     shop: {
         display: "flex",
         flexDirection: "row",
-        height: 1,
+        width: "100%"
     },
+    shopSidebar: {
+        width: "20%",
+        display: "flex"
+    },
+    shopItemsList: {
+        width: "80%",
+        display: "flex"
+    }
 }));
 
 export default function ShopView() {
@@ -34,8 +47,10 @@ export default function ShopView() {
 
     useEffect(async () => {
         console.log(recipeType, meal, minPrice, maxPrice);
-        const res = await recipeCollectionService.getRecipeCollections(recipeType, meal, minPrice, maxPrice);
-        setRCD(res.data);
+        //const res = await recipeCollectionService.getRecipeCollections(recipeType, meal, minPrice, maxPrice);
+        //setRCD(res.data);
+
+        setRCD(recipeCollectionsData);
 
         /*
             recipeCollectionsData.filter((recipeCollection) => {
@@ -77,16 +92,29 @@ export default function ShopView() {
     };
 
     return (
-        <div>
+        <div className={classes.shopContainer}>
             <ShopHeader {...headerProps} />
             <div className={classes.shop}>
-                <div>
+                <div className={classes.shopSidebar}>
                     <ShopSidebar {...sidebarProps} />
                 </div>
-                <div>
+                <div className={classes.shopItemsList}>
                     <ShopItemsList data={rcd} />
                 </div>
             </div>
         </div>
+        // <div className="shop-container">
+        //     <div className="shop-header-container">
+        //         <ShopHeader {...headerProps} />
+        //     </div>
+        //     <div className="shop-main-container">
+        //         <div className="shop-sidebar-container">
+        //             <ShopSidebar {...sidebarProps} />
+        //         </div>
+        //         <div className="shop-items-list-container">
+        //             <ShopItemsList data={rcd} />
+        //         </div>
+        //     </div>
+        // </div>
     );
 }

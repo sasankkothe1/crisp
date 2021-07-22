@@ -11,7 +11,6 @@ const useStyles = makeStyles(() => ({
     shopItemContainer: {
         display: "flex",
         flexDirection: "column",
-        width: "25vw",
         margin: "1em",
     },
     shopItemHeader: {
