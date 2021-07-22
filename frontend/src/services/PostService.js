@@ -20,4 +20,14 @@ export default class PostService {
             return { status: error.response.status, message: error.response.data.message }
         }
     }
+
+    static async allPosts() {
+        let res = null
+        try {
+            res = await axios.get(`${PostService.baseURL()}/posts/`)
+            return res.data
+        } catch (error) {
+            return { status: error.response.status, message: error.response.data.message }
+        }
+    }
 }

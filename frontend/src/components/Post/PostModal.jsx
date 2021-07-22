@@ -1,3 +1,4 @@
+/* eslint-disable indent */
 /* eslint-disable react/prop-types */
 import React from "react";
 import { Col, Container, Modal, Row } from "react-bootstrap";
@@ -36,11 +37,11 @@ export default function PostModal({ data }) {
                                                 showArrows={true}
                                             >
                                                 {data["media"].map((el) =>
-                                                    el["type"] === "image" ? (
+                                                    el.split(".")[
+                                                        el.split(".").length
+                                                    ] !== "mp4" ? (
                                                         <div>
-                                                            <img
-                                                                src={el["URL"]}
-                                                            />
+                                                            <img src={el} />
                                                         </div>
                                                     ) : (
                                                         <div className="post-tile-content-video">
@@ -51,7 +52,7 @@ export default function PostModal({ data }) {
                                                                 controls={true}
                                                                 height="100%"
                                                                 width="100%"
-                                                                url={el["URL"]}
+                                                                url={el}
                                                             />
                                                         </div>
                                                     )

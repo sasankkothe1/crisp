@@ -1,14 +1,19 @@
 .post-tile-container {
-    display: flex;
+    /* display: flex;
     flex-direction: column;
     width: 25vw;
-    margin: 1em;
+    margin: 1em; */
     transition: transform 0.2s;
+
+    background-color: #eee;
+    display: inline-block;
+    margin: 0 0 1em;
+    width: 100%;
 }
 
 .post-tile-container:hover {
     cursor: pointer;
-    transform: scale(1.05);
+    transform: scale(1.01);
 }
 
 .post-tile-header {

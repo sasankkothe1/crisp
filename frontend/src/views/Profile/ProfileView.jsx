@@ -17,7 +17,9 @@ import TabPanel from "../../components/Profile/TabPanel";
 import PostsList from "../../components/HomePage/PostsList";
 import UserService from "../../services/UserService";
 
-import { postData } from "../../SampleData/postData";
+// import { postData } from "../../SampleData/postData";
+
+import PostService from "../../services/PostService";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -56,6 +58,7 @@ function ProfileView({ history }) {
 
     const [user, setUser] = useState();
     const [tabIndex, setTabIndex] = useState(0);
+    const [data, setData] = useState([]);
 
     useEffect(async () => {
         if (id) {
@@ -67,6 +70,12 @@ function ProfileView({ history }) {
                 history.push("/");
             }
         }
+    }, []);
+
+    useEffect(() => {
+        PostService.allPosts().then((res) => {
+            setData(res);
+        });
     }, []);
 
     const handleChange = (event, newTabsValue) => {
@@ -135,21 +144,21 @@ function ProfileView({ history }) {
                             index={0}
                             dir={theme.direction}
                         >
-                            <PostsList data={postData} />
+                            <PostsList data={data} />
                         </TabPanel>
                         <TabPanel
                             value={tabIndex}
                             index={1}
                             dir={theme.direction}
                         >
-                            <PostsList data={postData} />
+                            <PostsList data={data} />
                         </TabPanel>
                         <TabPanel
                             value={tabIndex}
                             index={2}
                             dir={theme.direction}
                         >
-                            <PostsList data={postData} />
+                            <PostsList data={data} />
                         </TabPanel>
                     </SwipeableViews>
                 </Card>

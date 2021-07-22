@@ -12,11 +12,18 @@ export default function PostsList(props) {
     const handleClose = () => setShow(false);
 
     const postData = props["data"];
+    console.log(postData);
 
     const displayPost = (i) => {
         setPostIndex(i);
         setShow(true);
     };
+
+    if (postData.length > 0) {
+        postData.map((el) => {
+            console.log("from map : ", el);
+        });
+    }
 
     return (
         <div className="post">
