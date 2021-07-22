@@ -25,7 +25,7 @@ export default class RecipeCollectionService {
             const token = getToken();
             const headers = { Authorization: `Bearer ${token}` };
 
-            let url = `${RecipeCollectionService.baseURL()}`;
+            let url = `${RecipeCollectionService.baseURL()}?populate=postedBy`;
             let cgi = "";
             if (recipeType) {
                 cgi = cgi.concat(`&recipe_type=${recipeType}`);
@@ -40,7 +40,8 @@ export default class RecipeCollectionService {
                 cgi = cgi.concat(`&max_price=${maxPrice}`);
             }
             if (cgi) {
-                url = url.concat('?', cgi.substring(1));
+                url = url.concat(cgi);
+                //url = url.concat('?', cgi.substring(1));
             }
 
             console.log(url);
