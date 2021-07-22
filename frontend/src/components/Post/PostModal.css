@@ -16,3 +16,8 @@
     font-size: x-small;
     color: grey;
 }
+
+.post-modal-event-details {
+    display: flex;
+    flex-direction: column;
+}
