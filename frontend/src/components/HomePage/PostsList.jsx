@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Modal } from "react-bootstrap";
+import Pagination from "@material-ui/lab/Pagination";
 import "./PostList.css";
 import PostTile from "../Post/PostTile";
 import PostModal from "../Post/PostModal";
@@ -11,34 +12,65 @@ export default function PostsList(props) {
 
     const handleClose = () => setShow(false);
 
-    const postData = props["data"];
-    console.log(postData);
+    const { limit, fetchMethod, fetchParams } = props;
+
+    const [data, setData] = useState([]);
+    const [paginationData, setPaginationData] = useState([{}]);
+
+    useEffect(() => {
+        fetchPage(1);
+    }, []);
+
+    const fetchPage = (page) => {
+        fetchMethod(limit, page, ...Object.values(fetchParams)).then((res) => {
+            setData(res.docs);
+            setPaginationData({ totalPages: res.totalPages });
+        });
+    };
 
     const displayPost = (i) => {
         setPostIndex(i);
         setShow(true);
     };
 
-    if (postData.length > 0) {
-        postData.map((el) => {
+    if (data.length > 0) {
+        data.map((el) => {
             console.log("from map : ", el);
         });
     }
 
-    return (
-        <div className="post">
-            {postData.map((post, i) => (
-                <PostTile onClick={() => displayPost(i)} key={i} data={post} />
-            ))}
-            <Modal
-                size={"lg"}
-                scrollable
-                centered
-                show={show}
-                onHide={handleClose}
-            >
-                <PostModal data={postData[postIndex]} />
-            </Modal>
+    const handlePaginationChange = (_event, value) => {
+        fetchPage(value);
+    };
+
+    return data.length > 0 ? (
+        <div className="root">
+            <div className="post">
+                {data.map((post, i) => (
+                    <PostTile
+                        onClick={() => displayPost(i)}
+                        key={i}
+                        data={post}
+                    />
+                ))}
+                <Modal
+                    size={"lg"}
+                    scrollable
+                    centered
+                    show={show}
+                    onHide={handleClose}
+                >
+                    <PostModal data={data[postIndex]} />
+                </Modal>
+            </div>
+            <Pagination
+                count={paginationData.totalPages}
+                onChange={handlePaginationChange}
+                showFirstButton
+                showLastButton
+            />
         </div>
+    ) : (
+        <h1>Loading</h1>
     );
 }

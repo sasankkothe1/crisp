@@ -60,7 +60,8 @@ function ProfileView({ history }) {
     const [isLoggedInUser, setIsLoggedInUser] = useState(false);
     const [isFollowing, setIsFollowing] = useState(false);
     const [tabIndex, setTabIndex] = useState(0);
-    const [data, setData] = useState([]);
+    const [postData, setPostData] = useState([]);
+    const [paginationData, setPaginationData] = useState([{}]);
 
     useEffect(async () => {
         if (id) {
@@ -82,10 +83,15 @@ function ProfileView({ history }) {
     }, []);
 
     useEffect(() => {
-        PostService.allPosts().then((res) => {
-            setData(res);
-        });
+        fetchPostPage(1);
     }, []);
+
+    const fetchPostPage = (page) => {
+        PostService.allPosts(16, page).then((res) => {
+            setPostData(res.docs);
+            setPaginationData({ totalPages: res.totalPages });
+        });
+    };
 
     const handleChange = (event, newTabsValue) => {
         setTabIndex(newTabsValue);
@@ -173,21 +179,45 @@ function ProfileView({ history }) {
                             index={0}
                             dir={theme.direction}
                         >
-                            <PostsList data={data} />
+                            {postData.length > 0 ? (
+                                <PostsList
+                                    postData={postData}
+                                    paginationData={paginationData}
+                                    fetchPage={fetchPostPage}
+                                />
+                            ) : (
+                                <h1>Loading</h1>
+                            )}
                         </TabPanel>
                         <TabPanel
                             value={tabIndex}
                             index={1}
                             dir={theme.direction}
                         >
-                            <PostsList data={data} />
+                            {postData.length > 0 ? (
+                                <PostsList
+                                    postData={postData}
+                                    paginationData={paginationData}
+                                    fetchPage={fetchPostPage}
+                                />
+                            ) : (
+                                <h1>Loading</h1>
+                            )}
                         </TabPanel>
                         <TabPanel
                             value={tabIndex}
                             index={2}
                             dir={theme.direction}
                         >
-                            <PostsList data={data} />
+                            {postData.length > 0 ? (
+                                <PostsList
+                                    postData={postData}
+                                    paginationData={paginationData}
+                                    fetchPage={fetchPostPage}
+                                />
+                            ) : (
+                                <h1>Loading</h1>
+                            )}
                         </TabPanel>
                     </SwipeableViews>
                 </Card>

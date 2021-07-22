@@ -25,10 +25,16 @@ export default class PostService {
         }
     }
 
-    static async allPosts() {
+    static async allPosts(limit, page) {
         let res = null;
+
         try {
-            res = await axios.get(`${PostService.baseURL()}/posts/`);
+            res = await axios.get(`${PostService.baseURL()}/posts/`, {
+                params: {
+                    limit: limit,
+                    page: page,
+                },
+            });
             return res.data;
         } catch (error) {
             return {
