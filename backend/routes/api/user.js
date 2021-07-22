@@ -1,13 +1,21 @@
 const express = require("express");
 const router = express.Router();
+const { isAuthenticated } = require("../../middleware/auth");
 
 const {
-    getUserDetails
+    getUserDetails,
+    followUser,
+    unfollowUser,
+    isFollowing,
 } = require("../../controllers/user");
 
 const User = require("../../model/User");
 
-router.get("/getUserDetails/:id", getUserDetails)
+router.get("/getUserDetails/:id", getUserDetails);
+router.get("/isFollowing/:id", isAuthenticated, isFollowing);
+
+router.put("/followUser/:id", isAuthenticated, followUser);
+router.put("/unfollowUser/:id", isAuthenticated, unfollowUser);
 
 /* router.get("/", (req, res) => {
     User.find()

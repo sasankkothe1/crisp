@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { makeStyles } from "@material-ui/core";
 import PostsList from "../components/HomePage/PostsList";
 import SideBar from "../components/HomePage/SideBar";
@@ -23,18 +23,15 @@ const useStyles = makeStyles((theme) => ({
 
 export default function HomeView() {
     const classes = useStyles();
-    const [data, setData] = useState([]);
-
-    useEffect(() => {
-        PostService.allPosts().then((res) => {
-            setData(res);
-        });
-    }, []);
 
     return (
         <div className={classes.homeViewContainer}>
             <div className={classes.homeViewPostList}>
-                {data.length > 0 ? <PostsList data={data} /> : <h1>Loading</h1>}
+                <PostsList
+                    limit={16}
+                    fetchMethod={PostService.allPosts}
+                    fetchParams={{}}
+                />
             </div>
             <div className={classes.homeViewSideBar}>
                 <SideBar />

@@ -1,4 +1,5 @@
 import axios from "axios";
+import { getToken, isTokenValid } from "./utils";
 
 export default class UserService {
     static baseURL() {
@@ -78,6 +79,62 @@ export default class UserService {
             return res.data;
         } catch (error) {
             return error;
+        }
+    }
+
+    static async followUser(userID) {
+        if (isTokenValid()) {
+            try {
+                const headers = { Authorization: `Bearer ${getToken()}` };
+                const res = await axios.put(
+                    `${this.baseURL()}/users/followUser/${userID}`,
+                    {},
+                    { headers }
+                );
+
+                return res.data.isFollowing;
+            } catch (error) {
+                return error;
+            }
+        } else {
+            return new Error("Session expired, please login again");
+        }
+    }
+
+    static async unfollowUser(userID) {
+        if (isTokenValid()) {
+            try {
+                const headers = { Authorization: `Bearer ${getToken()}` };
+                const res = await axios.put(
+                    `${this.baseURL()}/users/unfollowUser/${userID}`,
+                    {},
+                    { headers }
+                );
+
+                return res.data.isFollowing;
+            } catch (error) {
+                return error;
+            }
+        } else {
+            return new Error("Session expired, please login again");
+        }
+    }
+
+    static async isFollowing(userID) {
+        if (isTokenValid()) {
+            try {
+                const headers = { Authorization: `Bearer ${getToken()}` };
+                const res = await axios.get(
+                    `${this.baseURL()}/users/isFollowing/${userID}`,
+                    { headers }
+                );
+
+                return res.data.isFollowing;
+            } catch (error) {
+                return error;
+            }
+        } else {
+            return new Error("Session expired, please login again");
         }
     }
 }
