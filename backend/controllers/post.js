@@ -75,16 +75,25 @@ const create = async (req, res) => {
 };
 
 const listPosts = (req, res) => {
-    PostModel.find({})
-        .populate("postedBy")
-        .exec()
+    PostModel.paginate(
+        {},
+        { limit: req.query.limit, page: req.query.page, sort: "-datePosted" }
+    )
         .then((posts) => {
-            if (!posts)
+            if (!posts) {
                 return res.status(400).json({
                     error: "Not Found",
                     message: "No Posts Found",
                 });
-            else return res.status(200).json(posts);
+            } else {
+                return res.status(200).json(posts);
+            }
+        })
+        .catch((error) => {
+            res.status(500).json({
+                error: "Internal server error",
+                message: error.message,
+            });
         });
 };
 

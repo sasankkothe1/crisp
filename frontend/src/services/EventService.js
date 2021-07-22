@@ -7,17 +7,21 @@ export default class EventService {
     }
 
     static async addEvent(event) {
-        let res = null
-        let token = getToken()
-        let headers = { Authorization: `Bearer ${token}` }
+        let res = null;
+        let token = getToken();
+        let headers = { Authorization: `Bearer ${token}` };
         try {
             res = await axios.post(
-                `${EventService.baseURL()}/events/addEvent`, event, { headers }
+                `${EventService.baseURL()}/events/addEvent`,
+                event,
+                { headers }
             );
-            return res.status
-        }
-        catch (error) {
-            return { status: error.response.status, message: error.response.data.message }
+            return res.status;
+        } catch (error) {
+            return {
+                status: error.response.status,
+                message: error.response.data.message,
+            };
         }
     }
 

@@ -7,8 +7,10 @@ import {
     CardHeader,
     CardContent,
     Grid,
+    Button,
 } from "@material-ui/core";
 import PersonIcon from "@material-ui/icons/Person";
+import { isLoggedIn } from "../../services/utils";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -27,7 +29,13 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const ProfileHeader = ({ recipeCount, following, followers }) => {
+const ProfileHeader = ({
+    counts,
+    isLoggedInUser,
+    isFollowing,
+    onFollow,
+    onUnfollow,
+}) => {
     const classes = useStyles();
 
     return (
@@ -38,19 +46,49 @@ const ProfileHeader = ({ recipeCount, following, followers }) => {
                         <PersonIcon /> <span>Profile</span>
                     </>
                 }
+                action={
+                    isLoggedIn &&
+                    !isLoggedInUser &&
+                    (isFollowing ? (
+                        <Button
+                            variant="outlined"
+                            color="primary"
+                            onClick={(e) => {
+                                onUnfollow(e);
+                            }}
+                        >
+                            Unfollow
+                        </Button>
+                    ) : (
+                        <Button
+                            variant="outlined"
+                            onClick={(e) => {
+                                onFollow(e);
+                            }}
+                        >
+                            Follow
+                        </Button>
+                    ))
+                }
                 className={classes.CardHeader}
             />
             <CardContent>
                 <Grid container className={classes.Container}>
                     <Grid item>
-                        <Typography variant="h5">{`recipes: ${recipeCount}`}</Typography>
+                        <Typography variant="h5">{`${counts.recipeCount} Recipes`}</Typography>
                     </Grid>
                     <Grid item>
+                        <Typography variant="h5">{`${counts.postCount} Posts`}</Typography>
+                    </Grid>
+                    <Grid item>
+                        <Typography variant="h5">{`${counts.eventCount} Events`}</Typography>
+                    </Grid>
+                    {/* <Grid item>
                         <Typography variant="h5">{`following: ${following?.length}`}</Typography>
-                    </Grid>
-                    <Grid item>
+                    </Grid> */}
+                    {/* <Grid item>
                         <Typography variant="h5">{`followers: ${followers?.length}`}</Typography>
-                    </Grid>
+                    </Grid> */}
                 </Grid>
             </CardContent>
         </Card>
@@ -58,9 +96,11 @@ const ProfileHeader = ({ recipeCount, following, followers }) => {
 };
 
 ProfileHeader.propTypes = {
-    recipeCount: PropTypes.number,
-    following: PropTypes.array,
-    followers: PropTypes.array,
+    counts: PropTypes.object,
+    isLoggedInUser: PropTypes.bool,
+    isFollowing: PropTypes.bool,
+    onFollow: PropTypes.func,
+    onUnfollow: PropTypes.func,
 };
 
 export default ProfileHeader;

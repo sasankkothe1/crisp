@@ -54,18 +54,28 @@ function ProfileView({ history }) {
 
     let { id } = useParams();
 
-    const currentUser = useSelector((state) => state.user);
+    const loggedInUser = useSelector((state) => state.user);
 
-    const [user, setUser] = useState();
+    const [profileUser, setProfileUser] = useState({});
+    const [isLoggedInUser, setIsLoggedInUser] = useState(false);
+    const [isFollowing, setIsFollowing] = useState(false);
     const [tabIndex, setTabIndex] = useState(0);
-    const [data, setData] = useState([]);
+    const [postData, setPostData] = useState([]);
+    const [paginationData, setPaginationData] = useState([{}]);
 
     useEffect(async () => {
         if (id) {
-            setUser(await UserService.getUserDetails(id));
+            setProfileUser(await UserService.getUserDetails(id));
+            setIsLoggedInUser(id === loggedInUser._id);
+            if (id != loggedInUser._id) {
+                setIsFollowing(await UserService.isFollowing(id));
+            }
         } else {
-            if (currentUser._id) {
-                setUser(await UserService.getUserDetails(currentUser._id));
+            if (loggedInUser._id) {
+                setProfileUser(
+                    await UserService.getUserDetails(loggedInUser._id)
+                );
+                setIsLoggedInUser(true);
             } else {
                 history.push("/");
             }
@@ -73,10 +83,15 @@ function ProfileView({ history }) {
     }, []);
 
     useEffect(() => {
-        PostService.allPosts().then((res) => {
-            setData(res);
-        });
+        fetchPostPage(1);
     }, []);
+
+    const fetchPostPage = (page) => {
+        PostService.allPosts(16, page).then((res) => {
+            setPostData(res.docs);
+            setPaginationData({ totalPages: res.totalPages });
+        });
+    };
 
     const handleChange = (event, newTabsValue) => {
         setTabIndex(newTabsValue);
@@ -86,19 +101,39 @@ function ProfileView({ history }) {
         setTabIndex(index);
     };
 
+    const onFollow = async (e) => {
+        e.preventDefault();
+
+        const res = await UserService.followUser(profileUser._id);
+        setIsFollowing(res);
+    };
+
+    const onUnfollow = async (e) => {
+        e.preventDefault();
+
+        const res = await UserService.unfollowUser(profileUser._id);
+        setIsFollowing(res);
+    };
+
     return (
         <Grid container className={classes.root}>
             <Grid item container className={classes.topContainer}>
                 <ProfileHeader
-                    recipeCount={user?.recipes.length || 0}
-                    following={user?.following || []}
-                    followers={user?.followers || []}
+                    counts={{
+                        recipeCount: 0,
+                        postCount: 0,
+                        eventCount: 0,
+                    }}
+                    isLoggedInUser={isLoggedInUser}
+                    isFollowing={isFollowing}
+                    onFollow={onFollow}
+                    onUnfollow={onUnfollow}
                 />
                 <ProfileDetails
                     user={{
-                        username: user?.username || "",
-                        firstName: user?.firstName || "",
-                        lastName: user?.lastName || "",
+                        username: profileUser?.username || "",
+                        firstName: profileUser?.firstName || "",
+                        lastName: profileUser?.lastName || "",
                     }}
                 />
             </Grid>
@@ -144,21 +179,45 @@ function ProfileView({ history }) {
                             index={0}
                             dir={theme.direction}
                         >
-                            <PostsList data={data} />
+                            {postData.length > 0 ? (
+                                <PostsList
+                                    postData={postData}
+                                    paginationData={paginationData}
+                                    fetchPage={fetchPostPage}
+                                />
+                            ) : (
+                                <h1>Loading</h1>
+                            )}
                         </TabPanel>
                         <TabPanel
                             value={tabIndex}
                             index={1}
                             dir={theme.direction}
                         >
-                            <PostsList data={data} />
+                            {postData.length > 0 ? (
+                                <PostsList
+                                    postData={postData}
+                                    paginationData={paginationData}
+                                    fetchPage={fetchPostPage}
+                                />
+                            ) : (
+                                <h1>Loading</h1>
+                            )}
                         </TabPanel>
                         <TabPanel
                             value={tabIndex}
                             index={2}
                             dir={theme.direction}
                         >
-                            <PostsList data={data} />
+                            {postData.length > 0 ? (
+                                <PostsList
+                                    postData={postData}
+                                    paginationData={paginationData}
+                                    fetchPage={fetchPostPage}
+                                />
+                            ) : (
+                                <h1>Loading</h1>
+                            )}
                         </TabPanel>
                     </SwipeableViews>
                 </Card>
