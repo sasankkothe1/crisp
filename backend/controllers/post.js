@@ -12,12 +12,12 @@ const create = async (req, res) => {
             error: "Bad Request",
             message: "The request body is empty",
         });
-    if (req.body.title === "undefined")
+    if (req.body.title === "undefined" || req.body.title === "")
         return res.status(400).json({
             error: "Bad Request",
             message: "The title is empty",
         });
-    if (req.body.description === "undefined")
+    if (req.body.description === "undefined" || req.body.description === "")
         return res.status(400).json({
             error: "Bad Request",
             message: "The description is empty",

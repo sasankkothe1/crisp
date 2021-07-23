@@ -1,7 +1,15 @@
 import React, { useState } from "react";
 
 import { useForm } from "react-hook-form";
-import { Button, styled, TextField, IconButton, Grid } from "@material-ui/core";
+import {
+    Button,
+    styled,
+    TextField,
+    IconButton,
+    Grid,
+    Snackbar,
+} from "@material-ui/core";
+import MuiAlert from "@material-ui/lab/Alert";
 import MomentUtils from "@date-io/moment";
 import {
     MuiPickersUtilsProvider,
@@ -24,6 +32,8 @@ export default function AddEventView() {
     const [eventDate, setEventDate] = useState(new moment());
     const [startTime, setStartTime] = useState(new moment());
     const [endTime, setEndTime] = useState(new moment());
+    const [succesfullyUploaded, setSuccesfullyUploaded] = useState(false);
+    const [response, setResponse] = useState();
 
     const handleEventDate = (date) => setEventDate(date);
     const handleStartTime = (date) => setStartTime(date);
@@ -55,6 +65,18 @@ export default function AddEventView() {
         setUploadedImages(newArray);
     };
 
+    const Alert = (props) => {
+        return <MuiAlert elevation={6} variant="filled" {...props} />;
+    };
+
+    const handleClose = (event, reason) => {
+        if (reason === "clickaway") {
+            return;
+        }
+        setResponse(null);
+        setSuccesfullyUploaded(false);
+    };
+
     const addPost = (data) => {
         // convert the date of the startTime to the event Date (as the startTime and end time contain today's day)
         startTime.date(eventDate.date());
@@ -80,7 +102,13 @@ export default function AddEventView() {
         formData.append("startTime", startTime.toISOString());
         formData.append("endTime", endTime.toISOString());
         EventService.addEvent(formData).then((res) => {
-            console.log(res);
+            setResponse(res);
+            if (res.status === 201) {
+                setSuccesfullyUploaded(true);
+            }
+            if (res.status / 100 === 4) {
+                setSuccesfullyUploaded(true);
+            }
         });
     };
 
@@ -271,6 +299,25 @@ export default function AddEventView() {
                     </Button>
                 </div>
             </form>
+            {response && (
+                <Snackbar
+                    open={succesfullyUploaded}
+                    autoHideDuration={6000}
+                    onClose={handleClose}
+                >
+                    {response.status === 200 ||
+                    response.status === 201 ||
+                    response.status === 202 ? (
+                        <Alert onClose={handleClose} severity="success">
+                            {response.message}
+                        </Alert>
+                    ) : (
+                        <Alert onClose={handleClose} severity="error">
+                            {response.message}
+                        </Alert>
+                    )}
+                </Snackbar>
+            )}
         </div>
     );
 }
