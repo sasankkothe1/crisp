@@ -44,6 +44,20 @@ export default class RecipeService {
         }
     }
 
+    static async recipeById(id) {
+        let res = null
+        try {
+            res = await axios.get(`${RecipeService.baseURL()}/recipes/recipeById/${id}`)
+            return res.data
+        } catch (error) {
+            return {
+                status: error.response.status,
+                message: error.response.data.message
+            };
+        }
+    }
+
+
     static async allRecipesByUserID(limit, page) {
         let res = null
         const userID = getLoggedInUserID();

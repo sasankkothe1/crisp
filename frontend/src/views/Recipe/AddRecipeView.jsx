@@ -1,7 +1,18 @@
-import React, { useState } from "react";
+/* eslint-disable react/prop-types */
+import React, { useState, useEffect } from "react";
 
 import { useForm } from "react-hook-form";
-import { Button, styled, TextField, IconButton } from "@material-ui/core";
+import {
+    Button,
+    styled,
+    TextField,
+    IconButton,
+    List,
+    ListItem,
+    ListItemIcon,
+    ListItemText,
+    Checkbox,
+} from "@material-ui/core";
 
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import AddIcon from "@material-ui/icons/Add";
@@ -11,13 +22,23 @@ import RecipeService from "../../services/RecipeService";
 
 import "./RecipeView.css";
 
-export default function AddRecipeView() {
+export default function AddRecipeView({ recipeID }) {
     const { handleSubmit, register } = useForm();
 
+    const [checked, setChecked] = useState([0]);
     const [charactersLeft, setCharactersLeft] = useState(500);
     const [uploadedImages, setUploadedImages] = useState([]);
     const [ingredientsList, setIngredientsList] = useState([]);
     const [instructionsList, setInstructionsList] = useState([]);
+    const [recipe, setRecipe] = useState();
+
+    useEffect(() => {
+        if (recipeID) {
+            RecipeService.recipeById(recipeID).then((res) => {
+                setRecipe(res);
+            });
+        }
+    }, [recipe]);
 
     const addIngredient = () => {
         setIngredientsList([{ ingredientName: "", ingredientQuantity: "" }]);
@@ -123,9 +144,100 @@ export default function AddRecipeView() {
         });
     };
 
+    const handleToggle = (value) => () => {
+        const currentIndex = checked.indexOf(value);
+        const newChecked = [...checked];
+
+        if (currentIndex === -1) {
+            newChecked.push(value);
+        } else {
+            newChecked.splice(currentIndex, 1);
+        }
+
+        setChecked(newChecked);
+    };
+
+    const renderIngredientsList = (ingredients) => {
+        if (recipeID) {
+            return (
+                <List>
+                    {ingredients.map((el) => {
+                        const { ingredientName, ingredientQuantity } = el;
+                        const labelId = `checkbox-list-label-${ingredientName}`;
+
+                        return (
+                            <ListItem
+                                key={ingredientName}
+                                role={undefined}
+                                dense
+                                button
+                                onClick={handleToggle(ingredientName)}
+                            >
+                                <ListItemIcon>
+                                    <Checkbox
+                                        edge="start"
+                                        checked={
+                                            checked.indexOf(ingredientName) !==
+                                            -1
+                                        }
+                                        tabIndex={-1}
+                                        disableRipple
+                                        inputProps={{
+                                            "aria-labelledby": labelId,
+                                        }}
+                                    />
+                                </ListItemIcon>
+                                <ListItemText
+                                    id={labelId}
+                                    primary={`${ingredientName} : ${ingredientQuantity}`}
+                                />
+                            </ListItem>
+                        );
+                    })}
+                </List>
+            );
+        }
+    };
+
+    const renderInstructionsList = (instructions) => {
+        if (recipeID) {
+            return (
+                <List>
+                    {instructions.map((el, i) => {
+                        const labelId = `checkbox-list-label-${i}`;
+
+                        return (
+                            <ListItem
+                                key={i}
+                                role={undefined}
+                                dense
+                                button
+                                onClick={handleToggle(i)}
+                            >
+                                <ListItemIcon>
+                                    <Checkbox
+                                        edge="start"
+                                        checked={checked.indexOf(i) !== -1}
+                                        tabIndex={-1}
+                                        disableRipple
+                                        inputProps={{
+                                            "aria-labelledby": labelId,
+                                        }}
+                                    />
+                                </ListItemIcon>
+                                <ListItemText id={labelId} primary={`${el}`} />
+                            </ListItem>
+                        );
+                    })}
+                </List>
+            );
+        }
+    };
+
     const Input = styled("input")({
         display: "none",
     });
+
     return (
         <div className="post-form-container">
             <form
@@ -133,6 +245,7 @@ export default function AddRecipeView() {
                 onSubmit={handleSubmit(addPost)}
             >
                 <TextField
+                    value={recipe && recipe["title"]}
                     key={"recipe-title"}
                     {...register("title")}
                     id="outlined-full-width"
@@ -145,9 +258,11 @@ export default function AddRecipeView() {
                         shrink: true,
                     }}
                     variant="outlined"
+                    disabled={recipe && true}
                 />
-
                 <TextField
+                    value={recipe && recipe["description"]}
+                    disabled={recipe && true}
                     key={"recipe-description"}
                     {...register("description")}
                     multiline
@@ -178,7 +293,9 @@ export default function AddRecipeView() {
                     <div className="ingredients-details-container">
                         <label>Ingredients</label>
                         <div className="ingredients-list">
-                            {ingredientsList.length === 0 ? (
+                            {recipe !== undefined ? (
+                                renderIngredientsList(recipe["ingredientsList"])
+                            ) : ingredientsList.length === 0 ? (
                                 <Button
                                     variant="contained"
                                     onClick={addIngredient}
@@ -303,7 +420,9 @@ export default function AddRecipeView() {
                     <div className="ingredients-details-container">
                         <label>Instructions</label>
                         <div className="instructions-list">
-                            {instructionsList.length === 0 ? (
+                            {recipe !== undefined ? (
+                                renderInstructionsList(recipe["instructions"])
+                            ) : instructionsList.length === 0 ? (
                                 <Button
                                     variant="contained"
                                     onClick={addInstruction}
@@ -373,6 +492,7 @@ export default function AddRecipeView() {
                 </div>
 
                 <TextField
+                    value={recipe && recipe["cuisine"]}
                     key={"recipe-cuisine"}
                     {...register("cuisine")}
                     id="outlined-full-width"
@@ -385,28 +505,32 @@ export default function AddRecipeView() {
                         shrink: true,
                     }}
                     variant="outlined"
+                    disabled={recipe && true}
                 />
-
-                <Form.Group controlId="typeOfSolution">
-                    <Form.Control
-                        className="premium-dropdown"
-                        {...register("contentType")}
-                        as="select"
-                    >
-                        <option>Not Premium</option>
-                        <option>Premium</option>
-                    </Form.Control>
-                </Form.Group>
-                <div className="submit-button-container">
-                    <Button
-                        className="submit-button"
-                        type="submit"
-                        variant="contained"
-                        color="primary"
-                    >
-                        Submit
-                    </Button>
-                </div>
+                {!recipe && (
+                    <>
+                        <Form.Group controlId="typeOfSolution">
+                            <Form.Control
+                                className="premium-dropdown"
+                                {...register("contentType")}
+                                as="select"
+                            >
+                                <option>Not Premium</option>
+                                <option>Premium</option>
+                            </Form.Control>
+                        </Form.Group>
+                        <div className="submit-button-container">
+                            <Button
+                                className="submit-button"
+                                type="submit"
+                                variant="contained"
+                                color="primary"
+                            >
+                                Submit
+                            </Button>
+                        </div>
+                    </>
+                )}
             </form>
         </div>
     );

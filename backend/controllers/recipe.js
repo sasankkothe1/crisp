@@ -146,7 +146,7 @@ const listRecipesByCuisine = (req, res) => {
 };
 
 const read = (req, res) => {
-    RecipeModel.find(req.params.id)
+    RecipeModel.findById(req.params.id)
         .populate("postedBy")
         .exec()
         .then((recipe) => {

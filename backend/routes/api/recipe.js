@@ -33,7 +33,7 @@ router.get(
     RecipeController.listRecipesByUserID
 );
 router.get("/:cuisine", RecipeController.listRecipesByCuisine);
-router.get("/:id", isAuthenticated, RecipeController.read);
+router.get("/recipeById/:id", RecipeController.read);
 router.put(
     "/:id",
     isAuthenticated,
