@@ -3,22 +3,15 @@ const { v4: uuidv4 } = require("uuid");
 
 const multerS3 = require("multer-s3");
 
-<<<<<<< HEAD
 const AWS = require("aws-sdk");
 AWS.config.update({
     region: "eu-central-1",
     accessKeyId: process.env.AWS_S3_ACCESS_KEY_ID,
     secretAccessKey: process.env.AWS_S3_SECRET_ACCESS_KEY,
-=======
-const AWS = require('aws-sdk');
-AWS.config.update({
-    region: 'eu-central-1'
->>>>>>> 59764e1f8deeda206fecc733153c004f73a8dd87
 });
 
 const s3 = new AWS.S3();
 
-<<<<<<< HEAD
 const removeFileFromS3 = (link) => {
     const key = link.split("/").slice(-1)[0];
     s3.deleteObject(
@@ -60,20 +53,6 @@ const uploadS3Template = function (mimetypes) {
         },
     });
 };
-=======
-const uploadS3 = multer({
-    storage: multerS3({
-        s3: s3,
-        bucket: 'sebis-ggr',
-        acl: 'public-read',
-        contentType: multerS3.AUTO_CONTENT_TYPE, 
-        key: function (req, file, cb) {
-            const fileType = file.originalname.toLowerCase().split(".").slice(-1)[0];
-            cb(null, `${Date.now().toString()}.${fileType}`);
-        }
-    })
-});
->>>>>>> 59764e1f8deeda206fecc733153c004f73a8dd87
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -106,12 +85,7 @@ const uploadTemplate = function (mimetypes) {
 };
 
 module.exports = {
-<<<<<<< HEAD
     uploadTemplate,
     uploadS3Template,
     removeFileFromS3,
-=======
-    upload2: upload,
-    uploadS3
->>>>>>> 59764e1f8deeda206fecc733153c004f73a8dd87
 };

@@ -67,11 +67,7 @@ const createRecipeCollection = (req, res) => {
             _id: new mongoose.Types.ObjectId(),
             postedBy: req.user._id,
             media: req.files?.media?.map((file) => file.location),
-<<<<<<< HEAD
             pdfFile: req.files.pdfFile[0].location,
-=======
-            pdfFile: req.files?.pdfFile.map((file) => file.location)[0]
->>>>>>> 59764e1f8deeda206fecc733153c004f73a8dd87
         },
         (err, recipeCollection) => {
             if (err) {
@@ -128,11 +124,7 @@ const editRecipeCollection = (req, res) => {
     };
 
     if (req.files?.media?.length) {
-<<<<<<< HEAD
         newRecipeCollection.media = req.files.media.map(
-=======
-        newRecipeCollection.media = req.files.map(
->>>>>>> 59764e1f8deeda206fecc733153c004f73a8dd87
             (file) => file.location
         );
     }
