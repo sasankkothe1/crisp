@@ -79,7 +79,12 @@ const create = async (req, res) => {
 const listRecipes = (req, res) => {
     RecipeModel.paginate(
         {},
-        { limit: req.query.limit, page: req.query.page, sort: "-datePosted", populate: "postedBy" }
+        {
+            limit: req.query.limit,
+            page: req.query.page,
+            sort: "-datePosted",
+            populate: "postedBy",
+        }
     )
         .then((recipes) => {
             if (!recipes) {
@@ -88,20 +93,27 @@ const listRecipes = (req, res) => {
                     message: "No Posts Found",
                 });
             } else {
-                return res.status(200).json(recipes)
+                return res.status(200).json(recipes);
             }
         })
         .catch((error) => {
             res.status(500).json({
                 error: "Internal server error",
                 message: error.message,
-            })
-        })
-
+            });
+        });
 };
 
 const listRecipesByUserID = (req, res) => {
-    RecipeModel.paginate({ postedBy: req.params.id }, { limit: req.query.limit, page: req.query.page, sort: "-datePosted", populate: "postedBy" })
+    RecipeModel.paginate(
+        { postedBy: req.params.id },
+        {
+            limit: req.query.limit,
+            page: req.query.page,
+            sort: "-datePosted",
+            populate: "postedBy",
+        }
+    )
         .then((recipes) => {
             if (!recipes) {
                 return res.status(400).json({
@@ -109,7 +121,7 @@ const listRecipesByUserID = (req, res) => {
                     message: "No Recipes Found",
                 });
             } else {
-                return res.status(200).json(recipes)
+                return res.status(200).json(recipes);
             }
         })
         .catch((error) =>
