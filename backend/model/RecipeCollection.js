@@ -22,7 +22,7 @@ const RecipeCollectionSchema = new mongoose.Schema({
         type: [String],
     },
     pdfFile: {
-        type: [String],
+        type: String,
         required: true,
     },
     datePosted: {
