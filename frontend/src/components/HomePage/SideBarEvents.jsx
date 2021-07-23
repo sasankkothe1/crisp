@@ -64,7 +64,7 @@ export default function SideBarEvents() {
                 show={show}
                 onHide={handleClose}
             >
-                <PostModal typeOfPost={"event"} data={events[postIndex]} />
+                <PostModal data={events[postIndex]} />
             </Modal>
         </div>
     );
