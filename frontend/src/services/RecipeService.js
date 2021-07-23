@@ -16,7 +16,7 @@ export default class RecipeService {
                 recipe,
                 { headers }
             );
-            return res.status;
+            return { status: res.status, message: "Uploaded Successfully" };
         } catch (error) {
             return {
                 status: error.response.status,

@@ -12,8 +12,9 @@ import {
     ListItemIcon,
     ListItemText,
     Checkbox,
+    Snackbar,
 } from "@material-ui/core";
-
+import MuiAlert from "@material-ui/lab/Alert";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import AddIcon from "@material-ui/icons/Add";
 import DeleteIcon from "@material-ui/icons/Delete";
@@ -31,6 +32,8 @@ export default function AddRecipeView({ recipeID }) {
     const [ingredientsList, setIngredientsList] = useState([]);
     const [instructionsList, setInstructionsList] = useState([]);
     const [recipe, setRecipe] = useState();
+    const [succesfullyUploaded, setSuccesfullyUploaded] = useState(false);
+    const [response, setResponse] = useState();
 
     useEffect(() => {
         if (recipeID) {
@@ -117,6 +120,18 @@ export default function AddRecipeView({ recipeID }) {
         setUploadedImages(newArray);
     };
 
+    const Alert = (props) => {
+        return <MuiAlert elevation={6} variant="filled" {...props} />;
+    };
+
+    const handleClose = (event, reason) => {
+        if (reason === "clickaway") {
+            return;
+        }
+        setResponse(null);
+        setSuccesfullyUploaded(false);
+    };
+
     const addPost = (data) => {
         const formData = new FormData();
         formData.append("title", data.title);
@@ -140,7 +155,13 @@ export default function AddRecipeView({ recipeID }) {
         formData.append("cuisine", data.cuisine);
 
         RecipeService.addRecipe(formData).then((res) => {
-            console.log(res);
+            setResponse(res);
+            if (res.status === 201) {
+                setSuccesfullyUploaded(true);
+            }
+            if (res.status / 100 === 4) {
+                setSuccesfullyUploaded(true);
+            }
         });
     };
 
@@ -532,6 +553,25 @@ export default function AddRecipeView({ recipeID }) {
                     </>
                 )}
             </form>
+            {response && (
+                <Snackbar
+                    open={succesfullyUploaded}
+                    autoHideDuration={6000}
+                    onClose={handleClose}
+                >
+                    {response.status === 200 ||
+                    response.status === 201 ||
+                    response.status === 202 ? (
+                        <Alert onClose={handleClose} severity="success">
+                            {response.message}
+                        </Alert>
+                    ) : (
+                        <Alert onClose={handleClose} severity="error">
+                            {response.message}
+                        </Alert>
+                    )}
+                </Snackbar>
+            )}
         </div>
     );
 }
