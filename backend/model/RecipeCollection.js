@@ -35,11 +35,11 @@ const RecipeCollectionSchema = new mongoose.Schema({
     },
     rating: {
         type: Number,
-        default: 5
+        default: 5,
     },
     numOrders: {
         type: Number,
-        default: 0
+        default: 0,
     },
 });
 

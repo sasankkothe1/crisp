@@ -45,24 +45,27 @@ export default class PostService {
     }
 
     static async allPostByUserID(limit, page) {
-        let res = null
+        let res = null;
         const userID = getLoggedInUserID();
         let token = getToken();
         let headers = { Authorization: `Bearer ${token}` };
 
         try {
-            res = await axios.get(`${PostService.baseURL()}/posts/postedBy/${userID}`, {
-                params: {
-                    limit: limit,
-                    page: page,
-                },
-                headers: headers
-            })
-            return res.data
+            res = await axios.get(
+                `${PostService.baseURL()}/posts/postedBy/${userID}`,
+                {
+                    params: {
+                        limit: limit,
+                        page: page,
+                    },
+                    headers: headers,
+                }
+            );
+            return res.data;
         } catch (error) {
             return {
                 status: error.response.status,
-                message: error.response.data.message
+                message: error.response.data.message,
             };
         }
     }

@@ -23,23 +23,29 @@ const getRecipeCollections = (req, res) => {
             console.log(recipeCollections);
             //recipeCollections = JSON.parse(JSON.stringify(recipeCollections));
             if (req.user) {
-                Order.find({ 
-                    orderedBy: req.user._id, 
-                    type: "RecipeCollection"
-                }).then(orders => {
-                    let orderKeys = new Set();
-                    orders.forEach(order => orderKeys.add(order.recipeCollection.toString()));
+                Order.find({
+                    orderedBy: req.user._id,
+                    type: "RecipeCollection",
+                })
+                    .then((orders) => {
+                        let orderKeys = new Set();
+                        orders.forEach((order) =>
+                            orderKeys.add(order.recipeCollection.toString())
+                        );
 
-                    console.log(orderKeys);
-                    
-                    recipeCollections.forEach(recipeCollection => {
-                        console.log(recipeCollection._id);
-                        if (orderKeys.has(recipeCollection._id.toString())) {
-                            console.log(true);
-                        } else {
-                        }
-                    });
-                }).catch();
+                        console.log(orderKeys);
+
+                        recipeCollections.forEach((recipeCollection) => {
+                            console.log(recipeCollection._id);
+                            if (
+                                orderKeys.has(recipeCollection._id.toString())
+                            ) {
+                                console.log(true);
+                            } else {
+                            }
+                        });
+                    })
+                    .catch();
             }
             res.json(recipeCollections);
         })
@@ -82,21 +88,27 @@ const getRecipeCollection = (req, res) => {
         .then((recipeCollection) => {
             recipeCollection = JSON.parse(JSON.stringify(recipeCollection));
             if (req.user) {
-                Order.find({ 
-                    orderedBy: req.user._id, 
-                    type: "RecipeCollection"
-                }).then(orders => {
-                    let orderKeys = new Set();
-                    orders.forEach(order => orderKeys.add(order.recipeCollection.toString()));
+                Order.find({
+                    orderedBy: req.user._id,
+                    type: "RecipeCollection",
+                })
+                    .then((orders) => {
+                        let orderKeys = new Set();
+                        orders.forEach((order) =>
+                            orderKeys.add(order.recipeCollection.toString())
+                        );
 
-                    console.log(orderKeys);
-                    
-                    const purchased = orderKeys.has(recipeCollection['_id']);
+                        console.log(orderKeys);
 
-                    recipeCollection['purchased'] = purchased;
+                        const purchased = orderKeys.has(
+                            recipeCollection["_id"]
+                        );
 
-                    console.log(recipeCollection);
-                }).catch();
+                        recipeCollection["purchased"] = purchased;
+
+                        console.log(recipeCollection);
+                    })
+                    .catch();
             }
             console.log(recipeCollection);
             res.send(recipeCollection);
@@ -119,7 +131,9 @@ const editRecipeCollection = (req, res) => {
     }
 
     if (req.files?.pdfFile?.length) {
-        newRecipeCollection.pdfFile = req.pdfFile.map((file) => file.location)[0];
+        newRecipeCollection.pdfFile = req.pdfFile.map(
+            (file) => file.location
+        )[0];
     }
 
     RecipeCollection.findOneAndUpdate(

@@ -51,6 +51,7 @@ function App() {
                         </Route>
                         <Route exact path="/addRecipeCollection">
                             <AddRecipeCollectionView />
+                        </Route>
                         <Route exact path="/viewRecipe/:id">
                             <RecipeIDView />
                         </Route>

@@ -6,7 +6,7 @@ export const recipeCollectionsData = [
         description: "hahahahah",
         tags: ["pizza", "fastfood"],
         meal: "dinner",
-        media: []
+        media: [],
     },
     {
         postedBy: "user2",
@@ -15,7 +15,7 @@ export const recipeCollectionsData = [
         description: "memememe",
         tags: ["pizza", "drinks"],
         meal: "dinner",
-        media: []
+        media: [],
     },
     {
         postedBy: "user3",
@@ -23,6 +23,6 @@ export const recipeCollectionsData = [
         price: 10,
         tags: ["pizza", "drinks"],
         meal: "snacks",
-        media: []
+        media: [],
     },
 ];

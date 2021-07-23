@@ -2,7 +2,13 @@ import React, { useState } from "react";
 
 import { useForm } from "react-hook-form";
 
-import { Button, styled, TextField, IconButton, makeStyles } from "@material-ui/core";
+import {
+    Button,
+    styled,
+    TextField,
+    IconButton,
+    makeStyles,
+} from "@material-ui/core";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import DeleteIcon from "@material-ui/icons/Delete";
 
@@ -13,31 +19,29 @@ import "../Post/PostView.css";
 import RecipeCollectionService from "../../services/RecipeCollectionService";
 
 const useStyles = makeStyles((theme) => ({
-	rcFormContainer: {
-
-	},
-	chip: {
-		margin: theme.spacing(0.5, 0.25)
-	}
+    rcFormContainer: {},
+    chip: {
+        margin: theme.spacing(0.5, 0.25),
+    },
 }));
 
 export default function AddRecipeCollectionView() {
-	const classes = useStyles();
+    const classes = useStyles();
 
     const { handleSubmit, register } = useForm();
 
     const [charactersLeft, setCharactersLeft] = useState(500);
     const [uploadedMedia, setUploadedMedia] = useState([]);
-	const [uploadedPdfFile, setUploadedPdfFile] = useState("");
+    const [uploadedPdfFile, setUploadedPdfFile] = useState("");
 
-	const [tags, setTags] = useState(["pizza"]);
-	const [currentTag, setCurrentTag] = useState("");
+    const [tags, setTags] = useState(["pizza"]);
+    const [currentTag, setCurrentTag] = useState("");
 
     const handleMediaOnChange = (e) => {
         e.preventDefault();
-		console.log(e.target.files);
-		[...e.target.files].forEach(file => {
-			let name = file["name"];
+        console.log(e.target.files);
+        [...e.target.files].forEach((file) => {
+            let name = file["name"];
             let reader = new FileReader();
             reader.readAsDataURL(file);
             reader.onloadend = () => {
@@ -46,22 +50,20 @@ export default function AddRecipeCollectionView() {
                     { file, name, preview: reader.result },
                 ]);
             };
-		});
+        });
     };
 
-	const handlePdfFileOnChange = (e) => {
-		e.preventDefault();
-		[...e.target.files].forEach(file => {
-			let name = file["name"];
+    const handlePdfFileOnChange = (e) => {
+        e.preventDefault();
+        [...e.target.files].forEach((file) => {
+            let name = file["name"];
             let reader = new FileReader();
             reader.readAsDataURL(file);
             reader.onloadend = () => {
-                setUploadedPdfFile(
-                    { file, name, preview: reader.result },
-                );
+                setUploadedPdfFile({ file, name, preview: reader.result });
             };
-		});
-	}
+        });
+    };
 
     const removeMedia = (e, name) => {
         e.preventDefault();
@@ -71,44 +73,44 @@ export default function AddRecipeCollectionView() {
         setUploadedMedia(newArray);
     };
 
-	const removePdfFile = (e) => {
-		e.preventDefault();
-		setUploadedPdfFile("");
-	};
+    const removePdfFile = (e) => {
+        e.preventDefault();
+        setUploadedPdfFile("");
+    };
 
     const addRecipeCollection = (data) => {
         const formData = new FormData();
         formData.append("title", data.title);
         formData.append("description", data.description);
-		formData.append("price", data.price);
-		uploadedMedia.forEach(file => formData.append("media", file["file"]));
-		formData.append("pdfFile", uploadedPdfFile["file"]);
-		tags.forEach(tag => formData.append("tags", tag));
+        formData.append("price", data.price);
+        uploadedMedia.forEach((file) => formData.append("media", file["file"]));
+        formData.append("pdfFile", uploadedPdfFile["file"]);
+        tags.forEach((tag) => formData.append("tags", tag));
 
-		console.log(formData);
+        console.log(formData);
 
         RecipeCollectionService.addRecipeCollection(formData).then((res) => {
             console.log(res);
         });
     };
 
-	const addTag = (event) => {
-		console.log(event);
-		if (event.key == 'Enter') {
-			setTags([...tags, currentTag]);
-			setCurrentTag("");
-		}
-	};
+    const addTag = (event) => {
+        console.log(event);
+        if (event.key == "Enter") {
+            setTags([...tags, currentTag]);
+            setCurrentTag("");
+        }
+    };
 
-	const changeTag = (event) => {
-		setCurrentTag(event.target.value);
-		console.log(currentTag);
-	};
+    const changeTag = (event) => {
+        setCurrentTag(event.target.value);
+        console.log(currentTag);
+    };
 
-	const removeTag = item => () => {
-		console.log(item);
-		setTags(tags.filter(tag => tag !== item));
-	};
+    const removeTag = (item) => () => {
+        console.log(item);
+        setTags(tags.filter((tag) => tag !== item));
+    };
 
     const Input = styled("input")({
         display: "none",
@@ -120,7 +122,12 @@ export default function AddRecipeCollectionView() {
                 encType="multipart/form-data"
                 onSubmit={handleSubmit(addRecipeCollection)}
             >
-				<button type="submit" disabled style={{display: "none"}} aria-hidden="true"></button>
+                <button
+                    type="submit"
+                    disabled
+                    style={{ display: "none" }}
+                    aria-hidden="true"
+                ></button>
 
                 <TextField
                     key={"rc-title"}
@@ -162,10 +169,10 @@ export default function AddRecipeCollectionView() {
                     }}
                 />
 
-				<TextField
+                <TextField
                     key={"rc-price"}
                     {...register("price")}
-					type="number"
+                    type="number"
                     label="Price"
                     style={{ margin: 8 }}
                     placeholder="Enter the price"
@@ -174,11 +181,12 @@ export default function AddRecipeCollectionView() {
                     InputLabelProps={{
                         shrink: true,
                     }}
-					InputProps={{
-						inputProps: { 
-							max: 1000, min: 1
-						}
-					}}
+                    InputProps={{
+                        inputProps: {
+                            max: 1000,
+                            min: 1,
+                        },
+                    }}
                     variant="outlined"
                 />
 
@@ -232,13 +240,13 @@ export default function AddRecipeCollectionView() {
                     </div>
                 </div>
 
-				<div className="upload-container">
+                <div className="upload-container">
                     <div className="upload-button-container">
                         <label htmlFor="contained-button-pdf">
                             <Input
                                 id="contained-button-pdf"
                                 type="file"
-								accept=".pdf"
+                                accept=".pdf"
                                 onChange={handlePdfFileOnChange}
                             />
                             <Button
@@ -252,35 +260,33 @@ export default function AddRecipeCollectionView() {
                     </div>
                     <div className="upload-preview-container">
                         {uploadedPdfFile ? (
-							<div
-								className="pdf-preview-container"
-								key={uploadedPdfFile["name"]}
-								style={{
-									border: "1px solid gray",
-								}}
-							>
-								<iframe
-									className="preview"
-									src={ uploadedPdfFile.preview }
-								></iframe>
-								<div className="remove-image-button">
-									<IconButton
-										onClick={(e) =>
-											removePdfFile(e)
-										}
-										aria-label="delete"
-									>
-										<DeleteIcon fontSize="large" />
-									</IconButton>
-								</div>
-							</div>
+                            <div
+                                className="pdf-preview-container"
+                                key={uploadedPdfFile["name"]}
+                                style={{
+                                    border: "1px solid gray",
+                                }}
+                            >
+                                <iframe
+                                    className="preview"
+                                    src={uploadedPdfFile.preview}
+                                ></iframe>
+                                <div className="remove-image-button">
+                                    <IconButton
+                                        onClick={(e) => removePdfFile(e)}
+                                        aria-label="delete"
+                                    >
+                                        <DeleteIcon fontSize="large" />
+                                    </IconButton>
+                                </div>
+                            </div>
                         ) : (
                             <h4 className="no-media">No file</h4>
                         )}
                     </div>
-				</div>
+                </div>
 
-				<TextField
+                <TextField
                     key={"post-tags"}
                     {...register("tags")}
                     label="Tags"
@@ -291,34 +297,34 @@ export default function AddRecipeCollectionView() {
                     InputLabelProps={{
                         shrink: true,
                     }}
-					value={currentTag}
-					InputProps={{
-						startAdornment: tags.map(item => (
-							<Chip
-							  key={item}
-							  tabIndex={-1}
-							  label={item}
-							  className={classes.chip}
-							  onDelete={removeTag(item)}
-							/>
-						)),
-						onKeyDown: event => addTag(event),
-						onChange: event => changeTag(event)
-					}}
+                    value={currentTag}
+                    InputProps={{
+                        startAdornment: tags.map((item) => (
+                            <Chip
+                                key={item}
+                                tabIndex={-1}
+                                label={item}
+                                className={classes.chip}
+                                onDelete={removeTag(item)}
+                            />
+                        )),
+                        onKeyDown: (event) => addTag(event),
+                        onChange: (event) => changeTag(event),
+                    }}
                     variant="outlined"
                 />
-			
-				<div className="submit-button-container">
-					<Button
-						className="submit-button"
-						type="submit"
-						variant="contained"
-						color="primary"
-					>
-						Submit
-					</Button>
-				</div>
-		</form>
+
+                <div className="submit-button-container">
+                    <Button
+                        className="submit-button"
+                        type="submit"
+                        variant="contained"
+                        color="primary"
+                    >
+                        Submit
+                    </Button>
+                </div>
+            </form>
         </div>
     );
 }

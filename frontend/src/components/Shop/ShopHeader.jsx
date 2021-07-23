@@ -65,7 +65,9 @@ const ShopHeader = (props) => {
                         <Grid item>
                             <IconButton
                                 onClick={() => {
-                                    props.recipeType == icon["type"] ? props.setRecipeType("") : props.setRecipeType(icon["type"])
+                                    props.recipeType == icon["type"]
+                                        ? props.setRecipeType("")
+                                        : props.setRecipeType(icon["type"]);
                                 }}
                             >
                                 <Icon className={classes.icon}>

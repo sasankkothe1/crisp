@@ -8,14 +8,14 @@ import PostModal from "../Post/PostModal";
 import { makeStyles } from "@material-ui/core";
 
 const useStyles = makeStyles(() => ({
-    post:  {
+    post: {
         overflowY: "scroll",
         padding: "2em 10em 0 10em",
         display: "flex",
         flexDirection: "row",
         flexWrap: "wrap",
-        flexShrink: "1"
-    }
+        flexShrink: "1",
+    },
 }));
 
 export default function ShopItemsList(props) {

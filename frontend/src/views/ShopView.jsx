@@ -12,23 +12,23 @@ import recipeCollectionService from "../services/RecipeCollectionService";
 
 const useStyles = makeStyles(() => ({
     shopContainer: {
-        width:"1000px",
+        width: "1000px",
         display: "flex",
-        flexDirection: "column"
+        flexDirection: "column",
     },
     shop: {
         display: "flex",
         flexDirection: "row",
-        width: "100%"
+        width: "100%",
     },
     shopSidebar: {
         width: "20%",
-        display: "flex"
+        display: "flex",
     },
     shopItemsList: {
         width: "80%",
-        display: "flex"
-    }
+        display: "flex",
+    },
 }));
 
 export default function ShopView() {
@@ -47,7 +47,12 @@ export default function ShopView() {
 
     useEffect(async () => {
         console.log(recipeType, meal, minPrice, maxPrice);
-        const res = await recipeCollectionService.getRecipeCollections(recipeType, meal, minPrice, maxPrice);
+        const res = await recipeCollectionService.getRecipeCollections(
+            recipeType,
+            meal,
+            minPrice,
+            maxPrice
+        );
 
         console.log(res.data);
 
@@ -65,7 +70,7 @@ export default function ShopView() {
 
     const headerProps = {
         recipeType: recipeType,
-        setRecipeType: setRecipeType
+        setRecipeType: setRecipeType,
     };
 
     return (

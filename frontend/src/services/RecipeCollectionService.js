@@ -11,7 +11,8 @@ export default class RecipeCollectionService {
             const headers = { Authorization: `Bearer ${token}` };
 
             const res = await axios.get(
-                `${RecipeCollectionService.baseURL()}/${id}`, { headers }
+                `${RecipeCollectionService.baseURL()}/${id}`,
+                { headers }
             );
 
             return res;
@@ -31,7 +32,7 @@ export default class RecipeCollectionService {
             }
             if (meal) {
                 cgi = cgi.concat(`&meal=${meal}`);
-            } 
+            }
             if (minPrice) {
                 cgi = cgi.concat(`&min_price=${minPrice}`);
             }
@@ -44,7 +45,7 @@ export default class RecipeCollectionService {
 
             const headers = {};
             if (token) {
-                headers.Authorization = `Bearer ${token}`; 
+                headers.Authorization = `Bearer ${token}`;
             }
             const res = await axios.get(url, headers);
 
@@ -62,7 +63,7 @@ export default class RecipeCollectionService {
         if (!token) {
             return 502;
         }
-        let headers = { Authorization: `Bearer ${token}`};
+        let headers = { Authorization: `Bearer ${token}` };
 
         try {
             const res = await axios.post(
@@ -80,4 +81,3 @@ export default class RecipeCollectionService {
         }
     }
 }
-
