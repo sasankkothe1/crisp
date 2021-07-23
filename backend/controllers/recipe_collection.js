@@ -1,8 +1,17 @@
 const mongoose = require("mongoose");
-const fs = require("fs");
-const path = require("path");
 
 const RecipeCollection = require("../model/RecipeCollection");
+
+const { removeFileFromS3 } = require("../middleware/upload");
+
+const AWS = require("aws-sdk");
+AWS.config.update({
+    region: "eu-central-1",
+    accessKeyId: process.env.AWS_S3_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_S3_SECRET_ACCESS_KEY,
+});
+
+const s3 = new AWS.S3();
 
 const getRecipeCollections = (req, res) => {
     let collections = RecipeCollection.find();
@@ -11,8 +20,6 @@ const getRecipeCollections = (req, res) => {
         const populates = Array.isArray(req.query.populate)
             ? req.query.populate
             : [req.query.populate];
-
-        console.log(populates);
 
         for (const field of populates) {
             collections = collections.populate(field);
@@ -30,12 +37,8 @@ const createRecipeCollection = (req, res) => {
             ...req.body,
             _id: new mongoose.Types.ObjectId(),
             postedBy: req.user._id,
-            media: req.files?.map(
-                (file) =>
-                    `${req.protocol}://${req.get("host")}/public/uploads/${
-                        file.filename
-                    }`
-            ),
+            media: req.files?.media?.map((file) => file.location),
+            pdfFile: req.files.pdfFile[0].location,
         },
         (err, recipeCollection) => {
             if (err) {
@@ -56,7 +59,6 @@ const getRecipeCollection = (req, res) => {
             : [req.query.populate];
 
         for (const field of populates) {
-            console.log(field);
             collection = collection.populate(field);
         }
     }
@@ -71,13 +73,13 @@ const editRecipeCollection = (req, res) => {
         ...req.body,
     };
 
-    if (req.files?.length) {
-        newRecipeCollection.media = req.files.map(
-            (file) =>
-                `${req.protocol}://${req.get("host")}/public/uploads/${
-                    file.filename
-                }`
+    if (req.files?.media?.length) {
+        newRecipeCollection.media = req.files.media.map(
+            (file) => file.location
         );
+    }
+    if (req.files?.pdfFile?.length) {
+        newRecipeCollection.pdfFile = req.files.pdfFile[0].location;
     }
 
     RecipeCollection.findOneAndUpdate(
@@ -90,7 +92,14 @@ const editRecipeCollection = (req, res) => {
             if (err) {
                 res.status(502).send({ message: err.message });
             } else {
-                // TODO: remove outdated files (not really important for now though)
+                if (req.files?.media?.length) {
+                    recipeCollection.media.map((media) =>
+                        removeFileFromS3(media)
+                    );
+                }
+                if (req.files?.pdfFile?.length) {
+                    removeFileFromS3(recipeCollection.pdfFile);
+                }
                 res.sendStatus(200);
             }
         }
@@ -107,23 +116,12 @@ const removeRecipeCollection = (req, res) => {
             if (err) {
                 res.status(404).send({ message: err.message });
             } else {
-                recipeCollection?.media.forEach((media) => {
-                    const filePath = `./public/uploads/${path.basename(media)}`;
-                    fs.access(filePath, fs.F_OK, (err) => {
-                        if (err) {
-                            console.log(err);
-                            return;
-                        }
-                        fs.unlink(filePath, (err) => {
-                            if (err) {
-                                console.log(err);
-                                return;
-                            }
-                        });
-                    });
-                });
                 if (recipeCollection) {
-                    res.status(200).send({ id: recipeCollection?._id });
+                    recipeCollection?.media.map((media) =>
+                        removeFileFromS3(media)
+                    );
+                    removeFileFromS3(recipeCollection.pdfFile);
+                    res.status(200).send({ id: recipeCollection._id });
                 } else {
                     res.sendStatus(200);
                 }
