@@ -17,9 +17,14 @@ const mimetypes = [
     "video/MP2T",
 ];
 
+<<<<<<< HEAD
 const { uploadTemplate } = require("../../middleware/upload");
 
 const upload = uploadTemplate(mimetypes);
+=======
+const { upload2 } = require("../../middleware/upload");
+const upload = upload2(mimetypes);
+>>>>>>> 59764e1f8deeda206fecc733153c004f73a8dd87
 
 router.post(
     "/addRecipe",

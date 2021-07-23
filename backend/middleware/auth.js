@@ -28,9 +28,17 @@ exports.authenticateIfPossible = async (req, res, next) => {
 
         next();
     } catch (error) {
+<<<<<<< HEAD
         return next(new ErrorResponse("Something weird happened", 502));
     }
 };
+=======
+        return next(
+            new ErrorResponse("Something weird happened", 502)
+        );
+    } 
+}
+>>>>>>> 59764e1f8deeda206fecc733153c004f73a8dd87
 
 exports.isAuthenticated = async (req, res, next) => {
     let token;

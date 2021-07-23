@@ -17,7 +17,7 @@ router.get("/isFollowing/:id", isAuthenticated, isFollowing);
 router.put("/followUser/:id", isAuthenticated, followUser);
 router.put("/unfollowUser/:id", isAuthenticated, unfollowUser);
 
-/* router.get("/", (req, res) => {
+router.get("/", (req, res) => {
     User.find()
         .then((users) => res.json(users))
         .catch((err) => res.status(404).send({ message: err.message }));
@@ -38,6 +38,6 @@ router.put("/:id", (req, res) => {
             }
         }
     );
-}); */
+}); 
 
 module.exports = router;
