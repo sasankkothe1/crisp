@@ -56,5 +56,28 @@ export default class RecipeCollectionService {
             return error;
         }
     }
+
+    static async addRecipeCollection(recipeCollection) {
+        let token = getToken();
+        if (!token) {
+            return 502;
+        }
+        let headers = { Authorization: `Bearer ${token}`};
+
+        try {
+            const res = await axios.post(
+                `${RecipeCollectionService.baseURL()}`,
+                recipeCollection,
+                { headers }
+            );
+
+            return res.status;
+        } catch (error) {
+            return {
+                status: error.response.status,
+                message: error.response.data.message,
+            };
+        }
+    }
 }
 

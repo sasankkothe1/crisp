@@ -13,6 +13,7 @@ import reducers from "./redux/reducers";
 import HomeView from "./views/HomeView";
 import ProfileView from "./views/Profile/ProfileView";
 import ShopView from "./views/ShopView";
+import AddRecipeCollectionView from "./views/RecipeCollection/AddRecipeCollection";
 
 // create store for redux
 export const store = createStore(reducers, applyMiddleware(thunkMiddleware));
@@ -46,6 +47,9 @@ function App() {
                         </Route>
                         <Route exact path="/shop">
                             <ShopView />
+                        </Route>
+                        <Route exact path="/addRecipeCollection">
+                            <AddRecipeCollectionView />
                         </Route>
                         <Route
                             render={() => <Redirect to={{ pathname: "/" }} />}

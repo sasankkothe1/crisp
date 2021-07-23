@@ -16,7 +16,7 @@ const useStyles = makeStyles(() => ({
         flexGrow: 1,
     },
     header: {
-        fontSize: "small",
+        fontSize: "large",
     },
 }));
 
@@ -71,7 +71,6 @@ export default function ShopSidebar(props) {
                         props.setMinPrice(price);
                     }}
                 />
-                <span> ... </span>
                 <Input
                     type="number"
                     name="min"
