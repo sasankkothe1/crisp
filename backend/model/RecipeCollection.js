@@ -35,7 +35,7 @@ const RecipeCollectionSchema = new mongoose.Schema({
     },
     rating: {
         type: Number,
-        default: 5,
+        default: 0,
     },
     numOrders: {
         type: Number,

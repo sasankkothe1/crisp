@@ -10,11 +10,11 @@ import { makeStyles } from "@material-ui/core";
 const useStyles = makeStyles(() => ({
     post: {
         overflowY: "scroll",
-        padding: "2em 10em 0 10em",
-        display: "flex",
-        flexDirection: "row",
-        flexWrap: "wrap",
-        flexShrink: "1",
+        padding: "25px 25px 0",
+        columnCount: 2,
+        gridColumnGap: "1em",
+        columnGap: "1em",
+        width: "90%"
     },
 }));
 

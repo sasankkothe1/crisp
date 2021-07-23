@@ -25,29 +25,35 @@ export default class RecipeCollectionService {
         try {
             const token = getToken();
 
-            let url = `${RecipeCollectionService.baseURL()}?populate=postedBy`;
-            let cgi = "";
+            let url = `${RecipeCollectionService.baseURL()}`;
+
+            let params = {
+            };
+
             if (recipeType) {
-                cgi = cgi.concat(`&recipe_type=${recipeType}`);
+                params.recipe_type = recipeType;
             }
             if (meal) {
-                cgi = cgi.concat(`&meal=${meal}`);
+                params.meal = meal;
             }
             if (minPrice) {
-                cgi = cgi.concat(`&min_price=${minPrice}`);
+                params.min_price = minPrice;
             }
             if (maxPrice && maxPrice != 999999999) {
-                cgi = cgi.concat(`&max_price=${maxPrice}`);
-            }
-            if (cgi) {
-                url = url.concat(cgi);
+                params.max_price = maxPrice;
             }
 
-            const headers = {};
+            let headers = {};
             if (token) {
-                headers.Authorization = `Bearer ${token}`;
+                headers = {
+                    ...headers,
+                    Authorization: `Bearer ${token}`
+                };
             }
-            const res = await axios.get(url, headers);
+            const res = await axios.get(url, {
+                headers: headers,
+                params: params
+            });
 
             console.log(res.status);
             console.log(res.data);
