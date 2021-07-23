@@ -57,7 +57,6 @@ const getOrder = (req, res) => {
 };
 
 const editOrder = (req, res) => {
-    console.log(req.user);
     Order.findOneAndUpdate(
         {
             _id: req.params.id,
