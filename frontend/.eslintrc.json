@@ -22,8 +22,7 @@
     "indent": [
       "warn",
       4,
-    ],
-    "no-unused-vars": "off",
-    "react/prop-types": "off"
+      { "SwitchCase": 1 }
+    ]
   }
 }
