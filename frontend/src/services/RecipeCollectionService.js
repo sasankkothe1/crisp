@@ -23,7 +23,6 @@ export default class RecipeCollectionService {
     static async getRecipeCollections(recipeType, meal, minPrice, maxPrice) {
         try {
             const token = getToken();
-            const headers = { Authorization: `Bearer ${token}` };
 
             let url = `${RecipeCollectionService.baseURL()}?populate=postedBy`;
             let cgi = "";
@@ -41,11 +40,13 @@ export default class RecipeCollectionService {
             }
             if (cgi) {
                 url = url.concat(cgi);
-                //url = url.concat('?', cgi.substring(1));
             }
 
-            console.log(url);
-            const res = await axios.get(url);
+            const headers = {};
+            if (token) {
+                headers.Authorization = `Bearer ${token}`; 
+            }
+            const res = await axios.get(url, headers);
 
             console.log(res.status);
             console.log(res.data);

@@ -6,11 +6,11 @@ import ShopSidebar from "../components/Shop/ShopSidebar";
 import ShopHeader from "../components/Shop/ShopHeader";
 import ShopItemsList from "../components/Shop/ShopItemsList";
 
-import { recipeCollectionsData } from "../SampleData/recipeCollectionsData";
+//import { recipeCollectionsData } from "../SampleData/recipeCollectionsData";
 
 import recipeCollectionService from "../services/RecipeCollectionService";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
     shopContainer: {
         width:"1000px",
         display: "flex",
