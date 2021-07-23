@@ -50,8 +50,6 @@ export default function AddRecipeCollectionView() {
     };
 
 	const handlePdfFileOnChange = (e) => {
-		console.log("Pdf!");
-
 		e.preventDefault();
 		[...e.target.files].forEach(file => {
 			let name = file["name"];
@@ -61,20 +59,15 @@ export default function AddRecipeCollectionView() {
                 setUploadedPdfFile(
                     { file, name, preview: reader.result },
                 );
-				console.log(name, reader.result);
-				console.log(uploadedPdfFile);
             };
 		});
 	}
 
     const removeMedia = (e, name) => {
         e.preventDefault();
-        console.log(name);
-		console.log(classes.rcFormContainer);
         const newArray = uploadedMedia.filter((image) => {
             return image["name"] != name;
         });
-        console.log(newArray);
         setUploadedMedia(newArray);
     };
 
@@ -90,7 +83,11 @@ export default function AddRecipeCollectionView() {
 		formData.append("price", data.price);
 		uploadedMedia.forEach(file => formData.append("media", file["file"]));
 		formData.append("pdfFile", uploadedPdfFile["file"]);
-        RecipeCollectionService.AddRecipeCollection(formData).then((res) => {
+		tags.forEach(tag => formData.append("tags", tag));
+
+		console.log(formData);
+
+        RecipeCollectionService.addRecipeCollection(formData).then((res) => {
             console.log(res);
         });
     };
@@ -98,12 +95,7 @@ export default function AddRecipeCollectionView() {
 	const addTag = (event) => {
 		console.log(event);
 		if (event.key == 'Enter') {
-			console.log(currentTag);
-			const newTags = [...tags];
-			console.log(tags);
-			newTags.push(currentTag);
-			console.log(newTags);
-			setTags(newTags);
+			setTags([...tags, currentTag]);
 			setCurrentTag("");
 		}
 	};
@@ -184,7 +176,7 @@ export default function AddRecipeCollectionView() {
                     }}
 					InputProps={{
 						inputProps: { 
-							max: 999.99, min: 0.99
+							max: 1000, min: 1
 						}
 					}}
                     variant="outlined"

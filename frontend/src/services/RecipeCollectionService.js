@@ -71,7 +71,7 @@ export default class RecipeCollectionService {
                 { headers }
             );
 
-            return res.status;
+            return res;
         } catch (error) {
             return {
                 status: error.response.status,
