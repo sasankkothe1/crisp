@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-//import ShopItem from "./ShopItem";
 
 import { Modal } from "react-bootstrap";
 import PostTile from "../Post/PostTile";
@@ -14,7 +13,7 @@ const useStyles = makeStyles(() => ({
         columnCount: 2,
         gridColumnGap: "1em",
         columnGap: "1em",
-        width: "90%"
+        width: "90%",
     },
 }));
 
@@ -35,9 +34,20 @@ export default function ShopItemsList(props) {
 
     return (
         <div className={classes.post}>
-            {recipeCollectionsData.map((rc, i) => (
-                <PostTile onClick={() => displayPost(i)} key={i} data={rc} />
-            ))}
+            {recipeCollectionsData.map((rc, i) => {
+                const rcProps = {
+                    price: rc.price,
+                    purchased: rc.purchased,
+                };
+                return (
+                    <PostTile
+                        onClick={() => displayPost(i)}
+                        key={i}
+                        data={rc}
+                        rcProps={rcProps}
+                    />
+                );
+            })}
             <Modal
                 size={"lg"}
                 scrollable

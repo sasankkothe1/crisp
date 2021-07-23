@@ -59,7 +59,7 @@ const ShopHeader = (props) => {
             icon: "emoji_objects",
             caption: "Creative",
             type: "creative",
-        }
+        },
     ];
 
     return (

@@ -28,7 +28,6 @@ const useStyles = makeStyles(() => ({
     shopItemsList: {
         width: "80%",
         display: "flex",
-  
     },
 }));
 

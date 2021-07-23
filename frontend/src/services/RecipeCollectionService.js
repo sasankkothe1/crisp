@@ -27,8 +27,7 @@ export default class RecipeCollectionService {
 
             let url = `${RecipeCollectionService.baseURL()}`;
 
-            let params = {
-            };
+            let params = {};
 
             if (recipeType) {
                 params.recipe_type = recipeType;
@@ -47,12 +46,12 @@ export default class RecipeCollectionService {
             if (token) {
                 headers = {
                     ...headers,
-                    Authorization: `Bearer ${token}`
+                    Authorization: `Bearer ${token}`,
                 };
             }
             const res = await axios.get(url, {
                 headers: headers,
-                params: params
+                params: params,
             });
 
             console.log(res.status);

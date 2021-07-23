@@ -7,15 +7,28 @@ import PersonIcon from "@material-ui/icons/Person";
 import StarRatings from "react-star-ratings";
 import ReactPlayer from "react-player";
 
+import DoneAllIcon from "@material-ui/icons/DoneAll";
+import ReceiptIcon from "@material-ui/icons/Receipt";
+
 import "./PostTile.css";
 
 export default function PostTile(props) {
     const { data, onClick } = props;
     const { media } = data;
 
+    const { rcProps } = props;
+
+    console.log(rcProps);
+
     return (
         <div className="post-tile-container" onClick={onClick}>
-            <div className="post-tile-header">
+            <div
+                className={
+                    rcProps && rcProps.purchased && rcProps.purchased == true
+                        ? "rc-tile-header"
+                        : "post-tile-header"
+                }
+            >
                 <div className="post-tile-header-left">
                     <PersonIcon fontSize="small" ml="2rem" />
                     <div>
@@ -24,6 +37,24 @@ export default function PostTile(props) {
                         </h6>
                     </div>
                 </div>
+                {rcProps &&
+                    rcProps.price &&
+                    rcProps.purchased &&
+                    rcProps.purchased === true && (
+                        <div className="post-tile-header-tick">
+                            <DoneAllIcon fontSize="small" />
+                        </div>
+                    )}
+                {rcProps && rcProps.price && !rcProps.purchased && (
+                    <div className="post-tile-header-price">
+                        <ReceiptIcon fontSize="small" />
+                        <div>
+                            <h6 className="post-tile-header-user">
+                                {rcProps.price}
+                            </h6>
+                        </div>
+                    </div>
+                )}
                 <div className="post-tile-header-right">
                     <StarRatings
                         className={"post-tile-ratings"}
