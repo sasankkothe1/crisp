@@ -20,6 +20,8 @@ import UserService from "../../services/UserService";
 // import { postData } from "../../SampleData/postData";
 
 import PostService from "../../services/PostService";
+import EventService from "../../services/EventService";
+import RecipeService from "../../services/RecipeService";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -40,6 +42,7 @@ const useStyles = makeStyles((theme) => ({
         marginTop: theme.spacing(5),
     },
     tabsContainer: {
+        zIndex: "auto",
         width: "fit-content",
         display: "flex",
     },
@@ -126,7 +129,7 @@ function ProfileView({ history }) {
             </Grid>
             <Grid item className={classes.botContainer}>
                 <AppBar
-                    position="static"
+                    position="sticky"
                     color="secondary"
                     className={classes.tabsContainer}
                 >
@@ -168,7 +171,7 @@ function ProfileView({ history }) {
                         >
                             <PostsList
                                 limit={16}
-                                fetchMethod={PostService.allPosts}
+                                fetchMethod={RecipeService.allRecipesByUserID}
                                 fetchParams={{}}
                             />
                         </TabPanel>
@@ -179,7 +182,7 @@ function ProfileView({ history }) {
                         >
                             <PostsList
                                 limit={16}
-                                fetchMethod={PostService.allPosts}
+                                fetchMethod={PostService.allPostByUserID}
                                 fetchParams={{}}
                             />
                         </TabPanel>
@@ -190,7 +193,7 @@ function ProfileView({ history }) {
                         >
                             <PostsList
                                 limit={16}
-                                fetchMethod={PostService.allPosts}
+                                fetchMethod={EventService.allEventsByUserID}
                                 fetchParams={{}}
                             />
                         </TabPanel>

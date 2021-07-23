@@ -9,8 +9,10 @@ import ReactPlayer from "react-player";
 import moment from "moment-timezone";
 
 import "./PostModal.css";
+import { Link } from "react-router-dom";
 
-export default function PostModal({ data, typeOfPost }) {
+export default function PostModal({ data }) {
+    console.log(data);
     return (
         <div>
             <Modal.Header className="post-modal-header" closeButton>
@@ -81,7 +83,7 @@ export default function PostModal({ data, typeOfPost }) {
                                             {data["description"]}
                                         </p>
                                     </div>
-                                    {typeOfPost === "event" && (
+                                    {data["typeOfPost"] === "event" && (
                                         <div className="post-modal-event-details">
                                             <div>
                                                 <strong>Held on: </strong>
@@ -121,6 +123,17 @@ export default function PostModal({ data, typeOfPost }) {
                                                 )}
                                         </h6>
                                     </div>
+                                    {data["typeOfPost"] === "recipe" && (
+                                        <div className="post-modal-full-recipe-link">
+                                            <Link
+                                                className="full-recipe-link"
+                                                to={`/viewRecipe/${data["_id"]}`}
+                                            >
+                                                Click here to view the full
+                                                recipe
+                                            </Link>
+                                        </div>
+                                    )}
                                 </Col>
                             </Row>
                         </Container>
@@ -133,7 +146,7 @@ export default function PostModal({ data, typeOfPost }) {
                                         {data["description"]}
                                     </p>
                                 </div>
-                                {typeOfPost === "event" && (
+                                {data["typeOfPost"] === "event" && (
                                     <div className="post-modal-event-details">
                                         <div>
                                             <strong>Held on: </strong>

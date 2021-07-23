@@ -16,6 +16,9 @@ const useStyles = makeStyles((theme) => ({
     content: {
         marginTop: theme.spacing(2),
     },
+    bannerGrid: {
+        width: "100%",
+    },
 }));
 
 const MainLayout = ({ children }) => {
@@ -28,7 +31,7 @@ const MainLayout = ({ children }) => {
             </header>
             <main>
                 <Grid container className={classes.container}>
-                    <Grid item>
+                    <Grid item className={classes.bannerGrid}>
                         <Banner />
                     </Grid>
                     <Grid item className={classes.content}>

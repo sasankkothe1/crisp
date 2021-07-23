@@ -22,7 +22,7 @@
     color: grey;
 }
 
-.post-modal-header{
+.post-modal-header {
     display: flex;
     justify-content: space-between;
     margin-top: 30px;
@@ -39,4 +39,9 @@
 .post-modal-event-details {
     display: flex;
     flex-direction: column;
+}
+
+.full-recipe-link {
+    text-decoration: underline;
+    font-size: x-small;
 }

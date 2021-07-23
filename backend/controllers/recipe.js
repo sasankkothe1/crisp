@@ -12,12 +12,12 @@ const create = async (req, res) => {
             error: "Bad Request",
             message: "The request body is empty",
         });
-    if (req.body.title === "undefined")
+    if (req.body.title === "undefined" || req.body.title === "")
         return res.status(400).json({
             error: "Bad Request",
             message: "The title is empty",
         });
-    if (req.body.description === "undefined")
+    if (req.body.description === "undefined" || req.body.description === "")
         return res.status(400).json({
             error: "Bad Request",
             message: "The description is empty",
@@ -77,25 +77,41 @@ const create = async (req, res) => {
 };
 
 const listRecipes = (req, res) => {
-    RecipeModel.find({})
-        .populate("postedBy")
-        .exec()
+    RecipeModel.paginate(
+        {},
+        { limit: req.query.limit, page: req.query.page, sort: "-datePosted", populate: "postedBy" }
+    )
         .then((recipes) => {
-            if (!recipes)
+            if (!recipes) {
+                return res.status(400).json({
+                    error: "Not Found",
+                    message: "No Posts Found",
+                });
+            } else {
+                return res.status(200).json(recipes)
+            }
+        })
+        .catch((error) => {
+            res.status(500).json({
+                error: "Internal server error",
+                message: error.message,
+            })
+        })
+
+};
+
+const listRecipesByUserID = (req, res) => {
+    RecipeModel.paginate({ postedBy: req.params.id }, { limit: req.query.limit, page: req.query.page, sort: "-datePosted", populate: "postedBy" })
+        .then((recipes) => {
+            if (!recipes) {
                 return res.status(400).json({
                     error: "Not Found",
                     message: "No Recipes Found",
                 });
-            else return res.status(200).json(recipes);
-        });
-};
-
-const listNewRecipes = (req, res) => {
-    RecipeModel.find({})
-        .sort("-datePosted")
-        .populate("postedBy")
-        .exec()
-        .then((recipes) => res.status(200).json(recipes))
+            } else {
+                return res.status(200).json(recipes)
+            }
+        })
         .catch((error) =>
             res.status(500).json({
                 error: "Internal server error",
@@ -104,8 +120,11 @@ const listNewRecipes = (req, res) => {
         );
 };
 
-const listRecipesByUserID = (req, res) => {
-    RecipeModel.find({ postedBy: req.params.id })
+const listNewRecipes = (req, res) => {
+    RecipeModel.find({})
+        .sort("-datePosted")
+        .populate("postedBy")
+        .exec()
         .then((recipes) => res.status(200).json(recipes))
         .catch((error) =>
             res.status(500).json({
@@ -127,7 +146,7 @@ const listRecipesByCuisine = (req, res) => {
 };
 
 const read = (req, res) => {
-    RecipeModel.find(req.params.id)
+    RecipeModel.findById(req.params.id)
         .populate("postedBy")
         .exec()
         .then((recipe) => {

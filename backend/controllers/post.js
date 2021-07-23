@@ -12,12 +12,12 @@ const create = async (req, res) => {
             error: "Bad Request",
             message: "The request body is empty",
         });
-    if (req.body.title === "undefined")
+    if (req.body.title === "undefined" || req.body.title === "")
         return res.status(400).json({
             error: "Bad Request",
             message: "The title is empty",
         });
-    if (req.body.description === "undefined")
+    if (req.body.description === "undefined" || req.body.description === "")
         return res.status(400).json({
             error: "Bad Request",
             message: "The description is empty",
@@ -77,7 +77,7 @@ const create = async (req, res) => {
 const listPosts = (req, res) => {
     PostModel.paginate(
         {},
-        { limit: req.query.limit, page: req.query.page, sort: "-datePosted" }
+        { limit: req.query.limit, page: req.query.page, sort: "-datePosted", populate: "postedBy" }
     )
         .then((posts) => {
             if (!posts) {
@@ -97,12 +97,18 @@ const listPosts = (req, res) => {
         });
 };
 
-const listNewPosts = (req, res) => {
-    PostModel.find({})
-        .sort("-datePosted")
-        .populate("postedBy")
-        .exec()
-        .then((posts) => res.status(200).json(posts))
+const listPostsByUserID = (req, res) => {
+    PostModel.paginate({ postedBy: req.params.id }, { limit: req.query.limit, page: req.query.page, sort: "-datePosted", populate: "postedBy" })
+        .then((posts) => {
+            if (!posts) {
+                return res.status(400).json({
+                    error: "Not Found",
+                    message: "No Posts Found",
+                });
+            } else {
+                return res.status(200).json(posts)
+            }
+        })
         .catch((error) =>
             res.status(500).json({
                 error: "Internal server error",
@@ -111,8 +117,11 @@ const listNewPosts = (req, res) => {
         );
 };
 
-const listPostsByUserID = (req, res) => {
-    PostModel.find({ postedBy: req.params.id })
+const listNewPosts = (req, res) => {
+    PostModel.find({})
+        .sort("-datePosted")
+        .populate("postedBy")
+        .exec()
         .then((posts) => res.status(200).json(posts))
         .catch((error) =>
             res.status(500).json({

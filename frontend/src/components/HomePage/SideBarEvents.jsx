@@ -16,19 +16,19 @@ export default function SideBarEvents() {
     const handleClose = () => setShow(false);
 
     useEffect(() => {
-        EventService.allEvents().then((res) => {
+        EventService.sideBarEvents().then((res) => {
             setEvents(res);
         });
 
-        events.map((el) => {
-            console.log({
-                title: el["title"],
-                start: moment(el["startTime"])
-                    .tz("Europe/Berlin")
-                    .format("HH:mm"),
-                end: moment(el["endTime"]).tz("Europe/Berlin").format("HH:mm"),
-            });
-        });
+        // events.map((el) => {
+        //     console.log({
+        //         title: el["title"],
+        //         start: moment(el["startTime"])
+        //             .tz("Europe/Berlin")
+        //             .format("HH:mm"),
+        //         end: moment(el["endTime"]).tz("Europe/Berlin").format("HH:mm"),
+        //     });
+        // });
     }, []);
 
     const displayPost = (i) => {
@@ -64,7 +64,7 @@ export default function SideBarEvents() {
                 show={show}
                 onHide={handleClose}
             >
-                <PostModal typeOfPost={"event"} data={events[postIndex]} />
+                <PostModal data={events[postIndex]} />
             </Modal>
         </div>
     );

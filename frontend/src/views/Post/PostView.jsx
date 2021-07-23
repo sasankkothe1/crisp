@@ -4,7 +4,14 @@ import { useForm } from "react-hook-form";
 
 import "./PostView.css";
 
-import { Button, styled, TextField, IconButton } from "@material-ui/core";
+import {
+    Button,
+    styled,
+    TextField,
+    IconButton,
+    Snackbar,
+} from "@material-ui/core";
+import MuiAlert from "@material-ui/lab/Alert";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import DeleteIcon from "@material-ui/icons/Delete";
 import { Form } from "react-bootstrap";
@@ -15,7 +22,8 @@ export default function PostView() {
 
     const [charactersLeft, setCharactersLeft] = useState(500);
     const [uploadedImages, setUploadedImages] = useState([]);
-
+    const [succesfullyUploaded, setSuccesfullyUploaded] = useState(false);
+    const [response, setResponse] = useState();
     const handleFileOnChange = (e) => {
         e.preventDefault();
         for (var i = 0; i < e.target.files.length; i++) {
@@ -42,6 +50,18 @@ export default function PostView() {
         setUploadedImages(newArray);
     };
 
+    const Alert = (props) => {
+        return <MuiAlert elevation={6} variant="filled" {...props} />;
+    };
+
+    const handleClose = (event, reason) => {
+        if (reason === "clickaway") {
+            return;
+        }
+        setResponse(null);
+        setSuccesfullyUploaded(false);
+    };
+
     const addPost = (data) => {
         const formData = new FormData();
         formData.append("title", data.title);
@@ -55,7 +75,13 @@ export default function PostView() {
             }
         }
         PostService.addPost(formData).then((res) => {
-            console.log(res);
+            setResponse(res);
+            if (res.status === 201) {
+                setSuccesfullyUploaded(true);
+            }
+            if (res.status / 100 === 4) {
+                setSuccesfullyUploaded(true);
+            }
         });
     };
 
@@ -181,6 +207,25 @@ export default function PostView() {
                     </Button>
                 </div>
             </form>
+            {response && (
+                <Snackbar
+                    open={succesfullyUploaded}
+                    autoHideDuration={6000}
+                    onClose={handleClose}
+                >
+                    {response.status === 200 ||
+                    response.status === 201 ||
+                    response.status === 202 ? (
+                        <Alert onClose={handleClose} severity="success">
+                            {response.message}
+                        </Alert>
+                    ) : (
+                        <Alert onClose={handleClose} severity="error">
+                            {response.message}
+                        </Alert>
+                    )}
+                </Snackbar>
+            )}
         </div>
     );
 }

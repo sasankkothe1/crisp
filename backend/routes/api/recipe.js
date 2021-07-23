@@ -17,7 +17,9 @@ const mimetypes = [
     "video/MP2T",
 ];
 
-const upload = require("../../middleware/upload")(mimetypes);
+const { uploadTemplate } = require("../../middleware/upload");
+
+const upload = uploadTemplate(mimetypes);
 
 router.post(
     "/addRecipe",
@@ -33,7 +35,7 @@ router.get(
     RecipeController.listRecipesByUserID
 );
 router.get("/:cuisine", RecipeController.listRecipesByCuisine);
-router.get("/:id", isAuthenticated, RecipeController.read);
+router.get("/recipeById/:id", RecipeController.read);
 router.put(
     "/:id",
     isAuthenticated,

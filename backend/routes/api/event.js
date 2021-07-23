@@ -16,7 +16,9 @@ const mimetypes = [
     "video/MP2T",
 ];
 
-const upload = require("../../middleware/upload")(mimetypes);
+const { uploadTemplate } = require("../../middleware/upload");
+
+const upload = uploadTemplate(mimetypes);
 
 router.post(
     "/addEvent",
@@ -24,6 +26,7 @@ router.post(
     upload.array("media"),
     EventController.create
 );
+router.get("/sideBarEvents", EventController.listSideBarEvents)
 router.get("/", EventController.listEvents);
 router.get("/new", EventController.listNewEvents);
 router.get(
