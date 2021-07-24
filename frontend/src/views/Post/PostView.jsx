@@ -26,8 +26,7 @@ export default function PostView({ postID, editable }) {
 
     // uploadedImages: used while uploading the images while creating the post
     const [uploadedImages, setUploadedImages] = useState([]);
-
-    const [succesfullyUploaded, setSuccesfullyUploaded] = useState(false);
+    const [successfullyUploaded, setSuccessfullyUploaded] = useState(false);
     const [response, setResponse] = useState();
     const [post, setPost] = useState();
 
@@ -98,7 +97,7 @@ export default function PostView({ postID, editable }) {
             return;
         }
         setResponse(null);
-        setSuccesfullyUploaded(false);
+        setSuccessfullyUploaded(false);
     };
 
     const addPost = (data) => {
@@ -126,10 +125,10 @@ export default function PostView({ postID, editable }) {
             PostService.addPost(formData).then((res) => {
                 setResponse(res);
                 if (res.status === 201) {
-                    setSuccesfullyUploaded(true);
+                    setSuccessfullyUploaded(true);
                 }
                 if (res.status / 100 === 4) {
-                    setSuccesfullyUploaded(true);
+                    setSuccessfullyUploaded(true);
                 }
             });
         } else {
@@ -298,7 +297,7 @@ export default function PostView({ postID, editable }) {
             </form>
             {response && (
                 <Snackbar
-                    open={succesfullyUploaded}
+                    open={successfullyUploaded}
                     autoHideDuration={6000}
                     onClose={handleClose}
                 >

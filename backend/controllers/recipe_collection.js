@@ -1,33 +1,66 @@
 const mongoose = require("mongoose");
 
 const RecipeCollection = require("../model/RecipeCollection");
+const Order = require("../model/Order");
+const Rating = require("../model/Rating");
 
 const { removeFileFromS3 } = require("../middleware/upload");
 
-const AWS = require("aws-sdk");
-AWS.config.update({
-    region: "eu-central-1",
-    accessKeyId: process.env.AWS_S3_ACCESS_KEY_ID,
-    secretAccessKey: process.env.AWS_S3_SECRET_ACCESS_KEY,
-});
-
-const s3 = new AWS.S3();
-
 const getRecipeCollections = (req, res) => {
-    let collections = RecipeCollection.find();
+    const filters = {};
 
-    if (req.query.populate) {
-        const populates = Array.isArray(req.query.populate)
-            ? req.query.populate
-            : [req.query.populate];
-
-        for (const field of populates) {
-            collections = collections.populate(field);
-        }
+    if (req.query.meal) {
+        filters.meal = req.query.meal;
     }
 
+    if (req.query.recipe_type) {
+        filters.tags = req.query.recipe_type;
+    }
+
+    const priceFilter = {};
+    if (req.query.min_price) {
+        priceFilter["$gte"] = parseFloat(req.query.min_price);
+    }
+    if (req.query.max_price) {
+        priceFilter["$lte"] = parseFloat(req.query.max_price);
+    }
+
+    if (Object.entries(priceFilter).length > 0) {
+        filters.price = priceFilter;
+    }
+
+    let collections = RecipeCollection.find(filters);
+
+    collections = collections.populate({
+        path: "postedBy",
+        select: { firstName: 1, _id: 1 },
+    });
+
     collections
-        .then((recipeCollections) => res.json(recipeCollections))
+        .then((recipeCollections) => {
+            recipeCollections = recipeCollections.map((rc) => rc.toJSON());
+            if (req.user) {
+                Order.find({
+                    orderedBy: req.user._id,
+                    type: "RecipeCollection",
+                }).then((orders) => {
+                    let orderKeys = new Set();
+                    orders.forEach((order) =>
+                        orderKeys.add(order.recipeCollection.toString())
+                    );
+
+                    recipeCollections.forEach((recipeCollection) => {
+                        recipeCollection.purchased = orderKeys.has(
+                            recipeCollection._id.toString()
+                        );
+                    });
+
+                    res.send(recipeCollections);
+                });
+            } else {
+                res.send(recipeCollections);
+            }
+        })
         .catch((err) => res.status(404).send({ message: err.message }));
 };
 
@@ -50,21 +83,65 @@ const createRecipeCollection = (req, res) => {
     );
 };
 
+const getRecipeCollectionLink = (req, res) => {
+    if (!req.user) {
+        res.sendStatus(403);
+    }
+
+    Order.findOne({
+        type: "RecipeCollection",
+        recipeCollection: req.params.id,
+        orderedBy: req.user._id,
+    })
+        .then((order) => {
+            if (!order) {
+                res.sendStatus(403);
+            } else {
+                RecipeCollection.findOne({ _id: req.params.id }, "pdfFile")
+                    .then((recipeCollection) => {
+                        res.status(200).send({
+                            link: recipeCollection.pdfFile,
+                        });
+                    })
+                    .catch((err) =>
+                        res.status(502).send({ message: err.message })
+                    );
+            }
+        })
+        .catch((err) => res.status(502).send({ message: err.message }));
+};
+
 const getRecipeCollection = (req, res) => {
     let collection = RecipeCollection.findOne({ _id: req.params.id });
 
-    if (req.query.populate) {
-        const populates = Array.isArray(req.query.populate)
-            ? req.query.populate
-            : [req.query.populate];
-
-        for (const field of populates) {
-            collection = collection.populate(field);
-        }
-    }
+    collection = collection.populate({
+        path: "postedBy",
+        select: { firstName: 1, _id: 1 },
+    });
 
     collection
-        .then((recipeCollection) => res.json(recipeCollection))
+        .then((recipeCollection) => {
+            recipeCollection = recipeCollection.toJSON();
+            if (req.user) {
+                Order.findOne({
+                    orderedBy: req.user._id,
+                    type: "RecipeCollection",
+                    recipeCollection: req.params.id,
+                })
+                    .then((order) => {
+                        console.log(order);
+                        if (order) {
+                            recipeCollection.purchased = true;
+                        } else {
+                            recipeCollection.purchased = false;
+                        }
+                        res.send(recipeCollection);
+                    })
+                    .catch();
+            } else {
+                res.send(recipeCollection);
+            }
+        })
         .catch((err) => res.status(404).send({ message: err.message }));
 };
 
@@ -80,6 +157,12 @@ const editRecipeCollection = (req, res) => {
     }
     if (req.files?.pdfFile?.length) {
         newRecipeCollection.pdfFile = req.files.pdfFile[0].location;
+    }
+
+    if (req.files?.pdfFile?.length) {
+        newRecipeCollection.pdfFile = req.pdfFile.map(
+            (file) => file.location
+        )[0];
     }
 
     RecipeCollection.findOneAndUpdate(
@@ -120,7 +203,9 @@ const removeRecipeCollection = (req, res) => {
                     recipeCollection?.media.map((media) =>
                         removeFileFromS3(media)
                     );
-                    removeFileFromS3(recipeCollection.pdfFile);
+                    if (recipeCollection.pdfFile) {
+                        removeFileFromS3(recipeCollection.pdfFile);
+                    }
                     res.status(200).send({ id: recipeCollection._id });
                 } else {
                     res.sendStatus(200);
@@ -130,10 +215,91 @@ const removeRecipeCollection = (req, res) => {
     );
 };
 
+const rateRecipeCollection = (req, res) => {
+    Rating.findOne({
+        ratedBy: req.user._id,
+        type: "RecipeCollection",
+        recipeCollection: req.params.id,
+    })
+        .then((rating) => {
+            console.log(rating);
+            if (rating) {
+                Rating.findByIdAndUpdate(
+                    rating._id,
+                    {
+                        rating: req.body.rating,
+                    },
+                    {
+                        runValidators: true,
+                    }
+                )
+                    .then((oldRating) => {
+                        const delta = req.body.rating - oldRating.rating;
+                        console.log(delta);
+                        RecipeCollection.findByIdAndUpdate(
+                            req.params.id,
+                            {
+                                $inc: {
+                                    cumulativeRating: delta,
+                                },
+                            },
+                            { new: true }
+                        )
+                            .then((recipeCollection) => {
+                                res.sendStatus(200);
+                            })
+                            .catch((err) => res.sendStatus(502));
+                    })
+                    .catch((err) => res.sendStatusus(502));
+            } else {
+                Rating.create({
+                    _id: new mongoose.Types.ObjectId(),
+                    ratedBy: req.user._id,
+                    type: "RecipeCollection",
+                    recipeCollection: req.params.id,
+                    rating: req.body.rating,
+                })
+                    .then((rating) => {
+                        RecipeCollection.findByIdAndUpdate(
+                            req.params.id,
+                            {
+                                $inc: {
+                                    cumulativeRating: req.body.rating,
+                                    numRates: 1,
+                                },
+                            },
+                            { new: true }
+                        )
+                            .then((recipeCollection) => {
+                                res.sendStatus(200);
+                            })
+                            .catch((err) => res.sendStatus(502));
+                    })
+                    .catch((err) => res.sendStatus(502));
+            }
+        })
+        .catch((err) => res.sendStatus(502));
+};
+
+const getRecipeCollectionUserRate = (req, res) => {
+    Rating.findOne({
+        ratedBy: req.user._id,
+        type: "RecipeCollection",
+        recipeCollection: req.params.id,
+    })
+        .then((rating) => {
+            res.status(200).send({ rating: rating ? rating.rating : 0 });
+        })
+        .catch((err) => res.status(502).send({ message: err.message }));
+};
+
 module.exports = {
     getRecipeCollections,
     createRecipeCollection,
     getRecipeCollection,
+    getRecipeCollectionLink,
     editRecipeCollection,
     removeRecipeCollection,
+    rateRecipeCollection,
+    getRecipeCollectionUserRate,
 };

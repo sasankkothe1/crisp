@@ -3,7 +3,7 @@ import { getLoggedInUserID, getToken } from "./utils";
 
 export default class PostService {
     static baseURL() {
-        return `${process.env.REACT_APP_BACKEND_URL}`;
+        return `${process.env.REACT_APP_BACKEND_URL}/posts`;
     }
 
     static async addPost(post) {
@@ -11,11 +11,9 @@ export default class PostService {
         let token = getToken();
         let headers = { Authorization: `Bearer ${token}` };
         try {
-            res = await axios.post(
-                `${PostService.baseURL()}/posts/addPost`,
-                post,
-                { headers }
-            );
+            res = await axios.post(`${PostService.baseURL()}/addPost`, post, {
+                headers,
+            });
             return { status: res.status, message: "Uploaded Successfully" };
         } catch (error) {
             return {
@@ -29,7 +27,7 @@ export default class PostService {
         let res = null;
 
         try {
-            res = await axios.get(`${PostService.baseURL()}/posts/`, {
+            res = await axios.get(`${PostService.baseURL()}`, {
                 params: {
                     limit: limit,
                     page: page,
