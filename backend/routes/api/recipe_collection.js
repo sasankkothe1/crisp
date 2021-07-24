@@ -57,6 +57,13 @@ router.get(
     RecipeCollectionController.getRecipeCollection
 );
 
+// Get specific collection direct link
+router.get(
+    "/:id/link",
+    isAuthenticated,
+    RecipeCollectionController.getRecipeCollectionLink
+);
+
 // Edit specific collection
 // Auth: User
 router.put(

@@ -12,7 +12,7 @@ import recipeCollectionService from "../services/RecipeCollectionService";
 
 const useStyles = makeStyles(() => ({
     shopContainer: {
-        width: "1000px",
+        width: "1500px",
         display: "flex",
         flexDirection: "column",
     },

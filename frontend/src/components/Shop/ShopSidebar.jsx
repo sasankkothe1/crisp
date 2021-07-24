@@ -2,7 +2,7 @@ import React from "react";
 
 import { makeStyles } from "@material-ui/core";
 
-import Input from "@material-ui/core/Input";
+import TextField from "@material-ui/core/TextField";
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
@@ -12,11 +12,31 @@ import Button from "@material-ui/core/Button";
 
 const useStyles = makeStyles(() => ({
     sidebar: {
-        width: "30%",
-        flexGrow: 1,
+        display: "flex",
+        flexDirection: "column",
+        width: "100%",
     },
     header: {
         fontSize: "large",
+    },
+    priceFilter: {
+        width: "100%",
+        align: "right",
+        marginBottom: "5px",
+        display: "flex",
+        flexDirection: "column",
+    },
+    pricePair: {
+        width: "100%",
+        display: "flex",
+        flexDirection: "column",
+    },
+    mealFilter: {
+        width: "100%",
+        align: "right",
+        marginBottom: "5px",
+        display: "flex",
+        flexDirection: "column",
     },
 }));
 
@@ -36,67 +56,69 @@ export default function ShopSidebar(props) {
         }
     };
 
-    const mealFilter = [
-        {
-            value: "breakfast",
-            caption: "Breakfast",
-        },
-        {
-            value: "dinner",
-            caption: "Dinner",
-        },
-        {
-            value: "lunch",
-            caption: "Lunch",
-        },
-        {
-            value: "snacks",
-            caption: "Snacks",
-        },
-    ];
+    const mealFilter = ["Breakfast", "Dinner", "Lunch", "Snacks"];
 
     return (
         <div className={classes.sidebar}>
-            <h5 className={classes.header}>Price</h5>
-            <div>
-                <Input
-                    type="number"
-                    name="min"
-                    placeholder="From"
-                    onBlur={(event) => {
-                        let price = parseFloat(event.target.value);
-                        if (!price || price < 0) {
-                            price = 0;
-                        }
-                        props.setMinPrice(price);
-                    }}
-                />
-                <Input
-                    type="number"
-                    name="min"
-                    placeholder="To"
-                    onBlur={(event) => {
-                        let price = parseFloat(event.target.value);
-                        if (!price || price < 0) {
-                            price = 0;
-                        }
-                        props.setMaxPrice(price);
-                    }}
-                />
+            <div className={classes.priceFilter}>
+                <h5 className={classes.header}>Price</h5>
+                <div className={classes.pricePair}>
+                    <TextField
+                        type="number"
+                        name="min"
+                        placeholder="From"
+                        min="0"
+                        onBlur={(event) => {
+                            let price = parseFloat(event.target.value);
+                            if (!price) {
+                                price = 0;
+                            }
+                            props.setMinPrice(price);
+                        }}
+                        InputProps={{
+                            inputProps: {
+                                max: 999999999,
+                                min: 0,
+                            },
+                        }}
+                    />
+
+                    <TextField
+                        type="number"
+                        name="min"
+                        placeholder="To"
+                        max="999999999"
+                        onBlur={(event) => {
+                            let price = parseFloat(event.target.value);
+                            if (!price) {
+                                price = 999999999;
+                            }
+                            props.setMaxPrice(price);
+                        }}
+                        InputProps={{
+                            inputProps: {
+                                max: 999999999,
+                                min: 0,
+                            },
+                        }}
+                    />
+                </div>
             </div>
-            <h5 className={classes.header}>Meal</h5>
-            <FormControl component="fieldset">
-                <RadioGroup value={props.meal}>
-                    {mealFilter.map((filter, i) => (
-                        <FormControlLabel
-                            key={i}
-                            value={filter["value"]}
-                            control={<Radio onClick={handleMealClick} />}
-                            label={filter["caption"]}
-                        />
-                    ))}
-                </RadioGroup>
-            </FormControl>
+            <div className={classes.mealFilter}>
+                <h5 className={classes.header}>Meal</h5>
+                <FormControl component="fieldset">
+                    <RadioGroup value={props.meal}>
+                        {mealFilter.map((filter, i) => (
+                            <FormControlLabel
+                                key={i}
+                                value={filter}
+                                control={<Radio onClick={handleMealClick} />}
+                                label={filter}
+                            />
+                        ))}
+                    </RadioGroup>
+                </FormControl>
+            </div>
             <Button variant="contained" color="primary" onClick={applyFilters}>
                 Apply
             </Button>

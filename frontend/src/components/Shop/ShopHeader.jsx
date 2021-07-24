@@ -50,6 +50,16 @@ const ShopHeader = (props) => {
             caption: "AF Drinks",
             type: "nadrinks",
         },
+        {
+            icon: "favorite",
+            caption: "Pastry",
+            type: "pastry",
+        },
+        {
+            icon: "emoji_objects",
+            caption: "Creative",
+            type: "creative",
+        },
     ];
 
     return (

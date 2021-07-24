@@ -7,10 +7,14 @@ import {
     styled,
     TextField,
     IconButton,
+    Snackbar,
     makeStyles,
 } from "@material-ui/core";
+import MuiAlert from "@material-ui/lab/Alert";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import DeleteIcon from "@material-ui/icons/Delete";
+
+import MenuItem from "@material-ui/core/MenuItem";
 
 import Chip from "@material-ui/core/Chip";
 
@@ -34,7 +38,7 @@ export default function AddRecipeCollectionView() {
     const [uploadedMedia, setUploadedMedia] = useState([]);
     const [uploadedPdfFile, setUploadedPdfFile] = useState("");
 
-    const [tags, setTags] = useState(["pizza"]);
+    const [tags, setTags] = useState([]);
     const [currentTag, setCurrentTag] = useState("");
 
     const handleMediaOnChange = (e) => {
@@ -78,6 +82,9 @@ export default function AddRecipeCollectionView() {
         setUploadedPdfFile("");
     };
 
+    const [uploadAttempt, setUploadAttempt] = useState(false);
+    const [response, setResponse] = useState();
+
     const addRecipeCollection = (data) => {
         const formData = new FormData();
         formData.append("title", data.title);
@@ -87,17 +94,47 @@ export default function AddRecipeCollectionView() {
         formData.append("pdfFile", uploadedPdfFile["file"]);
         tags.forEach((tag) => formData.append("tags", tag));
 
-        console.log(formData);
+        if (data.meal !== "Any") {
+            formData.append("meal", data.meal);
+        }
 
-        RecipeCollectionService.addRecipeCollection(formData).then((res) => {
-            console.log(res);
-        });
+        RecipeCollectionService.addRecipeCollection(formData)
+            .then((res) => {
+                setUploadAttempt(true);
+                if (res.status === 201) {
+                    setResponse({
+                        status: 201,
+                        message: `Success! Created new RC with id = ${res.data.id}`,
+                    });
+                } else {
+                    setResponse({
+                        status: 502,
+                        message: "Failed to create new recipe collection :(",
+                    });
+                }
+            })
+            .catch((err) => console.log(err));
+    };
+
+    const handleClose = (event, reason) => {
+        if (reason === "clickaway") {
+            return;
+        }
+        setResponse(null);
+        setUploadAttempt(false);
     };
 
     const addTag = (event) => {
         console.log(event);
         if (event.key == "Enter") {
-            setTags([...tags, currentTag]);
+            const currentTagTrimmed = currentTag.trim();
+            if (!currentTagTrimmed) {
+                return;
+            }
+            if (tags.indexOf(currentTagTrimmed) !== -1) {
+                return;
+            }
+            setTags([...tags, currentTagTrimmed]);
             setCurrentTag("");
         }
     };
@@ -115,6 +152,12 @@ export default function AddRecipeCollectionView() {
     const Input = styled("input")({
         display: "none",
     });
+
+    const Alert = (props) => {
+        return <MuiAlert elevation={6} variant="filled" {...props} />;
+    };
+
+    const mealTypes = ["Any", "Breakfast", "Dinner", "Snacks", "Lunch"];
 
     return (
         <div className="post-form-container">
@@ -314,6 +357,27 @@ export default function AddRecipeCollectionView() {
                     variant="outlined"
                 />
 
+                <TextField
+                    key={"rc-meal"}
+                    {...register("meal")}
+                    label="Meal"
+                    style={{ margin: 8 }}
+                    placeholder="Enter the title"
+                    fullWidth
+                    select
+                    margin="normal"
+                    InputLabelProps={{
+                        shrink: true,
+                    }}
+                    variant="outlined"
+                >
+                    {mealTypes.map((meal) => (
+                        <MenuItem key={meal} value={meal}>
+                            {meal}
+                        </MenuItem>
+                    ))}
+                </TextField>
+
                 <div className="submit-button-container">
                     <Button
                         className="submit-button"
@@ -325,6 +389,23 @@ export default function AddRecipeCollectionView() {
                     </Button>
                 </div>
             </form>
+            {response && (
+                <Snackbar
+                    open={uploadAttempt}
+                    autoHideDuration={6000}
+                    onClose={handleClose}
+                >
+                    {response.status === 201 ? (
+                        <Alert onClose={handleClose} severity="success">
+                            {response.message}
+                        </Alert>
+                    ) : (
+                        <Alert onClose={handleClose} severity="error">
+                            {response.message}
+                        </Alert>
+                    )}
+                </Snackbar>
+            )}
         </div>
     );
 }
