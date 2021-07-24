@@ -77,7 +77,12 @@ const create = async (req, res) => {
 const listPosts = (req, res) => {
     PostModel.paginate(
         {},
-        { limit: req.query.limit, page: req.query.page, sort: "-datePosted", populate: "postedBy" }
+        {
+            limit: req.query.limit,
+            page: req.query.page,
+            sort: "-datePosted",
+            populate: "postedBy",
+        }
     )
         .then((posts) => {
             if (!posts) {
@@ -98,7 +103,15 @@ const listPosts = (req, res) => {
 };
 
 const listPostsByUserID = (req, res) => {
-    PostModel.paginate({ postedBy: req.params.id }, { limit: req.query.limit, page: req.query.page, sort: "-datePosted", populate: "postedBy" })
+    PostModel.paginate(
+        { postedBy: req.params.id },
+        {
+            limit: req.query.limit,
+            page: req.query.page,
+            sort: "-datePosted",
+            populate: "postedBy",
+        }
+    )
         .then((posts) => {
             if (!posts) {
                 return res.status(400).json({
@@ -106,7 +119,7 @@ const listPostsByUserID = (req, res) => {
                     message: "No Posts Found",
                 });
             } else {
-                return res.status(200).json(posts)
+                return res.status(200).json(posts);
             }
         })
         .catch((error) =>

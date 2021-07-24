@@ -57,7 +57,7 @@ const RecipeSchema = new mongoose.Schema({
     },
 });
 
-RecipeSchema.plugin(mongoosePaginate)
+RecipeSchema.plugin(mongoosePaginate);
 const RecipeModel = mongoose.model("Recipe", RecipeSchema);
 
 module.exports = { RecipeModel };

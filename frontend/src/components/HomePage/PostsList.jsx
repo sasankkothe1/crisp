@@ -10,8 +10,6 @@ export default function PostsList(props) {
     const [show, setShow] = useState(false);
     const [postIndex, setPostIndex] = useState(0);
 
-    const handleClose = () => setShow(false);
-
     const { limit, fetchMethod, fetchParams } = props;
 
     const [data, setData] = useState([]);
@@ -37,7 +35,9 @@ export default function PostsList(props) {
         fetchPage(value);
     };
 
-    return data.length > 0 ? (
+    const handleClose = () => setShow(false);
+
+    return data?.length > 0 ? (
         <div className="root">
             <div className="post">
                 {data.map((post, i) => (

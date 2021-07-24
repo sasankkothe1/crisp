@@ -106,13 +106,17 @@ const listSideBarEvents = (req, res) => {
                 });
             else return res.status(200).json(events);
         });
-}
-
+};
 
 const listEvents = (req, res) => {
     EventModel.paginate(
         {},
-        { limit: req.query.limit, page: req.query.page, sort: "-datePosted", populate: "postedBy" }
+        {
+            limit: req.query.limit,
+            page: req.query.page,
+            sort: "-datePosted",
+            populate: "postedBy",
+        }
     )
         .then((events) => {
             if (!events) {
@@ -121,19 +125,27 @@ const listEvents = (req, res) => {
                     message: "No Posts Found",
                 });
             } else {
-                return res.status(200).json(events)
+                return res.status(200).json(events);
             }
         })
         .catch((error) => {
             res.status(500).json({
                 error: "Internal server error",
                 message: error.message,
-            })
-        })
+            });
+        });
 };
 
 const listEventsByUserID = (req, res) => {
-    EventModel.paginate({ postedBy: req.params.id }, { limit: req.query.limit, page: req.query.page, sort: "-datePosted", populate: "postedBy" })
+    EventModel.paginate(
+        { postedBy: req.params.id },
+        {
+            limit: req.query.limit,
+            page: req.query.page,
+            sort: "-datePosted",
+            populate: "postedBy",
+        }
+    )
         .then((events) => {
             if (!events) {
                 return res.status(400).json({
@@ -141,7 +153,7 @@ const listEventsByUserID = (req, res) => {
                     message: "No Events Found",
                 });
             } else {
-                return res.status(200).json(events)
+                return res.status(200).json(events);
             }
         })
         .catch((error) =>
@@ -303,5 +315,5 @@ module.exports = {
     update,
     remove,
     test,
-    listSideBarEvents
+    listSideBarEvents,
 };

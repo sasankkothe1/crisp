@@ -1,5 +1,5 @@
 import axios from "axios";
-import { getLoggedInUserID, getToken } from "./utils";
+import { getToken } from "./utils";
 
 export default class RecipeService {
     static baseURL() {
@@ -26,59 +26,62 @@ export default class RecipeService {
     }
 
     static async allRecipes(limit, page) {
-        let res = null
+        let res = null;
 
         try {
             res = await axios.get(`${RecipeService.baseURL()}/recipes/`, {
                 params: {
                     limit: limit,
                     page: page,
-                }
-            })
-            return res.data
+                },
+            });
+            return res.data;
         } catch (error) {
             return {
                 status: error.response.status,
-                message: error.response.data.message
+                message: error.response.data.message,
             };
         }
     }
 
     static async recipeById(id) {
-        let res = null
+        let res = null;
         try {
-            res = await axios.get(`${RecipeService.baseURL()}/recipes/recipeById/${id}`)
-            return res.data
+            res = await axios.get(
+                `${RecipeService.baseURL()}/recipes/recipeById/${id}`
+            );
+            return res.data;
         } catch (error) {
             return {
                 status: error.response.status,
-                message: error.response.data.message
+                message: error.response.data.message,
             };
         }
     }
 
-
-    static async allRecipesByUserID(limit, page) {
-        let res = null
-        const userID = getLoggedInUserID();
+    static async allRecipesByUserID(limit, page, id) {
+        let res = null;
+        const userID = id;
         let token = getToken();
         let headers = { Authorization: `Bearer ${token}` };
 
         try {
-            res = await axios.get(`${RecipeService.baseURL()}/recipes/postedBy/${userID}`, {
-                params: {
-                    limit: limit,
-                    page: page,
-                },
-                headers: headers
-            })
-            return res.data
+            res = await axios.get(
+                `${RecipeService.baseURL()}/recipes/postedBy/${userID}`,
+                {
+                    params: {
+                        limit: limit,
+                        page: page,
+                    },
+                    headers: headers,
+                }
+            );
+            return res.data;
         } catch (error) {
             return {
                 status: error.response.status,
-                message: error.response.data.message
+                message: error.response.data.message,
             };
         }
     }
-
 }

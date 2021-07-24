@@ -27,6 +27,9 @@ const useStyles = makeStyles((theme) => ({
         flexDirection: "row",
         justifyContent: "space-around",
     },
+    SubscribeButton: {
+        marginLeft: theme.spacing(1),
+    },
 }));
 
 const ProfileHeader = ({
@@ -35,6 +38,7 @@ const ProfileHeader = ({
     isFollowing,
     onFollow,
     onUnfollow,
+    onSubscribe,
 }) => {
     const classes = useStyles();
 
@@ -48,27 +52,38 @@ const ProfileHeader = ({
                 }
                 action={
                     isLoggedIn &&
-                    !isLoggedInUser &&
-                    (isFollowing ? (
-                        <Button
-                            variant="outlined"
-                            color="primary"
-                            onClick={(e) => {
-                                onUnfollow(e);
-                            }}
-                        >
-                            Unfollow
-                        </Button>
-                    ) : (
-                        <Button
-                            variant="outlined"
-                            onClick={(e) => {
-                                onFollow(e);
-                            }}
-                        >
-                            Follow
-                        </Button>
-                    ))
+                    !isLoggedInUser && (
+                        <>
+                            {isFollowing ? (
+                                <Button
+                                    variant="outlined"
+                                    color="primary"
+                                    onClick={(e) => {
+                                        onUnfollow(e);
+                                    }}
+                                >
+                                    Unfollow
+                                </Button>
+                            ) : (
+                                <Button
+                                    variant="outlined"
+                                    onClick={(e) => {
+                                        onFollow(e);
+                                    }}
+                                >
+                                    Follow
+                                </Button>
+                            )}
+                            <Button
+                                className={classes.SubscribeButton}
+                                onClick={() => {
+                                    onSubscribe(true);
+                                }}
+                            >
+                                Subscribe
+                            </Button>
+                        </>
+                    )
                 }
                 className={classes.CardHeader}
             />
@@ -101,6 +116,7 @@ ProfileHeader.propTypes = {
     isFollowing: PropTypes.bool,
     onFollow: PropTypes.func,
     onUnfollow: PropTypes.func,
+    onSubscribe: PropTypes.func,
 };
 
 export default ProfileHeader;

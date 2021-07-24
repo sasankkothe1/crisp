@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const stripe = require("stripe")(process.env.STRIPE_SECRET_TEST);
 
 const Order = require("../model/Order");
 
@@ -21,21 +22,69 @@ const getOrders = (req, res) => {
         .catch((err) => res.status(404).send({ message: err.message }));
 };
 
-const createOrder = (req, res) => {
-    Order.create(
-        {
-            ...req.body,
-            _id: new mongoose.Types.ObjectId(),
-            orderedBy: req.user._id,
-        },
-        (err, order) => {
-            if (err) {
-                res.status(502).send({ message: err.message });
-            } else {
-                res.status(201).send({ id: order._id });
+const createOrder = async (req, res, next) => {
+    let { paymentDetails, orderDetails } = req.body;
+
+    try {
+        const payment = await stripe.paymentIntents.create({
+            amount: paymentDetails.amount,
+            currency: paymentDetails.currency,
+            description: paymentDetails.description,
+            payment_method: paymentDetails.payment_method,
+            confirm: true,
+        });
+        console.log("Payment", payment);
+
+        Order.create(
+            {
+                ...orderDetails,
+                orderedBy: req.user._id,
+                transactionID: payment.id,
+            },
+            (err, order) => {
+                if (err) {
+                    console.log("A");
+                    console.log(err);
+                    return res.status(502).json({ message: err.message });
+                } else {
+                    console.log("B");
+                    console.log(orderDetails.type);
+                    if (orderDetails.type === "Subscription") {
+                        req.user.subscriptions.push(orderDetails.subscription);
+
+                        req.user.save(function (err) {
+                            if (err) {
+                                console.log("Error here");
+                                console.log(err);
+                                return next(err);
+                            }
+
+                            console.log("here?");
+
+                            return res.status(201).json({
+                                message: "Payment successful",
+                                success: true,
+                                order: order,
+                            });
+                        });
+                    }
+
+                    return res.status(201).json({
+                        message: "Payment successful",
+                        success: true,
+                        order: order,
+                    });
+                }
             }
-        }
-    );
+        );
+    } catch (error) {
+        console.log("WHOA");
+        console.log("Error", error);
+        return res.json({
+            message: "Payment failed",
+            success: false,
+        });
+    }
 };
 
 const getOrder = (req, res) => {
