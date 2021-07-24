@@ -1,6 +1,10 @@
 import { store } from "../App";
 import { logout } from "../redux/actions";
 
+export function getBackendURL() {
+    return `${process.env.REACT_APP_BACKEND_URL}`;
+}
+
 export function isLoggedIn() {
     return Boolean(window.localStorage["jwtToken"]);
 }

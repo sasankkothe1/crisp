@@ -5,6 +5,7 @@ const sendEmail = require("../utils/sendMail");
 
 exports.register = async (req, res, next) => {
     const { firstName, lastName, username, email, password } = req.body;
+    console.log("Heya");
 
     try {
         const user = await User.create({
@@ -15,6 +16,7 @@ exports.register = async (req, res, next) => {
             password: password,
         });
 
+        console.log("Oh boy");
         sendToken(user, 201, res);
     } catch (error) {
         next(error);

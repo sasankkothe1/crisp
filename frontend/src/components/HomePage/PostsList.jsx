@@ -12,7 +12,7 @@ export default function PostsList(props) {
 
     const handleClose = () => setShow(false);
 
-    const { limit, fetchMethod, fetchParams, editable } = props;
+    const { limit, fetchMethod, fetchParam, editable } = props;
 
     const [data, setData] = useState([]);
     const [paginationData, setPaginationData] = useState([{}]);
@@ -21,8 +21,13 @@ export default function PostsList(props) {
         fetchPage(1);
     }, []);
 
+    useEffect(() => {
+        fetchPage(1);
+    }, [fetchMethod, fetchParam]);
+
     const fetchPage = (page) => {
-        fetchMethod(limit, page, ...Object.values(fetchParams)).then((res) => {
+        console.log(fetchParam);
+        fetchMethod(limit, page, fetchParam).then((res) => {
             setData(res.docs);
             setPaginationData({ totalPages: res.totalPages });
         });
@@ -37,7 +42,7 @@ export default function PostsList(props) {
         fetchPage(value);
     };
 
-    return data.length > 0 ? (
+    return data?.length > 0 ? (
         <div className="root">
             <div className="post">
                 {data.map((post, i) => (

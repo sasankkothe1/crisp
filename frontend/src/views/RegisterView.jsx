@@ -48,7 +48,7 @@ const RegisterView = ({ history, dispatch }) => {
     const user = useSelector((state) => state.user);
 
     useEffect(() => {
-        if (user.user) {
+        if (user._id) {
             history.push("/");
         }
     }, [user, history]);

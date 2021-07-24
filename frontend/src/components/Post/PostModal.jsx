@@ -1,6 +1,7 @@
 /* eslint-disable indent */
 /* eslint-disable react/prop-types */
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { Col, Container, Modal, Row } from "react-bootstrap";
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
@@ -9,11 +10,9 @@ import ReactPlayer from "react-player";
 import moment from "moment-timezone";
 import { Button } from "@material-ui/core/";
 import EditIcon from "@material-ui/icons/Edit";
-
 import Rating from "@material-ui/lab/Rating";
 
 import "./PostModal.css";
-import { Link } from "react-router-dom";
 
 import RecipeCollectionService from "../../services/RecipeCollectionService";
 

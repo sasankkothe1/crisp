@@ -1,11 +1,7 @@
 import axios from "axios";
-import { getToken, isTokenValid } from "./utils";
+import { getToken, isTokenValid, getBackendURL } from "./utils";
 
 export default class UserService {
-    static baseURL() {
-        return `${process.env.REACT_APP_BACKEND_URL}`;
-    }
-
     static extractUser(token) {
         let base64Url = token.split(".")[1];
         let base64 = base64Url.replace("-", "+").replace("_", "/");
@@ -21,16 +17,13 @@ export default class UserService {
 
     static async register(firstName, lastName, username, email, password) {
         try {
-            const res = await axios.post(
-                `${UserService.baseURL()}/auth/register`,
-                {
-                    firstName: firstName,
-                    lastName: lastName,
-                    username: username,
-                    email: email,
-                    password: password,
-                }
-            );
+            const res = await axios.post(`${getBackendURL()}/auth/register`, {
+                firstName: firstName,
+                lastName: lastName,
+                username: username,
+                email: email,
+                password: password,
+            });
 
             if ("token" in res.data) {
                 window.localStorage["jwtToken"] = res.data.token;
@@ -45,13 +38,10 @@ export default class UserService {
 
     static async login(user, pass) {
         try {
-            const res = await axios.post(
-                `${UserService.baseURL()}/auth/login`,
-                {
-                    username: user,
-                    password: pass,
-                }
-            );
+            const res = await axios.post(`${getBackendURL()}/auth/login`, {
+                username: user,
+                password: pass,
+            });
 
             if ("token" in res.data) {
                 window.localStorage["jwtToken"] = res.data.token;
@@ -73,7 +63,7 @@ export default class UserService {
     static async getUserDetails(userID) {
         try {
             const res = await axios.get(
-                `${UserService.baseURL()}/users/getUserDetails/${userID}`
+                `${getBackendURL()}/users/getUserDetails/${userID}`
             );
 
             return res.data;

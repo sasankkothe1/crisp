@@ -1,5 +1,5 @@
 import axios from "axios";
-import { getLoggedInUserID, getToken } from "./utils";
+import { getToken } from "./utils";
 
 export default class RecipeService {
     static baseURL() {
@@ -59,9 +59,9 @@ export default class RecipeService {
         }
     }
 
-    static async allRecipesByUserID(limit, page) {
+    static async allRecipesByUserID(limit, page, id) {
         let res = null;
-        const userID = getLoggedInUserID();
+        const userID = id;
         let token = getToken();
         let headers = { Authorization: `Bearer ${token}` };
 

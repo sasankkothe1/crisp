@@ -16,6 +16,7 @@ import ProfileDetails from "../../components/Profile/ProfileDetails";
 import TabPanel from "../../components/Profile/TabPanel";
 import PostsList from "../../components/HomePage/PostsList";
 import UserService from "../../services/UserService";
+import PaymentPortal from "../../components/Payment/PaymentPortal";
 
 // import { postData } from "../../SampleData/postData";
 
@@ -64,18 +65,25 @@ function ProfileView({ history }) {
     const [isFollowing, setIsFollowing] = useState(false);
     const [tabIndex, setTabIndex] = useState(0);
 
+    // Payment Modal Condition
+    const [show, setShow] = useState(false);
+
     useEffect(async () => {
         if (id) {
-            setProfileUser(await UserService.getUserDetails(id));
+            const wut = await UserService.getUserDetails(id);
+            console.log("RIGHT HERE");
+            console.log(wut);
+            setProfileUser(wut);
             setIsLoggedInUser(id === loggedInUser._id);
             if (id != loggedInUser._id) {
                 setIsFollowing(await UserService.isFollowing(id));
             }
         } else {
             if (loggedInUser._id) {
-                setProfileUser(
-                    await UserService.getUserDetails(loggedInUser._id)
-                );
+                const wut = await UserService.getUserDetails(loggedInUser._id);
+                console.log("RIGHT THERE");
+                console.log(wut);
+                setProfileUser(wut);
                 setIsLoggedInUser(true);
             } else {
                 history.push("/");
@@ -106,104 +114,114 @@ function ProfileView({ history }) {
     };
 
     return (
-        <Grid container className={classes.root}>
-            <Grid item container className={classes.topContainer}>
-                <ProfileHeader
-                    counts={{
-                        recipeCount: 0,
-                        postCount: 0,
-                        eventCount: 0,
-                    }}
-                    isLoggedInUser={isLoggedInUser}
-                    isFollowing={isFollowing}
-                    onFollow={onFollow}
-                    onUnfollow={onUnfollow}
-                />
-                <ProfileDetails
-                    user={{
-                        username: profileUser?.username || "",
-                        firstName: profileUser?.firstName || "",
-                        lastName: profileUser?.lastName || "",
-                    }}
-                />
-            </Grid>
-            <Grid item className={classes.botContainer}>
-                <AppBar
-                    position="sticky"
-                    color="secondary"
-                    className={classes.tabsContainer}
-                >
-                    <Tabs
-                        value={tabIndex}
-                        onChange={handleChange}
-                        indicatorColor="primary"
-                        textColor="primary"
-                        variant="fullWidth"
-                        aria-label="full width tabs"
+        <>
+            <Grid container className={classes.root}>
+                <Grid item container className={classes.topContainer}>
+                    <ProfileHeader
+                        counts={{
+                            recipeCount: 0,
+                            postCount: 0,
+                            eventCount: 0,
+                        }}
+                        isLoggedInUser={isLoggedInUser}
+                        isFollowing={isFollowing}
+                        onFollow={onFollow}
+                        onUnfollow={onUnfollow}
+                        onSubscribe={setShow}
+                    />
+                    <ProfileDetails
+                        user={{
+                            username: profileUser?.username || "",
+                            firstName: profileUser?.firstName || "",
+                            lastName: profileUser?.lastName || "",
+                        }}
+                    />
+                </Grid>
+                <Grid item className={classes.botContainer}>
+                    <AppBar
+                        position="sticky"
+                        color="secondary"
+                        className={classes.tabsContainer}
                     >
-                        <Tab
-                            label="Recipes"
-                            id="full-width-tab-0"
-                            aria-controls="full-width-tabpanel-0"
-                        />
-                        <Tab
-                            label="Posts"
-                            id="full-width-tab-1"
-                            aria-controls="full-width-tabpanel-1"
-                        />
-                        <Tab
-                            label="Events"
-                            id="full-width-tab-2"
-                            aria-controls="full-width-tabpanel-2"
-                        />
-                    </Tabs>
-                </AppBar>
-                <Card>
-                    <SwipeableViews
-                        axis={"x"}
-                        index={tabIndex}
-                        onChangeIndex={handleChangeIndex}
-                    >
-                        <TabPanel
+                        <Tabs
                             value={tabIndex}
-                            index={0}
-                            dir={theme.direction}
+                            onChange={handleChange}
+                            indicatorColor="primary"
+                            textColor="primary"
+                            variant="fullWidth"
+                            aria-label="full width tabs"
                         >
-                            <PostsList
-                                limit={16}
-                                fetchMethod={RecipeService.allRecipesByUserID}
-                                fetchParams={{}}
-                                editable={true}
+                            <Tab
+                                label="Recipes"
+                                id="full-width-tab-0"
+                                aria-controls="full-width-tabpanel-0"
                             />
-                        </TabPanel>
-                        <TabPanel
-                            value={tabIndex}
-                            index={1}
-                            dir={theme.direction}
+                            <Tab
+                                label="Posts"
+                                id="full-width-tab-1"
+                                aria-controls="full-width-tabpanel-1"
+                            />
+                            <Tab
+                                label="Events"
+                                id="full-width-tab-2"
+                                aria-controls="full-width-tabpanel-2"
+                            />
+                        </Tabs>
+                    </AppBar>
+                    <Card>
+                        <SwipeableViews
+                            axis={"x"}
+                            index={tabIndex}
+                            onChangeIndex={handleChangeIndex}
                         >
-                            <PostsList
-                                limit={16}
-                                fetchMethod={PostService.allPostByUserID}
-                                fetchParams={{}}
-                                editable={true}
-                            />
-                        </TabPanel>
-                        <TabPanel
-                            value={tabIndex}
-                            index={2}
-                            dir={theme.direction}
-                        >
-                            <PostsList
-                                limit={16}
-                                fetchMethod={EventService.allEventsByUserID}
-                                fetchParams={{}}
-                                editable={true}
-                            />
-                        </TabPanel>
-                    </SwipeableViews>
-                </Card>
+                            <TabPanel
+                                value={tabIndex}
+                                index={0}
+                                dir={theme.direction}
+                            >
+                                <PostsList
+                                    limit={16}
+                                    fetchMethod={
+                                        RecipeService.allRecipesByUserID
+                                    }
+                                    fetchParam={profileUser._id}
+                                />
+                            </TabPanel>
+                            <TabPanel
+                                value={tabIndex}
+                                index={1}
+                                dir={theme.direction}
+                            >
+                                <PostsList
+                                    limit={16}
+                                    fetchMethod={PostService.allPostByUserID}
+                                    fetchParam={profileUser._id}
+                                />
+                            </TabPanel>
+                            <TabPanel
+                                value={tabIndex}
+                                index={2}
+                                dir={theme.direction}
+                            >
+                                <PostsList
+                                    limit={16}
+                                    fetchMethod={EventService.allEventsByUserID}
+                                    fetchParam={profileUser._id}
+                                />
+                            </TabPanel>
+                        </SwipeableViews>
+                    </Card>
+                </Grid>
             </Grid>
-        </Grid>
+            {id && id != loggedInUser._id && (
+                <PaymentPortal
+                    orderType="Subscription"
+                    orderObject={profileUser}
+                    show={show}
+                    setShow={setShow}
+                />
+            )}
+        </>
     );
 }
 

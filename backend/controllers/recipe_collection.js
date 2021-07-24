@@ -29,6 +29,8 @@ const getRecipeCollections = (req, res) => {
         filters.price = priceFilter;
     }
 
+    console.log(filters);
+
     let collections = RecipeCollection.find(filters);
 
     collections = collections.populate({

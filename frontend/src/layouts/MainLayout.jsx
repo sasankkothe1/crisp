@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
 import PropTypes from "prop-types";
 import { Grid, makeStyles } from "@material-ui/core";
 import Header from "../components/Header/Header";
 import Banner from "../components/Banner/Banner";
+import { isTokenValid } from "../services/utils";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -23,6 +24,10 @@ const useStyles = makeStyles((theme) => ({
 
 const MainLayout = ({ children }) => {
     const classes = useStyles();
+
+    useEffect(() => {
+        isTokenValid();
+    }, []);
 
     return (
         <div className={classes.root}>
@@ -45,6 +50,7 @@ const MainLayout = ({ children }) => {
 
 MainLayout.propTypes = {
     children: PropTypes.any,
+    location: PropTypes.object,
 };
 
 export default MainLayout;
