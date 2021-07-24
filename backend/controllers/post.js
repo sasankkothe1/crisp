@@ -1,7 +1,7 @@
 const { PostModel } = require("../model/Post");
 
 const fs = require("fs");
-const path = require('path');
+const path = require("path");
 
 const test = async (req, res) => {
     return res.send("testing");
@@ -78,7 +78,12 @@ const create = async (req, res) => {
 const listPosts = (req, res) => {
     PostModel.paginate(
         {},
-        { limit: req.query.limit, page: req.query.page, sort: "-datePosted", populate: "postedBy" }
+        {
+            limit: req.query.limit,
+            page: req.query.page,
+            sort: "-datePosted",
+            populate: "postedBy",
+        }
     )
         .then((posts) => {
             if (!posts) {
@@ -99,7 +104,15 @@ const listPosts = (req, res) => {
 };
 
 const listPostsByUserID = (req, res) => {
-    PostModel.paginate({ postedBy: req.params.id }, { limit: req.query.limit, page: req.query.page, sort: "-datePosted", populate: "postedBy" })
+    PostModel.paginate(
+        { postedBy: req.params.id },
+        {
+            limit: req.query.limit,
+            page: req.query.page,
+            sort: "-datePosted",
+            populate: "postedBy",
+        }
+    )
         .then((posts) => {
             if (!posts) {
                 return res.status(400).json({
@@ -107,7 +120,7 @@ const listPostsByUserID = (req, res) => {
                     message: "No Posts Found",
                 });
             } else {
-                return res.status(200).json(posts)
+                return res.status(200).json(posts);
             }
         })
         .catch((error) =>
@@ -153,7 +166,6 @@ const read = (req, res) => {
 };
 
 const update = async (req, res) => {
-
     //FIXME: Fis if only one image is deleted. Because if one image is selected, then it is not an array. So should push it to the array. That's enough. Or remove the for loop. Enough.
     try {
         let post = await PostModel.findOne({ _id: req.params.id }).exec();
@@ -167,10 +179,8 @@ const update = async (req, res) => {
 
         let mediaFiles = [];
 
-
         if (req.files !== undefined) {
             let url = req.protocol + "://" + req.get("host") + "/";
-
 
             if (req.files.length > 0) {
                 for (let i = 0; i < req.files.length; i++)
@@ -180,14 +190,14 @@ const update = async (req, res) => {
 
         let toBeDeleted = req.body.toBeDeleted;
 
-
         if (toBeDeleted && toBeDeleted.length) {
             for (let i = 0; i < toBeDeleted.length; i++) {
-
-
-                fs.unlink(path.join(__dirname, `../public/uploads/${toBeDeleted[i]}`), () => {
-                    console.log("deleted");
-                })
+                fs.unlink(
+                    path.join(__dirname, `../public/uploads/${toBeDeleted[i]}`),
+                    () => {
+                        console.log("deleted");
+                    }
+                );
             }
         }
 
@@ -195,10 +205,9 @@ const update = async (req, res) => {
 
         if (userImages && userImages.length) {
             for (let i = 0; i < userImages.length; i++) {
-                mediaFiles.push(userImages[i]["preview"])
+                mediaFiles.push(userImages[i]["preview"]);
             }
         }
-
 
         post.title = req.body.title;
         post.description = req.body.description;

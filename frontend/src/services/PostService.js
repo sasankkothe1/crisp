@@ -45,37 +45,42 @@ export default class PostService {
     }
 
     static async postById(id) {
-        let res = null
+        let res = null;
         try {
-            res = await axios.get(`${PostService.baseURL()}/posts/postByID/${id}`)
-            return res.data
+            res = await axios.get(
+                `${PostService.baseURL()}/posts/postByID/${id}`
+            );
+            return res.data;
         } catch (error) {
             return {
                 status: error.response.status,
-                message: error.response.data.message
+                message: error.response.data.message,
             };
         }
     }
 
     static async allPostByUserID(limit, page) {
-        let res = null
+        let res = null;
         const userID = getLoggedInUserID();
         let token = getToken();
         let headers = { Authorization: `Bearer ${token}` };
 
         try {
-            res = await axios.get(`${PostService.baseURL()}/posts/postedBy/${userID}`, {
-                params: {
-                    limit: limit,
-                    page: page,
-                },
-                headers: headers
-            })
-            return res.data
+            res = await axios.get(
+                `${PostService.baseURL()}/posts/postedBy/${userID}`,
+                {
+                    params: {
+                        limit: limit,
+                        page: page,
+                    },
+                    headers: headers,
+                }
+            );
+            return res.data;
         } catch (error) {
             return {
                 status: error.response.status,
-                message: error.response.data.message
+                message: error.response.data.message,
             };
         }
     }
@@ -85,13 +90,17 @@ export default class PostService {
         let token = getToken();
         let headers = { Authorization: `Bearer ${token}` };
         try {
-            res = await axios.put(`${PostService.baseURL()}/posts/${id}`, post, { headers });
+            res = await axios.put(
+                `${PostService.baseURL()}/posts/${id}`,
+                post,
+                { headers }
+            );
             return { status: res.status, message: "Edited Successfully" };
         } catch (error) {
-            console.log(error)
+            console.log(error);
             return {
                 status: error.response.status,
-                message: error.response.data.message
+                message: error.response.data.message,
             };
         }
     }
