@@ -4,7 +4,6 @@
     width: 25vw;
     margin: 1em; */
     transition: transform 0.2s;
-
     background-color: #eee;
     display: inline-block;
     margin: 0 0 1em;
@@ -69,4 +68,9 @@
     margin-left: 10px;
 }
 
-
+.post-tile-content-image{
+    margin-left: 10%;
+    margin-right: 10%;
+    display: block;
+    max-height: 200px;
+}

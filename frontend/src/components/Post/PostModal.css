@@ -3,6 +3,11 @@
     flex-direction: row;
 }
 
+.post-modal-media{
+    display: block;
+    max-height: 400px;
+}
+
 .post-modal-content-description {
     max-height: 500px;
     overflow-y: scroll;

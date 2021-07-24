@@ -6,6 +6,7 @@
 
 .eventList {
     height: 300px;
+    width: 200px;
     overflow-x: scroll;
 }
 
@@ -15,8 +16,9 @@
     justify-content: space-evenly;
     flex-direction: row;
     border-bottom: 1px solid black;
-
     transition: transform 0.2s;
+    margin-right: 10px;
+    margin-left: 10px;
 }
 
 .eventList-element:hover {
