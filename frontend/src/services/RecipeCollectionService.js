@@ -92,6 +92,55 @@ export default class RecipeCollectionService {
         }
     }
 
+    static async rateRecipeCollection(id, rating) {
+        let token = getToken();
+        if (!token) {
+            return {
+                status: 401,
+            };
+        }
+        let headers = { Authorization: `Bearer ${token}` };
+
+        try {
+            const res = await axios.post(
+                `${RecipeCollectionService.baseURL()}/${id}/rate`,
+                { rating: rating * 2 },
+                { headers }
+            );
+
+            return res;
+        } catch (error) {
+            return {
+                status: error.response.status,
+                message: error.response.data.message,
+            };
+        }
+    }
+
+    static async getRecipeCollectionUserRate(id) {
+        let token = getToken();
+        if (!token) {
+            return {
+                status: 401,
+            };
+        }
+        let headers = { Authorization: `Bearer ${token}` };
+
+        try {
+            const res = await axios.get(
+                `${RecipeCollectionService.baseURL()}/${id}/user_rate`,
+                { headers }
+            );
+
+            return res;
+        } catch (error) {
+            return {
+                status: error.response.status,
+                message: error.response.data.message,
+            };
+        }
+    }
+
     static async checkoutRecipeCollectionMock(id) {
         let token = getToken();
         if (!token) {
@@ -101,7 +150,7 @@ export default class RecipeCollectionService {
         }
 
         let headers = { Authorization: `Bearer ${token}` };
-        
+
         try {
             const res = await axios.post(
                 `${process.env.REACT_APP_BACKEND_URL}/orders`,
@@ -109,7 +158,7 @@ export default class RecipeCollectionService {
                     type: "RecipeCollection",
                     recipeCollection: id,
                     totalAmount: 100,
-                    transactionID: "228"
+                    transactionID: "228",
                 },
                 { headers }
             );
@@ -120,6 +169,6 @@ export default class RecipeCollectionService {
                 status: error.response.status,
                 message: error.response.data.message,
             };
-        } 
+        }
     }
 }

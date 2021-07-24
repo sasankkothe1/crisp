@@ -34,7 +34,7 @@ const useStyles = makeStyles(() => ({
 export default function ShopView() {
     const classes = useStyles();
 
-    const [purchaseMade, setPurchaseMade] = useState(false);
+    const [dataChanged, setDataChanged] = useState(false);
 
     const [recipeType, setRecipeType] = useState("");
 
@@ -56,10 +56,8 @@ export default function ShopView() {
             maxPrice
         );
 
-        console.log(res.data);
-
         setRCD(res.data);
-    }, [recipeType, buttonClicked, purchaseMade]);
+    }, [recipeType, buttonClicked, dataChanged]);
 
     const sidebarProps = {
         meal: meal,
@@ -77,8 +75,8 @@ export default function ShopView() {
 
     const listProps = {
         recipeCollectionsData: rcd,
-        purchaseMade: purchaseMade,
-        setPurchaseMade: setPurchaseMade
+        dataChanged: dataChanged,
+        setDataChanged: setDataChanged,
     };
 
     return (
