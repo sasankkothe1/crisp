@@ -18,17 +18,16 @@ import { Link } from "react-router-dom";
 import RecipeCollectionService from "../../services/RecipeCollectionService";
 
 const useRating = (data, rcProps) => {
-    if (!rcProps) {
-        return 0;
-    }
-
     const [rating, setRating] = useState(0);
+
+    if (!rcProps) {
+        return [rating, setRating]; 
+    }
 
     useEffect(async () => {
         const res = await RecipeCollectionService.getRecipeCollectionUserRate(
             data._id
         );
-        console.log(res);
         if (res.status == 200) {
             setRating(res.data.rating / 2);
         }
@@ -39,10 +38,6 @@ const useRating = (data, rcProps) => {
 
 export default function PostModal({ data, rcProps }) {
     const [rating, setRating] = useRating(data, rcProps);
-
-    useEffect(() => {
-        alert(`Rating changed! New rating = ${rating}`);
-    }, [rating]);
 
     return (
         <div>
