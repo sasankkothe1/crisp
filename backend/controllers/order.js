@@ -33,7 +33,6 @@ const createOrder = async (req, res, next) => {
             payment_method: paymentDetails.payment_method,
             confirm: true,
         });
-        console.log("Payment", payment);
 
         Order.create(
             {
@@ -43,23 +42,15 @@ const createOrder = async (req, res, next) => {
             },
             (err, order) => {
                 if (err) {
-                    console.log("A");
-                    console.log(err);
                     return res.status(502).json({ message: err.message });
                 } else {
-                    console.log("B");
-                    console.log(orderDetails.type);
                     if (orderDetails.type === "Subscription") {
                         req.user.subscriptions.push(orderDetails.subscription);
 
                         req.user.save(function (err) {
                             if (err) {
-                                console.log("Error here");
-                                console.log(err);
                                 return next(err);
                             }
-
-                            console.log("here?");
 
                             return res.status(201).json({
                                 message: "Payment successful",
@@ -67,19 +58,17 @@ const createOrder = async (req, res, next) => {
                                 order: order,
                             });
                         });
+                    } else {
+                        return res.status(201).json({
+                            message: "Payment successful",
+                            success: true,
+                            order: order,
+                        });
                     }
-
-                    return res.status(201).json({
-                        message: "Payment successful",
-                        success: true,
-                        order: order,
-                    });
                 }
             }
         );
     } catch (error) {
-        console.log("WHOA");
-        console.log("Error", error);
         return res.json({
             message: "Payment failed",
             success: false,

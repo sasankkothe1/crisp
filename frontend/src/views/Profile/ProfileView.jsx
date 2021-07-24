@@ -70,16 +70,20 @@ function ProfileView({ history }) {
 
     useEffect(async () => {
         if (id) {
-            setProfileUser(await UserService.getUserDetails(id));
+            const wut = await UserService.getUserDetails(id);
+            console.log("RIGHT HERE");
+            console.log(wut);
+            setProfileUser(wut);
             setIsLoggedInUser(id === loggedInUser._id);
             if (id != loggedInUser._id) {
                 setIsFollowing(await UserService.isFollowing(id));
             }
         } else {
             if (loggedInUser._id) {
-                setProfileUser(
-                    await UserService.getUserDetails(loggedInUser._id)
-                );
+                const wut = await UserService.getUserDetails(loggedInUser._id);
+                console.log("RIGHT THERE");
+                console.log(wut);
+                setProfileUser(wut);
                 setIsLoggedInUser(true);
             } else {
                 history.push("/");
@@ -180,7 +184,7 @@ function ProfileView({ history }) {
                                     fetchMethod={
                                         RecipeService.allRecipesByUserID
                                     }
-                                    fetchParams={{ id: profileUser._id }}
+                                    fetchParam={profileUser._id}
                                 />
                             </TabPanel>
                             <TabPanel
@@ -191,7 +195,7 @@ function ProfileView({ history }) {
                                 <PostsList
                                     limit={16}
                                     fetchMethod={PostService.allPostByUserID}
-                                    fetchParams={{ id: profileUser._id }}
+                                    fetchParam={profileUser._id}
                                 />
                             </TabPanel>
                             <TabPanel
@@ -202,19 +206,21 @@ function ProfileView({ history }) {
                                 <PostsList
                                     limit={16}
                                     fetchMethod={EventService.allEventsByUserID}
-                                    fetchParams={{ id: profileUser._id }}
+                                    fetchParam={profileUser._id}
                                 />
                             </TabPanel>
                         </SwipeableViews>
                     </Card>
                 </Grid>
             </Grid>
-            <PaymentPortal
-                orderType="Subscription"
-                orderObject={profileUser}
-                show={show}
-                setShow={setShow}
-            />
+            {id && id != loggedInUser._id && (
+                <PaymentPortal
+                    orderType="Subscription"
+                    orderObject={profileUser}
+                    show={show}
+                    setShow={setShow}
+                />
+            )}
         </>
     );
 }

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { getLoggedInUserID, getToken } from "./utils";
+import { getToken } from "./utils";
 
 export default class EventService {
     static baseURL() {
@@ -44,9 +44,9 @@ export default class EventService {
         }
     }
 
-    static async allEventsByUserID(limit, page) {
+    static async allEventsByUserID(limit, page, id) {
         let res = null;
-        const userID = getLoggedInUserID();
+        const userID = id;
         let token = getToken();
         let headers = { Authorization: `Bearer ${token}` };
 

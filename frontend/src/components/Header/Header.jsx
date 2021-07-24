@@ -120,7 +120,7 @@ const Header = ({ history, dispatch }) => {
                     />
                     <div className={classes.buttonGroup}>
                         <IconButton
-                            aria-label="add post, event, or recipe"
+                            aria-label="add post, event, recipe or recipe collection"
                             aria-controls="menu-list-add"
                             aria-haspopup="true"
                             onClick={handleMenu}
@@ -171,6 +171,15 @@ const Header = ({ history, dispatch }) => {
                                                 >
                                                     Add Event
                                                 </MenuItem>
+                                                <MenuItem
+                                                    onClick={() =>
+                                                        redirect(
+                                                            "/addRecipeCollection"
+                                                        )
+                                                    }
+                                                >
+                                                    Add Recipe Collection
+                                                </MenuItem>
                                             </MenuList>
                                         </ClickAwayListener>
                                     </Paper>
@@ -181,6 +190,7 @@ const Header = ({ history, dispatch }) => {
                             aria-label="account of current user"
                             aria-haspopup="true"
                             color="black"
+                            onClick={() => redirect("/shop")}
                         >
                             <ShoppingCartIcon className={classes.icon} />
                         </IconButton>

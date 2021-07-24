@@ -12,6 +12,8 @@ import AddEventView from "./views/Event/AddEventView";
 import reducers from "./redux/reducers";
 import HomeView from "./views/HomeView";
 import ProfileView from "./views/Profile/ProfileView";
+import ShopView from "./views/ShopView";
+import AddRecipeCollectionView from "./views/RecipeCollection/AddRecipeCollection";
 import RecipeIDView from "./views/Recipe/RecipeIDView";
 //import PaymentPortal from "./components/Payment/PaymentPortal";
 
@@ -44,6 +46,12 @@ function App() {
                         </Route>
                         <Route exact path="/addEvent">
                             <AddEventView />
+                        </Route>
+                        <Route exact path="/shop">
+                            <ShopView />
+                        </Route>
+                        <Route exact path="/addRecipeCollection">
+                            <AddRecipeCollectionView />
                         </Route>
                         <Route exact path="/viewRecipe/:id">
                             <RecipeIDView />

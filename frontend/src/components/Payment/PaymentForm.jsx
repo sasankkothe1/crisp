@@ -26,12 +26,10 @@ const CARD_OPTIONS = {
     },
 };
 
-const PaymentForm = ({ orderType, orderObject }) => {
+const PaymentForm = ({ orderType, orderObject, onSuccess }) => {
     const [success, setSuccess] = useState(false);
     const stripe = useStripe();
     const elements = useElements();
-
-    console.log(success);
 
     let orderDescription;
     let paymentSubtitle;
@@ -56,8 +54,6 @@ const PaymentForm = ({ orderType, orderObject }) => {
 
     orderDetails.description = orderDescription;
     orderDetails.totalAmount = paymentAmount;
-
-    console.log(orderDescription);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -87,11 +83,10 @@ const PaymentForm = ({ orderType, orderObject }) => {
                         { headers }
                     );
 
-                    console.log("After");
-
                     if (response.data.success) {
                         console.log("Successful Payment");
                         setSuccess(true);
+                        onSuccess(response.data);
                     }
                 } else {
                     return new Error("Session expired, please login again");
@@ -132,6 +127,7 @@ const PaymentForm = ({ orderType, orderObject }) => {
 PaymentForm.propTypes = {
     orderType: PropTypes.String,
     orderObject: PropTypes.object,
+    onSuccess: PropTypes.func,
 };
 
 export default PaymentForm;

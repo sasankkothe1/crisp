@@ -10,7 +10,7 @@ export default function PostsList(props) {
     const [show, setShow] = useState(false);
     const [postIndex, setPostIndex] = useState(0);
 
-    const { limit, fetchMethod, fetchParams } = props;
+    const { limit, fetchMethod, fetchParam } = props;
 
     const [data, setData] = useState([]);
     const [paginationData, setPaginationData] = useState([{}]);
@@ -19,8 +19,13 @@ export default function PostsList(props) {
         fetchPage(1);
     }, []);
 
+    useEffect(() => {
+        fetchPage(1);
+    }, [fetchMethod, fetchParam]);
+
     const fetchPage = (page) => {
-        fetchMethod(limit, page, ...Object.values(fetchParams)).then((res) => {
+        console.log(fetchParam);
+        fetchMethod(limit, page, fetchParam).then((res) => {
             setData(res.docs);
             setPaginationData({ totalPages: res.totalPages });
         });

@@ -23,6 +23,7 @@
       "warn",
       4,
       { "SwitchCase": 1 }
-    ]
+    ],
+    "react/prop-types": "off"
   }
 }

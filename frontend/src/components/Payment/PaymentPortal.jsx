@@ -11,7 +11,13 @@ const PUBLIC_KEY =
 
 const stripeTestPromise = loadStripe(PUBLIC_KEY);
 
-const PaymentPortal = ({ orderType, orderObject, show, setShow }) => {
+const PaymentPortal = ({
+    orderType,
+    orderObject,
+    show,
+    setShow,
+    onSuccess,
+}) => {
     const handleClose = () => setShow(false);
 
     return (
@@ -24,6 +30,7 @@ const PaymentPortal = ({ orderType, orderObject, show, setShow }) => {
                     <PaymentForm
                         orderType={orderType}
                         orderObject={orderObject}
+                        onSuccess={onSuccess}
                     />
                 </Elements>
             </Modal.Body>
@@ -36,6 +43,7 @@ PaymentPortal.propTypes = {
     orderObject: PropTypes.object,
     show: PropTypes.bool,
     setShow: PropTypes.func,
+    onSuccess: PropTypes.func,
 };
 
 export default PaymentPortal;
