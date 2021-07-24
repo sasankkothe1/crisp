@@ -8,11 +8,16 @@ import StarRatings from "react-star-ratings";
 import ReactPlayer from "react-player";
 import moment from "moment-timezone";
 
+import Button from "@material-ui/core/Button";
+
 import "./PostModal.css";
 import { Link } from "react-router-dom";
 
-export default function PostModal({ data }) {
+import RecipeCollectionService from "../../services/RecipeCollectionService";
+
+export default function PostModal({ data, isRC }) {
     console.log(data);
+
     return (
         <div>
             <Modal.Header className="post-modal-header" closeButton>
@@ -20,6 +25,38 @@ export default function PostModal({ data }) {
                     {data["title"] && (
                         <Modal.Title>{data["title"]}</Modal.Title>
                     )}
+                    {isRC &&
+                        (data.purchased && data.purchased === true ? (
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                onClick={async () => {
+                                    console.log(data._id);
+                                    const res =
+                                        await RecipeCollectionService.getRecipeCollectionLink(
+                                            data._id
+                                        );
+                                    if (res.status == 200) {
+                                        const newWindow = window.open(
+                                            res.link,
+                                            "_blank",
+                                            "noopener,noreferrer"
+                                        );
+                                        if (newWindow) newWindow.opener = null;
+                                    }
+                                }}
+                            >
+                                Open PDF
+                            </Button>
+                        ) : (
+                            <Button
+                                variant="contained"
+                                color="secondary"
+                                onClick={() => console.log("checkout!")}
+                            >
+                                Checkout
+                            </Button>
+                        ))}
                     {data["rating"] !== 0 ? (
                         <StarRatings
                             className={"post-modal-ratings"}

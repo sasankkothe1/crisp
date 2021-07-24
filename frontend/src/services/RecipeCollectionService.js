@@ -5,13 +5,20 @@ export default class RecipeCollectionService {
         return `${process.env.REACT_APP_BACKEND_URL}/recipe_collections`;
     }
 
-    static async getRecipeCollection(id) {
+    static async getRecipeCollectionLink(id) {
         try {
             const token = getToken();
+
+            if (!token) {
+                return {
+                    status: 401,
+                };
+            }
+
             const headers = { Authorization: `Bearer ${token}` };
 
             const res = await axios.get(
-                `${RecipeCollectionService.baseURL()}/${id}`,
+                `${RecipeCollectionService.baseURL()}/${id}/link`,
                 { headers }
             );
 
@@ -66,7 +73,9 @@ export default class RecipeCollectionService {
     static async addRecipeCollection(recipeCollection) {
         let token = getToken();
         if (!token) {
-            return 502;
+            return {
+                status: 401,
+            };
         }
         let headers = { Authorization: `Bearer ${token}` };
 

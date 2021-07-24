@@ -23,12 +23,12 @@ export default function ShopItemsList(props) {
     const recipeCollectionsData = props["data"];
 
     const [show, setShow] = useState(false);
-    const [postIndex, setPostIndex] = useState(0);
+    const [rcIndex, setRCIndex] = useState(0);
 
     const handleClose = () => setShow(false);
 
-    const displayPost = (i) => {
-        setPostIndex(i);
+    const displayRC = (i) => {
+        setRCIndex(i);
         setShow(true);
     };
 
@@ -41,7 +41,7 @@ export default function ShopItemsList(props) {
                 };
                 return (
                     <PostTile
-                        onClick={() => displayPost(i)}
+                        onClick={() => displayRC(i)}
                         key={i}
                         data={rc}
                         rcProps={rcProps}
@@ -55,7 +55,7 @@ export default function ShopItemsList(props) {
                 show={show}
                 onHide={handleClose}
             >
-                <PostModal data={recipeCollectionsData[postIndex]} />
+                <PostModal data={recipeCollectionsData[rcIndex]} isRC={true} /> 
             </Modal>
         </div>
     );

@@ -8,7 +8,8 @@ import StarRatings from "react-star-ratings";
 import ReactPlayer from "react-player";
 
 import DoneAllIcon from "@material-ui/icons/DoneAll";
-import ReceiptIcon from "@material-ui/icons/Receipt";
+import LocalOffer from "@material-ui/icons/LocalOffer";
+import EuroIcon from "@material-ui/icons/Euro";
 
 import "./PostTile.css";
 
@@ -36,25 +37,24 @@ export default function PostTile(props) {
                             {data["postedBy"]["firstName"]}
                         </h6>
                     </div>
-                </div>
-                {rcProps &&
-                    rcProps.price &&
-                    rcProps.purchased &&
-                    rcProps.purchased === true && (
-                        <div className="post-tile-header-tick">
+                    {rcProps &&
+                        rcProps.price &&
+                        rcProps.purchased &&
+                        rcProps.purchased === true && (
                             <DoneAllIcon fontSize="small" />
-                        </div>
+                        )}
+                    {rcProps && rcProps.price && !rcProps.purchased && (
+                        <React.Fragment>
+                            <LocalOffer fontSize="small" />
+                            <div>
+                                <h6 className="post-tile-header-user">
+                                    {rcProps.price}
+                                </h6>
+                            </div>
+                            <EuroIcon fontSize="small" />
+                        </React.Fragment>
                     )}
-                {rcProps && rcProps.price && !rcProps.purchased && (
-                    <div className="post-tile-header-price">
-                        <ReceiptIcon fontSize="small" />
-                        <div>
-                            <h6 className="post-tile-header-user">
-                                {rcProps.price}
-                            </h6>
-                        </div>
-                    </div>
-                )}
+                </div>
                 <div className="post-tile-header-right">
                     <StarRatings
                         className={"post-tile-ratings"}

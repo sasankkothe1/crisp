@@ -24,6 +24,11 @@ const RecipeCollectionSchema = new mongoose.Schema({
     pdfFile: {
         type: String,
         required: true,
+        select: false,
+    },
+    meal: {
+        type: String,
+        enum: ["Breakfast", "Dinner", "Snacks", "Lunch"],
     },
     datePosted: {
         type: Date,
