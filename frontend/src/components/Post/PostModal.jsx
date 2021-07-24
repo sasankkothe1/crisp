@@ -15,9 +15,7 @@ import { Link } from "react-router-dom";
 
 import RecipeCollectionService from "../../services/RecipeCollectionService";
 
-export default function PostModal({ data, isRC }) {
-    console.log(data);
-
+export default function PostModal({ data, rcProps }) {
     return (
         <div>
             <Modal.Header className="post-modal-header" closeButton>
@@ -25,8 +23,8 @@ export default function PostModal({ data, isRC }) {
                     {data["title"] && (
                         <Modal.Title>{data["title"]}</Modal.Title>
                     )}
-                    {isRC &&
-                        (data.purchased && data.purchased === true ? (
+                    {rcProps &&
+                        (data.purchased && data.purchased == true ? (
                             <Button
                                 variant="contained"
                                 color="primary"
@@ -37,8 +35,9 @@ export default function PostModal({ data, isRC }) {
                                             data._id
                                         );
                                     if (res.status == 200) {
+                                        console.log(res.data.link);
                                         const newWindow = window.open(
-                                            res.link,
+                                            res.data.link,
                                             "_blank",
                                             "noopener,noreferrer"
                                         );
@@ -52,9 +51,21 @@ export default function PostModal({ data, isRC }) {
                             <Button
                                 variant="contained"
                                 color="secondary"
-                                onClick={() => console.log("checkout!")}
+                                onClick={async () => {
+                                    console.log(data._id);
+                                    const res = await RecipeCollectionService.checkoutRecipeCollectionMock(
+                                        data._id
+                                    ); 
+                                    if (res.status == 201 && res.data.id) {
+                                        console.log("Success!");
+                                        rcProps.setPurchaseMade(!rcProps.purchaseMade);
+                                        //setPurchased(true);
+                                    } else {
+                                        console.log("Error :(");
+                                    }
+                                }}
                             >
-                                Checkout
+                                {`Checkout ${data.price}€`}
                             </Button>
                         ))}
                     {data["rating"] !== 0 ? (

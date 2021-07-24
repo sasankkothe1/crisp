@@ -61,9 +61,6 @@ export default class RecipeCollectionService {
                 params: params,
             });
 
-            console.log(res.status);
-            console.log(res.data);
-
             return res;
         } catch (error) {
             return error;
@@ -93,5 +90,36 @@ export default class RecipeCollectionService {
                 message: error.response.data.message,
             };
         }
+    }
+
+    static async checkoutRecipeCollectionMock(id) {
+        let token = getToken();
+        if (!token) {
+            return {
+                status: 401,
+            };
+        }
+
+        let headers = { Authorization: `Bearer ${token}` };
+        
+        try {
+            const res = await axios.post(
+                `${process.env.REACT_APP_BACKEND_URL}/orders`,
+                {
+                    type: "RecipeCollection",
+                    recipeCollection: id,
+                    totalAmount: 100,
+                    transactionID: "228"
+                },
+                { headers }
+            );
+
+            return res;
+        } catch (error) {
+            return {
+                status: error.response.status,
+                message: error.response.data.message,
+            };
+        } 
     }
 }

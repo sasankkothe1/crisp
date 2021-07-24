@@ -20,7 +20,7 @@ const useStyles = makeStyles(() => ({
 export default function ShopItemsList(props) {
     const classes = useStyles();
 
-    const recipeCollectionsData = props["data"];
+    const { recipeCollectionsData, purchaseMade, setPurchaseMade } = props;
 
     const [show, setShow] = useState(false);
     const [rcIndex, setRCIndex] = useState(0);
@@ -55,7 +55,12 @@ export default function ShopItemsList(props) {
                 show={show}
                 onHide={handleClose}
             >
-                <PostModal data={recipeCollectionsData[rcIndex]} isRC={true} /> 
+                <PostModal data={recipeCollectionsData[rcIndex]} rcProps={
+                    {
+                        purchaseMade: purchaseMade,
+                        setPurchaseMade: setPurchaseMade
+                    }
+                } /> 
             </Modal>
         </div>
     );
