@@ -11,6 +11,8 @@ import DoneAllIcon from "@material-ui/icons/DoneAll";
 import LocalOffer from "@material-ui/icons/LocalOffer";
 import EuroIcon from "@material-ui/icons/Euro";
 
+import Rating from "@material-ui/lab/Rating";
+
 import "./PostTile.css";
 
 export default function PostTile(props) {
@@ -18,8 +20,6 @@ export default function PostTile(props) {
     const { media } = data;
 
     const { rcProps } = props;
-
-    console.log(rcProps);
 
     return (
         <div className="post-tile-container" onClick={onClick}>
@@ -56,13 +56,23 @@ export default function PostTile(props) {
                     )}
                 </div>
                 <div className="post-tile-header-right">
-                    <StarRatings
-                        className={"post-tile-ratings"}
-                        starRatedColor="black"
-                        rating={parseInt(data["rating"]) / 2}
-                        starDimension="20px"
-                        starSpacing="2px"
-                    />
+                    {rcProps ? (
+                        <Rating
+                            className={"post-tile-ratings"}
+                            name="simple-controlled"
+                            value={data.rating / 2}
+                            precision={0.1}
+                            readOnly
+                        />
+                    ) : (
+                        <StarRatings
+                            className={"post-tile-ratings"}
+                            starRatedColor="black"
+                            rating={parseInt(data["rating"]) / 2}
+                            starDimension="20px"
+                            starSpacing="2px"
+                        />
+                    )}
                 </div>
             </div>
             <div className="post-tile-content">

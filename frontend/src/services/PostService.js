@@ -11,11 +11,9 @@ export default class PostService {
         let token = getToken();
         let headers = { Authorization: `Bearer ${token}` };
         try {
-            res = await axios.post(
-                `${PostService.baseURL()}/addPost`,
-                post,
-                { headers }
-            );
+            res = await axios.post(`${PostService.baseURL()}/addPost`, post, {
+                headers,
+            });
             return { status: res.status, message: "Uploaded Successfully" };
         } catch (error) {
             return {
