@@ -1,6 +1,7 @@
 const { PostModel } = require("../model/Post");
 
 const fs = require("fs");
+const path = require('path');
 
 const test = async (req, res) => {
     return res.send("testing");
@@ -132,7 +133,7 @@ const listNewPosts = (req, res) => {
 };
 
 const read = (req, res) => {
-    PostModel.find(req.params.id)
+    PostModel.findById(req.params.id)
         .populate("postedBy")
         .exec()
         .then((post) => {
@@ -152,6 +153,8 @@ const read = (req, res) => {
 };
 
 const update = async (req, res) => {
+
+    //FIXME: Fis if only one image is deleted. Because if one image is selected, then it is not an array. So should push it to the array. That's enough. Or remove the for loop. Enough.
     try {
         let post = await PostModel.findOne({ _id: req.params.id }).exec();
 
@@ -162,15 +165,40 @@ const update = async (req, res) => {
             });
         }
 
-        let mediaFiles = post.media;
-        if (req.file !== undefined) {
+        let mediaFiles = [];
+
+
+        if (req.files !== undefined) {
             let url = req.protocol + "://" + req.get("host") + "/";
 
+
             if (req.files.length > 0) {
-                for (var i = 0; i < req.files.length; i++)
+                for (let i = 0; i < req.files.length; i++)
                     mediaFiles.push(url + req.files[i].filename);
             }
         }
+
+        let toBeDeleted = req.body.toBeDeleted;
+
+
+        if (toBeDeleted && toBeDeleted.length) {
+            for (let i = 0; i < toBeDeleted.length; i++) {
+
+
+                fs.unlink(path.join(__dirname, `../public/uploads/${toBeDeleted[i]}`), () => {
+                    console.log("deleted");
+                })
+            }
+        }
+
+        let userImages = JSON.parse(req.body.userImages);
+
+        if (userImages && userImages.length) {
+            for (let i = 0; i < userImages.length; i++) {
+                mediaFiles.push(userImages[i]["preview"])
+            }
+        }
+
 
         post.title = req.body.title;
         post.description = req.body.description;

@@ -7,11 +7,13 @@ import "react-responsive-carousel/lib/styles/carousel.min.css";
 import StarRatings from "react-star-ratings";
 import ReactPlayer from "react-player";
 import moment from "moment-timezone";
+import { Button } from "@material-ui/core/";
+import EditIcon from "@material-ui/icons/Edit";
 
 import "./PostModal.css";
 import { Link } from "react-router-dom";
 
-export default function PostModal({ data }) {
+export default function PostModal({ data, editable }) {
     console.log(data);
     return (
         <div>
@@ -134,6 +136,21 @@ export default function PostModal({ data }) {
                                             </Link>
                                         </div>
                                     )}
+                                    {editable && (
+                                        <div className="post-modal-edit-button">
+                                            <Link
+                                                to={`/edit${data["typeOfPost"]}/${data["_id"]}`}
+                                            >
+                                                <Button
+                                                    variant="contained"
+                                                    color="default"
+                                                    startIcon={<EditIcon />}
+                                                >
+                                                    Edit
+                                                </Button>
+                                            </Link>
+                                        </div>
+                                    )}
                                 </Col>
                             </Row>
                         </Container>
@@ -174,6 +191,22 @@ export default function PostModal({ data }) {
                                                 {data["eventLocation"]}
                                             </a>
                                         </div>
+                                    </div>
+                                )}
+
+                                {editable && (
+                                    <div className="post-modal-edit-button">
+                                        <Link
+                                            to={`/edit${data["typeOfPost"]}/${data["_id"]}`}
+                                        >
+                                            <Button
+                                                variant="contained"
+                                                color="default"
+                                                startIcon={<EditIcon />}
+                                            >
+                                                Edit
+                                            </Button>
+                                        </Link>
                                     </div>
                                 )}
                             </Row>

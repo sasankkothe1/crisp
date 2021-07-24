@@ -67,7 +67,7 @@ router.get(
     middleware.isAuthenticated,
     PostController.listPostsByUserID
 );
-router.get("/:id", middleware.isAuthenticated, PostController.read);
+router.get("/postByID/:id", PostController.read);
 router.put(
     "/:id",
     middleware.isAuthenticated,

@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+/* eslint-disable react/prop-types */
+import React, { useState, useEffect } from "react";
 
 import { useForm } from "react-hook-form";
 
@@ -16,14 +17,43 @@ import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import DeleteIcon from "@material-ui/icons/Delete";
 import { Form } from "react-bootstrap";
 import PostService from "../../services/PostService";
+import EditIcon from "@material-ui/icons/Edit";
 
-export default function PostView() {
+export default function PostView({ postID, editable }) {
     const { handleSubmit, register } = useForm();
 
     const [charactersLeft, setCharactersLeft] = useState(500);
+
+    // uploadedImages: used while uploading the images while creating the post
     const [uploadedImages, setUploadedImages] = useState([]);
+
     const [succesfullyUploaded, setSuccesfullyUploaded] = useState(false);
     const [response, setResponse] = useState();
+    const [post, setPost] = useState();
+
+    // userImages: these are the images that already user have. These are present in the post[media]
+    const [userImages, setUserImages] = useState([]);
+
+    //toBeDeletedImages: List of urls that contain the images that are to be deleted
+    const [toBeDeleted, setToBeDeleted] = useState([]);
+    useEffect(() => {
+        if (postID) {
+            PostService.postById(postID).then((res) => {
+                setPost(res);
+                if (res["media"]) {
+                    res["media"].map((url) => {
+                        const name_arr = url.split("/");
+                        const nameOfTheFile = name_arr[name_arr.length - 1];
+                        setUserImages((oldUserImages) => [
+                            ...oldUserImages,
+                            { name: nameOfTheFile, preview: url },
+                        ]);
+                    });
+                }
+            });
+        }
+    }, []);
+
     const handleFileOnChange = (e) => {
         e.preventDefault();
         for (var i = 0; i < e.target.files.length; i++) {
@@ -42,12 +72,21 @@ export default function PostView() {
 
     const removeImage = (e, name) => {
         e.preventDefault();
-        console.log(name);
         const newArray = uploadedImages.filter((image) => {
             return image["name"] != name;
         });
-        console.log(newArray);
         setUploadedImages(newArray);
+    };
+
+    const removeUserImages = (e, name) => {
+        e.preventDefault();
+        const newArray = userImages.filter((image) => {
+            return image["name"] != name;
+        });
+        const name_arr = name.split("/");
+        const nameOfTheFile = name_arr[name_arr.length - 1];
+        setUserImages(newArray);
+        setToBeDeleted((prevArray) => [...prevArray, nameOfTheFile]);
     };
 
     const Alert = (props) => {
@@ -70,19 +109,35 @@ export default function PostView() {
             formData.append("premiumStatus", true);
         else formData.append("premiumStatus", false);
         if (uploadedImages.length > 0) {
-            for (var i = 0; i < uploadedImages.length; i++) {
+            for (let i = 0; i < uploadedImages.length; i++) {
                 formData.append("media", uploadedImages[i]["file"]);
             }
         }
-        PostService.addPost(formData).then((res) => {
-            setResponse(res);
-            if (res.status === 201) {
-                setSuccesfullyUploaded(true);
+        if (editable) {
+            if (userImages.length > 0) {
+                formData.append("userImages", JSON.stringify(userImages));
             }
-            if (res.status / 100 === 4) {
-                setSuccesfullyUploaded(true);
+            if (toBeDeleted.length > 0) {
+                for (let i = 0; i < toBeDeleted.length; i++)
+                    formData.append("toBeDeleted", toBeDeleted[i]);
             }
-        });
+        }
+        if (!editable) {
+            PostService.addPost(formData).then((res) => {
+                setResponse(res);
+                if (res.status === 201) {
+                    setSuccesfullyUploaded(true);
+                }
+                if (res.status / 100 === 4) {
+                    setSuccesfullyUploaded(true);
+                }
+            });
+        } else {
+            PostService.updatePost(formData, postID).then((res) => {
+                if (res.status === 200) alert("successful");
+                else alert(res.status);
+            });
+        }
     };
 
     const Input = styled("input")({
@@ -95,6 +150,7 @@ export default function PostView() {
                 onSubmit={handleSubmit(addPost)}
             >
                 <TextField
+                    defaultValue={editable && post && post["title"]}
                     key={"post-title"}
                     {...register("title")}
                     id="outlined-full-width"
@@ -110,6 +166,7 @@ export default function PostView() {
                 />
 
                 <TextField
+                    defaultValue={editable && post && post["description"]}
                     key={"post-description"}
                     {...register("description")}
                     multiline
@@ -155,8 +212,36 @@ export default function PostView() {
                         </label>
                     </div>
                     <div className="upload-preview-container">
-                        {uploadedImages.length ? (
-                            uploadedImages.map((item) => (
+                        {uploadedImages.length
+                            ? uploadedImages.map((item) => (
+                                  <div
+                                      className="image-preview-container"
+                                      key={item["name"]}
+                                      style={{
+                                          border: "1px solid gray",
+                                      }}
+                                  >
+                                      <img
+                                          className="preview"
+                                          src={[item["preview"]]}
+                                      />
+                                      <div className="remove-image-button">
+                                          <IconButton
+                                              onClick={(e) =>
+                                                  removeImage(e, item["name"])
+                                              }
+                                              aria-label="delete"
+                                          >
+                                              <DeleteIcon fontSize="large" />
+                                          </IconButton>
+                                      </div>
+                                  </div>
+                              ))
+                            : !userImages && (
+                                  <h4 className="no-media">No media</h4>
+                              )}
+                        {userImages.length ? (
+                            userImages.map((item) => (
                                 <div
                                     className="image-preview-container"
                                     key={item["name"]}
@@ -167,11 +252,14 @@ export default function PostView() {
                                     <img
                                         className="preview"
                                         src={[item["preview"]]}
-                                    />{" "}
+                                    />
                                     <div className="remove-image-button">
                                         <IconButton
                                             onClick={(e) =>
-                                                removeImage(e, item["name"])
+                                                removeUserImages(
+                                                    e,
+                                                    item["name"]
+                                                )
                                             }
                                             aria-label="delete"
                                         >
@@ -201,9 +289,10 @@ export default function PostView() {
                         className="submit-button"
                         type="submit"
                         variant="contained"
-                        color="primary"
+                        color={editable ? "default" : "primary"}
+                        startIcon={editable && <EditIcon />}
                     >
-                        Submit
+                        {editable ? "Edit" : "Submit"}
                     </Button>
                 </div>
             </form>
