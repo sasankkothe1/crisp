@@ -1,23 +1,42 @@
 /* eslint-disable indent */
 /* eslint-disable react/prop-types */
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { Col, Container, Modal, Row } from "react-bootstrap";
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import StarRatings from "react-star-ratings";
 import ReactPlayer from "react-player";
 import moment from "moment-timezone";
-
-import Button from "@material-ui/core/Button";
+import { Button } from "@material-ui/core/";
+import EditIcon from "@material-ui/icons/Edit";
+import Rating from "@material-ui/lab/Rating";
 
 import "./PostModal.css";
-import { Link } from "react-router-dom";
 
 import RecipeCollectionService from "../../services/RecipeCollectionService";
 
-export default function PostModal({ data, isRC }) {
-    console.log(data);
+const useRating = (data, rcProps) => {
+    const [rating, setRating] = useState(0);
 
+    if (!rcProps) {
+        return [rating, setRating];
+    }
+
+    useEffect(async () => {
+        const res = await RecipeCollectionService.getRecipeCollectionUserRate(
+            data._id
+        );
+        if (res.status == 200) {
+            setRating(res.data.rating / 2);
+        }
+    }, []);
+
+    return [rating, setRating];
+};
+
+export default function PostModal({ data, rcProps, editable }) {
+    const [rating, setRating] = useRating(data, rcProps);
     return (
         <div>
             <Modal.Header className="post-modal-header" closeButton>
@@ -25,8 +44,8 @@ export default function PostModal({ data, isRC }) {
                     {data["title"] && (
                         <Modal.Title>{data["title"]}</Modal.Title>
                     )}
-                    {isRC &&
-                        (data.purchased && data.purchased === true ? (
+                    {rcProps &&
+                        (data.purchased && data.purchased == true ? (
                             <Button
                                 variant="contained"
                                 color="primary"
@@ -37,8 +56,9 @@ export default function PostModal({ data, isRC }) {
                                             data._id
                                         );
                                     if (res.status == 200) {
+                                        console.log(res.data.link);
                                         const newWindow = window.open(
-                                            res.link,
+                                            res.data.link,
                                             "_blank",
                                             "noopener,noreferrer"
                                         );
@@ -52,18 +72,45 @@ export default function PostModal({ data, isRC }) {
                             <Button
                                 variant="contained"
                                 color="secondary"
-                                onClick={() => console.log("checkout!")}
+                                onClick={async () => {
+                                    console.log(data._id);
+                                    const res =
+                                        await RecipeCollectionService.checkoutRecipeCollectionMock(
+                                            data._id
+                                        );
+                                    if (res.status == 201 && res.data.id) {
+                                        rcProps.setDataChanged(
+                                            !rcProps.dataChanged
+                                        );
+                                    } else {
+                                        console.log("Error :(");
+                                    }
+                                }}
                             >
-                                Checkout
+                                {`Checkout ${data.price}€`}
                             </Button>
                         ))}
-                    {data["rating"] !== 0 ? (
-                        <StarRatings
+                    {rcProps ? (
+                        <Rating
                             className={"post-modal-ratings"}
-                            starRatedColor="black"
-                            rating={parseInt(data["rating"]) / 2}
-                            starDimension="20px"
-                            starSpacing="2px"
+                            name="simple-controlled"
+                            value={rating}
+                            onChange={async (event, rate) => {
+                                if (rate !== rating) {
+                                    const res =
+                                        await RecipeCollectionService.rateRecipeCollection(
+                                            data._id,
+                                            rate
+                                        );
+                                    if (res.status == 200) {
+                                        rcProps.setDataChanged(
+                                            !rcProps.dataChanged
+                                        );
+                                        setRating(rate);
+                                    }
+                                }
+                            }}
+                            readOnly={rcProps ? false : true}
                         />
                     ) : (
                         <StarRatings
@@ -171,6 +218,21 @@ export default function PostModal({ data, isRC }) {
                                             </Link>
                                         </div>
                                     )}
+                                    {editable && (
+                                        <div className="post-modal-edit-button">
+                                            <Link
+                                                to={`/edit${data["typeOfPost"]}/${data["_id"]}`}
+                                            >
+                                                <Button
+                                                    variant="contained"
+                                                    color="default"
+                                                    startIcon={<EditIcon />}
+                                                >
+                                                    Edit
+                                                </Button>
+                                            </Link>
+                                        </div>
+                                    )}
                                 </Col>
                             </Row>
                         </Container>
@@ -211,6 +273,22 @@ export default function PostModal({ data, isRC }) {
                                                 {data["eventLocation"]}
                                             </a>
                                         </div>
+                                    </div>
+                                )}
+
+                                {editable && (
+                                    <div className="post-modal-edit-button">
+                                        <Link
+                                            to={`/edit${data["typeOfPost"]}/${data["_id"]}`}
+                                        >
+                                            <Button
+                                                variant="contained"
+                                                color="default"
+                                                startIcon={<EditIcon />}
+                                            >
+                                                Edit
+                                            </Button>
+                                        </Link>
                                     </div>
                                 )}
                             </Row>

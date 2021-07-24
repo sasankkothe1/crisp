@@ -11,6 +11,8 @@ import DoneAllIcon from "@material-ui/icons/DoneAll";
 import LocalOffer from "@material-ui/icons/LocalOffer";
 import EuroIcon from "@material-ui/icons/Euro";
 
+import Rating from "@material-ui/lab/Rating";
+
 import "./PostTile.css";
 
 export default function PostTile(props) {
@@ -18,8 +20,6 @@ export default function PostTile(props) {
     const { media } = data;
 
     const { rcProps } = props;
-
-    console.log(rcProps);
 
     return (
         <div className="post-tile-container" onClick={onClick}>
@@ -56,17 +56,27 @@ export default function PostTile(props) {
                     )}
                 </div>
                 <div className="post-tile-header-right">
-                    <StarRatings
-                        className={"post-tile-ratings"}
-                        starRatedColor="black"
-                        rating={parseInt(data["rating"]) / 2}
-                        starDimension="20px"
-                        starSpacing="2px"
-                    />
+                    {rcProps ? (
+                        <Rating
+                            className={"post-tile-ratings"}
+                            name="simple-controlled"
+                            value={data.rating / 2}
+                            precision={0.1}
+                            readOnly
+                        />
+                    ) : (
+                        <StarRatings
+                            className={"post-tile-ratings"}
+                            starRatedColor="black"
+                            rating={parseInt(data["rating"]) / 2}
+                            starDimension="20px"
+                            starSpacing="2px"
+                        />
+                    )}
                 </div>
             </div>
             <div className="post-tile-content">
-                {media.length && (
+                {media.length ? (
                     <Carousel showThumbs={false} showArrows={true}>
                         {data["media"].map((el) =>
                             el.split(".")[el.split(".").length] !== "mp4" ? (
@@ -88,49 +98,10 @@ export default function PostTile(props) {
                             )
                         )}
                     </Carousel>
+                ) : (
+                    <h6>{data["title"]}</h6>
                 )}
             </div>
         </div>
     );
 }
-
-// <div key={i} className="post-container">
-//     <div className="post-container-header">
-//         <h5>{post["title"]}</h5>
-//         <StarRatings
-//             starRatedColor="black"
-//             rating={parseInt(post["rating"]) / 2}
-//             starDimension="20px"
-//             starSpacing="15px"
-//         />
-//     </div>
-//     <div className="media-container">
-//         <div className="post-container-media">
-//             {post["media"].length &&
-//                 post["media"].map((media) =>
-//                     media["type"] === "image" ? (
-//                         <div className="post-media">
-//                             <img src={media["URL"]} />
-//                         </div>
-//                     ) : (
-//                         <div className="post-media">
-//                             <ReactPlayer
-//                                 playing={true}
-//                                 light={true}
-//                                 width={500}
-//                                 height={500}
-//                                 controls={true}
-//                                 url={media["URL"]}
-//                             />
-//                         </div>
-//                     )
-//                 )}
-//         </div>
-//     </div>
-//     <div className="details-container">
-//         <p className="description-container">
-//             <strong>{`${post["postedBy"]} `}</strong>
-//             {post["description"]}
-//         </p>
-//     </div>
-// </div>

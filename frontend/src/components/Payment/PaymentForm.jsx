@@ -86,7 +86,9 @@ const PaymentForm = ({ orderType, orderObject, onSuccess }) => {
                     if (response.data.success) {
                         console.log("Successful Payment");
                         setSuccess(true);
-                        onSuccess(response.data);
+                        if (onSuccess) {
+                            onSuccess(response.data);
+                        }
                     }
                 } else {
                     return new Error("Session expired, please login again");

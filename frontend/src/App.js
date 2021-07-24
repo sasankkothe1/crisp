@@ -15,7 +15,9 @@ import ProfileView from "./views/Profile/ProfileView";
 import ShopView from "./views/ShopView";
 import AddRecipeCollectionView from "./views/RecipeCollection/AddRecipeCollection";
 import RecipeIDView from "./views/Recipe/RecipeIDView";
-//import PaymentPortal from "./components/Payment/PaymentPortal";
+import EditPost from "./views/EditViews/EditPost";
+import EditEvent from "./views/EditViews/EditEvent";
+import EditRecipe from "./views/EditViews/EditRecipe";
 
 // create store for redux
 export const store = createStore(reducers, applyMiddleware(thunkMiddleware));
@@ -56,15 +58,15 @@ function App() {
                         <Route exact path="/viewRecipe/:id">
                             <RecipeIDView />
                         </Route>
-                        {/* <Route exact path="/payment">
-                            <PaymentPortal
-                                orderDetails={{
-                                    type: "Subscription",
-                                    subscription: "60e72838c38a4658b807c094",
-                                    totalAmount: 300,
-                                }}
-                            />
-                        </Route> */}
+                        <Route exact path="/editpost/:id">
+                            <EditPost />
+                        </Route>
+                        <Route exact path="/editevent/:id">
+                            <EditEvent />
+                        </Route>
+                        <Route exact path="/editrecipe/:id">
+                            <EditRecipe />
+                        </Route>
                         <Route
                             render={() => <Redirect to={{ pathname: "/" }} />}
                         />

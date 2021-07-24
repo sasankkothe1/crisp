@@ -62,8 +62,6 @@ export default class RecipeService {
     static async allRecipesByUserID(limit, page, id) {
         let res = null;
         const userID = id;
-        console.log("USER ID IN SERVICE");
-        console.log(userID);
         let token = getToken();
         let headers = { Authorization: `Bearer ${token}` };
 

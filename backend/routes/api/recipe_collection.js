@@ -83,10 +83,25 @@ router.put(
 
 // Remove specific collection
 // Auth: User
+
 router.delete(
     "/:id",
     isAuthenticated,
     RecipeCollectionController.removeRecipeCollection
+);
+
+// Rate specific collection
+// Auth: User
+router.post(
+    "/:id/rate",
+    isAuthenticated,
+    RecipeCollectionController.rateRecipeCollection
+);
+
+router.get(
+    "/:id/user_rate",
+    isAuthenticated,
+    RecipeCollectionController.getRecipeCollectionUserRate
 );
 
 module.exports = router;

@@ -36,6 +36,11 @@
     flex-direction: column;
 }
 
+.post-modal-edit-button {
+    margin-top: 2em;
+    margin-left: 2em;
+}
+
 .full-recipe-link {
     text-decoration: underline;
     font-size: x-small;
