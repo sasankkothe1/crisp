@@ -12,7 +12,7 @@ export default function PostsList(props) {
 
     const handleClose = () => setShow(false);
 
-    const { limit, fetchMethod, fetchParams } = props;
+    const { limit, fetchMethod, fetchParams, editable } = props;
 
     const [data, setData] = useState([]);
     const [paginationData, setPaginationData] = useState([{}]);
@@ -54,7 +54,7 @@ export default function PostsList(props) {
                     show={show}
                     onHide={handleClose}
                 >
-                    <PostModal data={data[postIndex]} />
+                    <PostModal data={data[postIndex]} editable={editable} />
                 </Modal>
             </div>
             <Pagination

@@ -42,6 +42,21 @@ export default class PostService {
         }
     }
 
+    static async postById(id) {
+        let res = null;
+        try {
+            res = await axios.get(
+                `${PostService.baseURL()}/posts/postByID/${id}`
+            );
+            return res.data;
+        } catch (error) {
+            return {
+                status: error.response.status,
+                message: error.response.data.message,
+            };
+        }
+    }
+
     static async allPostByUserID(limit, page) {
         let res = null;
         const userID = getLoggedInUserID();
@@ -50,7 +65,7 @@ export default class PostService {
 
         try {
             res = await axios.get(
-                `${PostService.baseURL()}/postedBy/${userID}`,
+                `${PostService.baseURL()}/posts/postedBy/${userID}`,
                 {
                     params: {
                         limit: limit,
@@ -61,6 +76,26 @@ export default class PostService {
             );
             return res.data;
         } catch (error) {
+            return {
+                status: error.response.status,
+                message: error.response.data.message,
+            };
+        }
+    }
+
+    static async updatePost(post, id) {
+        let res = null;
+        let token = getToken();
+        let headers = { Authorization: `Bearer ${token}` };
+        try {
+            res = await axios.put(
+                `${PostService.baseURL()}/posts/${id}`,
+                post,
+                { headers }
+            );
+            return { status: res.status, message: "Edited Successfully" };
+        } catch (error) {
+            console.log(error);
             return {
                 status: error.response.status,
                 message: error.response.data.message,

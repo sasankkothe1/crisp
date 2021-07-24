@@ -28,6 +28,7 @@ export default function HomeView() {
         <div className={classes.homeViewContainer}>
             <div className={classes.homeViewPostList}>
                 <PostsList
+                    editable={false}
                     limit={16}
                     fetchMethod={PostService.allPosts}
                     fetchParams={{}}

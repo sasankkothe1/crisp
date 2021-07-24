@@ -7,10 +7,10 @@ import "react-responsive-carousel/lib/styles/carousel.min.css";
 import StarRatings from "react-star-ratings";
 import ReactPlayer from "react-player";
 import moment from "moment-timezone";
+import { Button } from "@material-ui/core/";
+import EditIcon from "@material-ui/icons/Edit";
 
 import Rating from "@material-ui/lab/Rating";
-
-import Button from "@material-ui/core/Button";
 
 import "./PostModal.css";
 import { Link } from "react-router-dom";
@@ -21,7 +21,7 @@ const useRating = (data, rcProps) => {
     const [rating, setRating] = useState(0);
 
     if (!rcProps) {
-        return [rating, setRating]; 
+        return [rating, setRating];
     }
 
     useEffect(async () => {
@@ -36,9 +36,8 @@ const useRating = (data, rcProps) => {
     return [rating, setRating];
 };
 
-export default function PostModal({ data, rcProps }) {
+export default function PostModal({ data, rcProps, editable }) {
     const [rating, setRating] = useRating(data, rcProps);
-
     return (
         <div>
             <Modal.Header className="post-modal-header" closeButton>
@@ -220,6 +219,21 @@ export default function PostModal({ data, rcProps }) {
                                             </Link>
                                         </div>
                                     )}
+                                    {editable && (
+                                        <div className="post-modal-edit-button">
+                                            <Link
+                                                to={`/edit${data["typeOfPost"]}/${data["_id"]}`}
+                                            >
+                                                <Button
+                                                    variant="contained"
+                                                    color="default"
+                                                    startIcon={<EditIcon />}
+                                                >
+                                                    Edit
+                                                </Button>
+                                            </Link>
+                                        </div>
+                                    )}
                                 </Col>
                             </Row>
                         </Container>
@@ -260,6 +274,22 @@ export default function PostModal({ data, rcProps }) {
                                                 {data["eventLocation"]}
                                             </a>
                                         </div>
+                                    </div>
+                                )}
+
+                                {editable && (
+                                    <div className="post-modal-edit-button">
+                                        <Link
+                                            to={`/edit${data["typeOfPost"]}/${data["_id"]}`}
+                                        >
+                                            <Button
+                                                variant="contained"
+                                                color="default"
+                                                startIcon={<EditIcon />}
+                                            >
+                                                Edit
+                                            </Button>
+                                        </Link>
                                     </div>
                                 )}
                             </Row>

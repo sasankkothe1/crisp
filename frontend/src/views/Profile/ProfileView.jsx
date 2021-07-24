@@ -173,6 +173,7 @@ function ProfileView({ history }) {
                                 limit={16}
                                 fetchMethod={RecipeService.allRecipesByUserID}
                                 fetchParams={{}}
+                                editable={true}
                             />
                         </TabPanel>
                         <TabPanel
@@ -184,6 +185,7 @@ function ProfileView({ history }) {
                                 limit={16}
                                 fetchMethod={PostService.allPostByUserID}
                                 fetchParams={{}}
+                                editable={true}
                             />
                         </TabPanel>
                         <TabPanel
@@ -195,6 +197,7 @@ function ProfileView({ history }) {
                                 limit={16}
                                 fetchMethod={EventService.allEventsByUserID}
                                 fetchParams={{}}
+                                editable={true}
                             />
                         </TabPanel>
                     </SwipeableViews>
