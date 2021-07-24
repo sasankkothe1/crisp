@@ -16,7 +16,7 @@ export default class EventService {
                 event,
                 { headers }
             );
-            return { status: res.status, message: "Uploaded Successfully" }
+            return { status: res.status, message: "Uploaded Successfully" };
         } catch (error) {
             return {
                 status: error.response.status,
@@ -26,59 +26,63 @@ export default class EventService {
     }
 
     static async allEvents(limit, page) {
-        let res = null
+        let res = null;
 
         try {
             res = await axios.get(`${EventService.baseURL()}/events/`, {
                 params: {
                     limit: limit,
                     page: page,
-                }
-            })
-            return res.data
+                },
+            });
+            return res.data;
         } catch (error) {
             return {
                 status: error.response.status,
-                message: error.response.data.message
+                message: error.response.data.message,
             };
         }
     }
 
     static async allEventsByUserID(limit, page) {
-        let res = null
+        let res = null;
         const userID = getLoggedInUserID();
         let token = getToken();
         let headers = { Authorization: `Bearer ${token}` };
 
         try {
-            res = await axios.get(`${EventService.baseURL()}/events/postedBy/${userID}`, {
-                params: {
-                    limit: limit,
-                    page: page,
-                },
-                headers: headers
-            })
-            return res.data
+            res = await axios.get(
+                `${EventService.baseURL()}/events/postedBy/${userID}`,
+                {
+                    params: {
+                        limit: limit,
+                        page: page,
+                    },
+                    headers: headers,
+                }
+            );
+            return res.data;
         } catch (error) {
             return {
                 status: error.response.status,
-                message: error.response.data.message
+                message: error.response.data.message,
             };
         }
     }
 
     static async sideBarEvents() {
-        let res = null
+        let res = null;
 
         try {
-            res = await axios.get(`${EventService.baseURL()}/events/sideBarEvents`)
-            return res.data
+            res = await axios.get(
+                `${EventService.baseURL()}/events/sideBarEvents`
+            );
+            return res.data;
         } catch (error) {
             return {
                 status: error.response.status,
-                message: error.response.data.message
+                message: error.response.data.message,
             };
         }
     }
-
 }

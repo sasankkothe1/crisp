@@ -57,7 +57,7 @@ const EventSchema = new mongoose.Schema({
     },
 });
 
-EventSchema.plugin(mongoosePaginate)
+EventSchema.plugin(mongoosePaginate);
 const EventModel = mongoose.model("Event", EventSchema);
 
 module.exports = { EventModel };

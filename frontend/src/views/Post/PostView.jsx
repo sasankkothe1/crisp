@@ -22,7 +22,7 @@ export default function PostView() {
 
     const [charactersLeft, setCharactersLeft] = useState(500);
     const [uploadedImages, setUploadedImages] = useState([]);
-    const [succesfullyUploaded, setSuccesfullyUploaded] = useState(false);
+    const [successfullyUploaded, setSuccessfullyUploaded] = useState(false);
     const [response, setResponse] = useState();
     const handleFileOnChange = (e) => {
         e.preventDefault();
@@ -59,7 +59,7 @@ export default function PostView() {
             return;
         }
         setResponse(null);
-        setSuccesfullyUploaded(false);
+        setSuccessfullyUploaded(false);
     };
 
     const addPost = (data) => {
@@ -77,10 +77,10 @@ export default function PostView() {
         PostService.addPost(formData).then((res) => {
             setResponse(res);
             if (res.status === 201) {
-                setSuccesfullyUploaded(true);
+                setSuccessfullyUploaded(true);
             }
             if (res.status / 100 === 4) {
-                setSuccesfullyUploaded(true);
+                setSuccessfullyUploaded(true);
             }
         });
     };
@@ -209,7 +209,7 @@ export default function PostView() {
             </form>
             {response && (
                 <Snackbar
-                    open={succesfullyUploaded}
+                    open={successfullyUploaded}
                     autoHideDuration={6000}
                     onClose={handleClose}
                 >
