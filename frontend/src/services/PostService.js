@@ -3,7 +3,7 @@ import { getLoggedInUserID, getToken } from "./utils";
 
 export default class PostService {
     static baseURL() {
-        return `${process.env.REACT_APP_BACKEND_URL}`;
+        return `${process.env.REACT_APP_BACKEND_URL}/posts`;
     }
 
     static async addPost(post) {
@@ -12,7 +12,7 @@ export default class PostService {
         let headers = { Authorization: `Bearer ${token}` };
         try {
             res = await axios.post(
-                `${PostService.baseURL()}/posts/addPost`,
+                `${PostService.baseURL()}/addPost`,
                 post,
                 { headers }
             );
@@ -29,7 +29,7 @@ export default class PostService {
         let res = null;
 
         try {
-            res = await axios.get(`${PostService.baseURL()}/posts/`, {
+            res = await axios.get(`${PostService.baseURL()}`, {
                 params: {
                     limit: limit,
                     page: page,
@@ -52,7 +52,7 @@ export default class PostService {
 
         try {
             res = await axios.get(
-                `${PostService.baseURL()}/posts/postedBy/${userID}`,
+                `${PostService.baseURL()}/postedBy/${userID}`,
                 {
                     params: {
                         limit: limit,
