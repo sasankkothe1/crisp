@@ -22,7 +22,7 @@ import { isLoggedIn } from "../../services/utils";
 
 import UserRating from "../Rating/Rating";
 
-export default function PostModal({ data, rcProps, editable }) {
+export default function PostModal({ data, dataChanged, setDataChanged, postType, editable }) {
     const [showPaymentPortal, setShowPaymentPortal] = useState(false);
 
     const [paymentAttempt, setPaymentAttempt] = useState(false);
@@ -35,7 +35,7 @@ export default function PostModal({ data, rcProps, editable }) {
                     {data["title"] && (
                         <Modal.Title>{data["title"]}</Modal.Title>
                     )}
-                    {rcProps &&
+                    { postType == "RecipeCollection" &&
                         isLoggedIn() &&
                         (data.purchased && data.purchased == true ? (
                             <Button
@@ -90,8 +90,8 @@ export default function PostModal({ data, rcProps, editable }) {
                                         onClose={() => {
                                             setPaymentResponse(null);
                                             setPaymentAttempt(false);
-                                            rcProps.setDataChanged(
-                                                !rcProps.dataChanged
+                                            setDataChanged(
+                                                !dataChanged
                                             );
                                         }}
                                         onSuccess={() =>
@@ -104,23 +104,29 @@ export default function PostModal({ data, rcProps, editable }) {
                                 )}
                             </>
                         ))}
-                    { rcProps ? (
+                    { data._id ? (
                         <UserRating
                             entryID={data._id}
-                            dataChanged={rcProps.dataChanged}
-                            setDataChanged={rcProps.setDataChanged}
+                            dataChanged={dataChanged}
+                            setDataChanged={setDataChanged}
                             rateEntry={async (id, rate) => {
-                                const res = await RecipeCollectionService.rateRecipeCollection(
-                                    id,
-                                    rate
-                                );
-                                return res.status == 200;
+                                if (postType == "RecipeCollection") {
+                                    const res = await RecipeCollectionService.rateRecipeCollection(
+                                        id,
+                                        rate
+                                    );
+                                    return res.status == 200;
+                                }
+                                return true;
                             }}
                             getEntryUserRate={async (id) => {
-                                const res = await RecipeCollectionService.getRecipeCollectionUserRate(
-                                    id
-                                );
-                                return [res.status == 200, res.data.rating / 2];
+                                if (postType == "RecipeCollection") {
+                                    const res = await RecipeCollectionService.getRecipeCollectionUserRate(
+                                        id
+                                    );
+                                    return [res.status == 200, res.data.rating / 2];
+                                }
+                                return [true, 3.775];
                             }}
                         />
                     ) :

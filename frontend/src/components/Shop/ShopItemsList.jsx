@@ -57,10 +57,9 @@ export default function ShopItemsList(props) {
             >
                 <PostModal
                     data={recipeCollectionsData[rcIndex]}
-                    rcProps={{
-                        dataChanged: dataChanged,
-                        setDataChanged: setDataChanged,
-                    }}
+                    dataChanged={dataChanged}
+                    setDataChanged={setDataChanged}
+                    postType="RecipeCollection"
                 />
             </Modal>
         </div>
