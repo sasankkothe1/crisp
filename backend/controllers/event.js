@@ -190,7 +190,7 @@ const listSoonEndingEvents = (req, res) => {
 };
 
 const read = (req, res) => {
-    EventModel.find(req.params.id)
+    EventModel.findById(req.params.id)
         .populate("postedBy")
         .exec()
         .then((event) => {
@@ -210,6 +210,7 @@ const read = (req, res) => {
 };
 
 const update = async (req, res) => {
+
     try {
         let event = await EventModel.findOne({ _id: req.params.id }).exec();
 
@@ -220,21 +221,35 @@ const update = async (req, res) => {
             });
         }
 
-        event.title = req.body.title;
-        event.description = req.body.description;
+        let mediaFiles =
+            req.files?.length > 0
+                ? [...req.files].map((file) => file.location)
+                : [];
 
-        if (req.files?.length > 0) {
-            event.media = event.media.concat(
-                [...req.files].map((file) => file.location)
-            );
+        let toBeDeleted = req.body.toBeDeleted;
+
+        if (toBeDeleted && toBeDeleted.length) {
+            toBeDeleted.map((media) => removeFileFromS3(media));
         }
 
+        let userImages = JSON.parse(req.body.userImages);
+
+        if (userImages && userImages.length) {
+            for (let i = 0; i < userImages.length; i++) {
+                mediaFiles.push(userImages[i]["preview"]);
+            }
+        }
+
+        event.title = req.body.title;
+        event.description = req.body.description;
         event.tags = req.body.tags;
         event.premiumStatus = req.body.premiumStatus;
         event.rating = req.body.rating;
+        event.eventDate = req.body.eventDate;
         event.startDate = req.body.startDate;
         event.endDate = req.body.endDate;
         event.eventLocation = req.body.eventLocation;
+        event.media = mediaFiles
 
         event.save(function (error) {
             if (error)
@@ -277,7 +292,6 @@ const remove = async (req, res) => {
         await event.remove();
         res.status(200).json({ message: "Event Deleted." });
     } catch (error) {
-        console.log(error);
         res.status(500).json({
             error: "Internal server error",
             message: error.message,

@@ -1,11 +1,12 @@
 import React from "react";
-
-//TODO: see the EditPost.jsx and understand the implementation
+import { useParams } from "react-router-dom";
+import AddRecipeView from "../Recipe/AddRecipeView";
 
 export default function EditRecipe() {
+    let { id } = useParams();
     return (
         <div>
-            <h1>This is edit recipe</h1>
+            <AddRecipeView recipeID={id} editable={true} />
         </div>
     );
 }

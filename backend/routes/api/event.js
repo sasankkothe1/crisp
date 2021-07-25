@@ -35,10 +35,9 @@ router.get(
     EventController.listEventsByUserID
 );
 router.get("/soonEnding", EventController.listSoonEndingEvents);
-router.get("/:id", isAuthenticated, EventController.read);
+router.get("/eventByID/:id", EventController.read);
 router.put(
     "/:id",
-    isAuthenticated,
     uploadS3.array("media"),
     EventController.update
 );

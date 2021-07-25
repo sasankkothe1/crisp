@@ -91,4 +91,25 @@ export default class RecipeService {
             };
         }
     }
+
+    static async updateRecipe(recipe, id) {
+        let res = null;
+        let token = getToken();
+        let headers = { Authorization: `Bearer ${token}` };
+        try {
+            res = await axios.put(
+                `${RecipeService.baseURL()}/recipes/${id}`,
+                recipe,
+                {
+                    headers,
+                }
+            );
+            return { status: res.status, message: "Edited Successfully" };
+        } catch (error) {
+            return {
+                status: error.response.status,
+                message: error.response.data.message,
+            };
+        }
+    }
 }

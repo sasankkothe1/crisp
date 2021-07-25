@@ -154,6 +154,7 @@ const listRecipesByCuisine = (req, res) => {
 };
 
 const read = (req, res) => {
+    console.log(req.params.id)
     RecipeModel.findById(req.params.id)
         .populate("postedBy")
         .exec()
@@ -184,27 +185,43 @@ const update = async (req, res) => {
             });
         }
 
-        if (req.files?.length > 0) {
-            recipe.media = recipe.media.concat(
-                [...req.files].map((file) => file.location)
-            );
+        let mediaFiles =
+            req.files?.length > 0
+                ? [...req.files].map((file) => file.location)
+                : [];
+
+        let toBeDeleted = req.body.toBeDeleted;
+
+        if (toBeDeleted && toBeDeleted.length) {
+            toBeDeleted.map((media) => removeFileFromS3(media));
         }
+
+        let userImages = JSON.parse(req.body.userImages);
+
+        if (userImages && userImages.length) {
+            for (let i = 0; i < userImages.length; i++) {
+                mediaFiles.push(userImages[i]["preview"]);
+            }
+        }
+
 
         recipe.title = req.body.title;
         recipe.description = req.body.description;
         recipe.tags = req.body.tags;
         recipe.premiumStatus = req.body.premiumStatus;
         recipe.rating = req.body.rating;
-        recipe.ingredientsList = req.body.ingredientsList;
+        recipe.ingredientsList = JSON.parse(req.body.ingredientsList);
         recipe.instructions = req.body.instructions;
         recipe.cuisine = req.body.cuisine;
+        recipe.media = mediaFiles
 
         recipe.save(function (error) {
-            if (error)
+            if (error) {
                 res.status(500).json({
-                    error: "Internal server error",
+                    error: "Internal server error haha",
                     message: error.message,
                 });
+            }
             else res.status(200).json(recipe);
         });
     } catch (error) {
@@ -241,7 +258,6 @@ const remove = async (req, res) => {
         await recipe.remove();
         res.status(200).json({ message: "Recipe Deleted." });
     } catch (error) {
-        console.log(error);
         res.status(500).json({
             error: "Internal server error",
             message: error.message,
