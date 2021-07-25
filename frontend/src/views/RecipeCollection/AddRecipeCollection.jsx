@@ -72,8 +72,6 @@ export default function AddRecipeCollectionView() {
     const [response, setResponse] = useState();
 
     const addRecipeCollection = (data) => {
-        console.log(data);
-
         const formData = new FormData();
         formData.append("title", data.title);
         formData.append("description", data.description);
