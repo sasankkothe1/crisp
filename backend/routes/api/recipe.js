@@ -17,14 +17,14 @@ const mimetypes = [
     "video/MP2T",
 ];
 
-const { uploadTemplate } = require("../../middleware/upload");
+const { uploadS3Template } = require("../../middleware/upload");
 
-const upload = uploadTemplate(mimetypes);
+const uploadS3 = uploadS3Template(mimetypes);
 
 router.post(
     "/addRecipe",
     isAuthenticated,
-    upload.array("media"),
+    uploadS3.array("media"),
     RecipeController.create
 );
 router.get("/", RecipeController.listRecipes);
@@ -39,7 +39,7 @@ router.get("/recipeById/:id", RecipeController.read);
 router.put(
     "/:id",
     isAuthenticated,
-    upload.array("media"),
+    uploadS3.array("media"),
     RecipeController.update
 );
 router.delete("/:id", isAuthenticated, RecipeController.remove);

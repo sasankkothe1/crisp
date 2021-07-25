@@ -1,10 +1,10 @@
 const { EventModel } = require("../model/Event");
 
-const fs = require("fs");
-
 const test = async (req, res) => {
     return res.send("testing Event");
 };
+
+const { removeFileFromS3 } = require("../middleware/upload");
 
 const create = async (req, res) => {
     if (Object.keys(req.body).length === 0)
@@ -47,17 +47,11 @@ const create = async (req, res) => {
             error: "Bad Request",
             message: "The premium status is empty",
         });
-    let url = req.protocol + "://" + req.get("host") + "/";
-    let mediaFiles = [];
 
-    if (req.files?.length > 0) {
-        for (var i = 0; i < req.files.length; i++)
-            mediaFiles.push(url + req.files[i].filename);
-    }
     let event = {
         ...req.body,
         postedBy: req.user._id,
-        media: mediaFiles,
+        media: req.files?.length > 0 ? [...req.files].map(file => file.location) : [],
     };
 
     const session = await EventModel.startSession();
@@ -223,19 +217,13 @@ const update = async (req, res) => {
             });
         }
 
-        let mediaFiles = event.media;
-        if (req.file !== undefined) {
-            let url = req.protocol + "://" + req.get("host") + "/";
-
-            if (req.files.length > 0) {
-                for (var i = 0; i < req.files.length; i++)
-                    mediaFiles.push(url + req.files[i].filename);
-            }
-        }
-
         event.title = req.body.title;
         event.description = req.body.description;
-        event.media = mediaFiles;
+
+        if (req.files?.length > 0) {
+            event.media = event.media.concat([...req.files].map(file => file.location));
+        }
+
         event.tags = req.body.tags;
         event.premiumStatus = req.body.premiumStatus;
         event.rating = req.body.rating;
@@ -279,20 +267,9 @@ const remove = async (req, res) => {
     }
     try {
         let { media } = event;
-        media.map((mediaFile) => {
-            let path =
-                "./public/uploads/" +
-                mediaFile.substr(mediaFile.lastIndexOf("/") + 1);
-            fs.access(path, fs.F_OK, (err) => {
-                if (err) {
-                    console.log(err);
-                    return;
-                }
-                fs.unlink(path, (err) => {
-                    if (err) throw err;
-                });
-            });
-        });
+        media.map((media) =>
+            removeFileFromS3(media)
+        );
 
         await event.remove();
         res.status(200).json({ message: "Event Deleted." });
