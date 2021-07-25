@@ -7,10 +7,10 @@ import {
     styled,
     TextField,
     IconButton,
-    Snackbar,
+    //Snackbar,
     makeStyles,
 } from "@material-ui/core";
-import MuiAlert from "@material-ui/lab/Alert";
+//import MuiAlert from "@material-ui/lab/Alert";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import DeleteIcon from "@material-ui/icons/Delete";
 
@@ -21,6 +21,8 @@ import Chip from "@material-ui/core/Chip";
 import "../Post/PostView.css";
 
 import RecipeCollectionService from "../../services/RecipeCollectionService";
+
+import SnackbarAlert from "../../components/Alert/SnackbarAlert";
 
 const useStyles = makeStyles((theme) => ({
     rcFormContainer: {},
@@ -116,6 +118,7 @@ export default function AddRecipeCollectionView() {
             .catch((err) => console.log(err));
     };
 
+    /*
     const handleClose = (event, reason) => {
         if (reason === "clickaway") {
             return;
@@ -123,6 +126,7 @@ export default function AddRecipeCollectionView() {
         setResponse(null);
         setUploadAttempt(false);
     };
+    */
 
     const addTag = (event) => {
         console.log(event);
@@ -153,9 +157,11 @@ export default function AddRecipeCollectionView() {
         display: "none",
     });
 
+    /*
     const Alert = (props) => {
         return <MuiAlert elevation={6} variant="filled" {...props} />;
     };
+    */
 
     const mealTypes = ["Any", "Breakfast", "Dinner", "Snacks", "Lunch"];
 
@@ -389,22 +395,17 @@ export default function AddRecipeCollectionView() {
                     </Button>
                 </div>
             </form>
-            {response && (
-                <Snackbar
-                    open={uploadAttempt}
-                    autoHideDuration={6000}
-                    onClose={handleClose}
-                >
-                    {response.status === 201 ? (
-                        <Alert onClose={handleClose} severity="success">
-                            {response.message}
-                        </Alert>
-                    ) : (
-                        <Alert onClose={handleClose} severity="error">
-                            {response.message}
-                        </Alert>
-                    )}
-                </Snackbar>
+            { response && (
+                <SnackbarAlert 
+                    open={uploadAttempt} 
+                    success={response.status == 201} 
+                    onClose={() => {
+                        setResponse(null);
+                        setUploadAttempt(false); 
+                    }}
+                    onSuccess={() => response.message}
+                    onError={() => response.message}
+                />
             )}
         </div>
     );

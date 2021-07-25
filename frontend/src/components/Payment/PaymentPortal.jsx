@@ -17,6 +17,7 @@ const PaymentPortal = ({
     show,
     setShow,
     onSuccess,
+    onFailure
 }) => {
     const handleClose = () => setShow(false);
 
@@ -31,6 +32,7 @@ const PaymentPortal = ({
                         orderType={orderType}
                         orderObject={orderObject}
                         onSuccess={onSuccess}
+                        onFailure={onFailure}
                     />
                 </Elements>
             </Modal.Body>
@@ -44,6 +46,7 @@ PaymentPortal.propTypes = {
     show: PropTypes.bool,
     setShow: PropTypes.func,
     onSuccess: PropTypes.func,
+    onFailure: PropTypes.func
 };
 
 export default PaymentPortal;

@@ -12,9 +12,12 @@ import { Button } from "@material-ui/core/";
 import EditIcon from "@material-ui/icons/Edit";
 import Rating from "@material-ui/lab/Rating";
 
+import PaymentPortal from "../../components/Payment/PaymentPortal";
+
 import "./PostModal.css";
 
 import RecipeCollectionService from "../../services/RecipeCollectionService";
+import SnackbarAlert from "../Alert/SnackbarAlert";
 
 const useRating = (data, rcProps) => {
     const [rating, setRating] = useState(0);
@@ -37,6 +40,11 @@ const useRating = (data, rcProps) => {
 
 export default function PostModal({ data, rcProps, editable }) {
     const [rating, setRating] = useRating(data, rcProps);
+    const [showPaymentPortal, setShowPaymentPortal] = useState(false);
+
+    const [paymentAttempt, setPaymentAttempt] = useState(false);
+    const [paymentResponse, setPaymentResponse] = useState();
+
     return (
         <div>
             <Modal.Header className="post-modal-header" closeButton>
@@ -69,26 +77,51 @@ export default function PostModal({ data, rcProps, editable }) {
                                 Open PDF
                             </Button>
                         ) : (
-                            <Button
-                                variant="contained"
-                                color="secondary"
-                                onClick={async () => {
-                                    console.log(data._id);
-                                    const res =
-                                        await RecipeCollectionService.checkoutRecipeCollectionMock(
-                                            data._id
+                            <>
+                                <Button
+                                    variant="contained"
+                                    color="secondary"
+                                    onClick={async () => {
+                                        setShowPaymentPortal(true);
+                                    }}
+                                >
+                                    {`Checkout ${data.price}€`}
+                                </Button>
+
+                                <PaymentPortal
+                                    orderType="RecipeCollection"
+                                    orderObject={data}
+                                    show={showPaymentPortal}
+                                    setShow={setShowPaymentPortal}
+                                    onSuccess={(res) => {
+                                        setPaymentResponse(
+                                            res.data
                                         );
-                                    if (res.status == 201 && res.data.id) {
-                                        rcProps.setDataChanged(
-                                            !rcProps.dataChanged
-                                        );
-                                    } else {
-                                        console.log("Error :(");
-                                    }
-                                }}
-                            >
-                                {`Checkout ${data.price}€`}
-                            </Button>
+                                        setPaymentAttempt(true);
+                                    }}
+                                    onFailure={(res) => {
+                                        console.log(res);
+
+                                    }}
+                                />
+                                { paymentResponse && (
+                                    <SnackbarAlert 
+                                        open={paymentAttempt}
+                                        success={paymentResponse.success}
+                                        onClose={() => {
+                                            setPaymentResponse(null);
+                                            setPaymentAttempt(false); 
+                                            rcProps.setDataChanged(
+                                                !rcProps.dataChanged
+                                            ); 
+                                        }}
+                                        onSuccess={() => 
+                                            `Successful payment: ${paymentResponse.order._id}`
+                                        } 
+                                        onError={() => `Error: ${paymentResponse.data.error}`}
+                                    />
+                                )}
+                            </>
                         ))}
                     {rcProps ? (
                         <Rating
