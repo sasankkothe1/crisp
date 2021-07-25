@@ -4,6 +4,8 @@ import { Toolbar, makeStyles, IconButton, Grid } from "@material-ui/core";
 
 import Icon from "@material-ui/core/Icon";
 
+import { tagTypes } from "./tagTypes";
+
 const useStyles = makeStyles((theme) => ({
     divContainer: {
         width: "100%",
@@ -24,48 +26,10 @@ const useStyles = makeStyles((theme) => ({
 const ShopHeader = (props) => {
     const classes = useStyles();
 
-    const icons = [
-        {
-            icon: "local_pizza_icon",
-            caption: "Pizza",
-            type: "pizza",
-        },
-        {
-            icon: "fastfood_icon",
-            caption: "Fast Food",
-            type: "fastfood",
-        },
-        {
-            icon: "local_bar_icon",
-            caption: "Drinks",
-            type: "drinks",
-        },
-        {
-            icon: "child_friendly",
-            caption: "Children",
-            type: "children",
-        },
-        {
-            icon: "emoji_food_beverage",
-            caption: "AF Drinks",
-            type: "nadrinks",
-        },
-        {
-            icon: "favorite",
-            caption: "Pastry",
-            type: "pastry",
-        },
-        {
-            icon: "emoji_objects",
-            caption: "Creative",
-            type: "creative",
-        },
-    ];
-
     return (
         <div className={classes.divContainer}>
             <Toolbar className={classes.shopToolBar}>
-                {icons.map((icon, i) => (
+                {tagTypes.map((tagType, i) => (
                     <Grid
                         key={i}
                         container
@@ -75,18 +39,18 @@ const ShopHeader = (props) => {
                         <Grid item>
                             <IconButton
                                 onClick={() => {
-                                    props.recipeType == icon["type"]
+                                    props.recipeType == tagTypes["type"]
                                         ? props.setRecipeType("")
-                                        : props.setRecipeType(icon["type"]);
+                                        : props.setRecipeType(tagType["type"]);
                                 }}
                             >
                                 <Icon className={classes.icon}>
-                                    {icon["icon"]}
+                                    {tagType["icon"]}
                                 </Icon>
                             </IconButton>
                         </Grid>
                         <Grid item>
-                            <span>{icon["caption"]}</span>
+                            <span>{tagType["caption"]}</span>
                         </Grid>
                     </Grid>
                 ))}

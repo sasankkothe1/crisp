@@ -15,6 +15,9 @@ import RecipeCollectionService from "../../services/RecipeCollectionService";
 import SnackbarAlert from "../../components/Alert/SnackbarAlert";
 import TagCloud from "../../components/Shop/TagCloud";
 
+import { isLoggedIn } from "../../services/utils";
+import { tagTypes } from "../../components/Shop/tagTypes";
+
 export default function AddRecipeCollectionView() {
     const { handleSubmit, register } = useForm();
 
@@ -69,6 +72,8 @@ export default function AddRecipeCollectionView() {
     const [response, setResponse] = useState();
 
     const addRecipeCollection = (data) => {
+        console.log(data);
+
         const formData = new FormData();
         formData.append("title", data.title);
         formData.append("description", data.description);
@@ -105,7 +110,11 @@ export default function AddRecipeCollectionView() {
 
     const mealTypes = ["Any", "Breakfast", "Dinner", "Snacks", "Lunch"];
 
-    return (
+    const [chosenMeal, setChosenMeal] = useState("Any");
+
+    const [addTagResponse, setAddTagResponse] = useState();
+
+    return isLoggedIn() ? (
         <div className="post-form-container">
             <form
                 encType="multipart/form-data"
@@ -285,15 +294,49 @@ export default function AddRecipeCollectionView() {
                     handleNewTag={(tag) => {
                         const currentTagTrimmed = tag.trim();
                         if (!currentTagTrimmed) {
+                            setAddTagResponse({
+                                success: false,
+                                message: "Empty tag!",
+                            });
                             return false;
                         }
                         if (tags.indexOf(currentTagTrimmed) !== -1) {
+                            setAddTagResponse({
+                                success: false,
+                                message: "Duplicate tag!",
+                            });
+                            return false;
+                        }
+                        if (
+                            tagTypes.findIndex((tagType) => {
+                                return tagType.type === currentTagTrimmed;
+                            }) === -1
+                        ) {
+                            setAddTagResponse({
+                                success: false,
+                                message: "Disallowed tag.",
+                            });
                             return false;
                         }
                         setTags([...tags, currentTagTrimmed]);
+                        setAddTagResponse({
+                            success: true,
+                        });
                         return true;
                     }}
                 />
+
+                {addTagResponse && (
+                    <SnackbarAlert
+                        open={!addTagResponse.success}
+                        success={false}
+                        onClose={() => {
+                            setAddTagResponse(null);
+                        }}
+                        onSuccess={() => addTagResponse.message}
+                        onError={() => addTagResponse.message}
+                    />
+                )}
 
                 <TextField
                     key={"rc-meal"}
@@ -307,7 +350,11 @@ export default function AddRecipeCollectionView() {
                     InputLabelProps={{
                         shrink: true,
                     }}
+                    value={chosenMeal}
                     variant="outlined"
+                    onChange={(event) => {
+                        setChosenMeal(event.target.value);
+                    }}
                 >
                     {mealTypes.map((meal) => (
                         <MenuItem key={meal} value={meal}>
@@ -340,5 +387,7 @@ export default function AddRecipeCollectionView() {
                 />
             )}
         </div>
+    ) : (
+        <h1>You should login first!</h1>
     );
 }
