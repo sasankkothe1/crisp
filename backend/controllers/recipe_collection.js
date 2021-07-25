@@ -269,82 +269,6 @@ const removeRecipeCollection = (req, res) => {
     );
 };
 
-const rateRecipeCollection = (req, res) => {
-    Rating.findOne({
-        ratedBy: req.user._id,
-        type: "RecipeCollection",
-        recipeCollection: req.params.id,
-    })
-        .then((rating) => {
-            if (rating) {
-                Rating.findByIdAndUpdate(
-                    rating._id,
-                    {
-                        rating: req.body.rating,
-                    },
-                    {
-                        runValidators: true,
-                    }
-                )
-                    .then((oldRating) => {
-                        const delta = req.body.rating - oldRating.rating;
-                        RecipeCollection.findByIdAndUpdate(
-                            req.params.id,
-                            {
-                                $inc: {
-                                    cumulativeRating: delta,
-                                },
-                            },
-                            { new: true }
-                        )
-                            .then((recipeCollection) => {
-                                res.sendStatus(200);
-                            })
-                            .catch((err) => res.sendStatus(502));
-                    })
-                    .catch((err) => res.sendStatus(502));
-            } else {
-                Rating.create({
-                    _id: new mongoose.Types.ObjectId(),
-                    ratedBy: req.user._id,
-                    type: "RecipeCollection",
-                    recipeCollection: req.params.id,
-                    rating: req.body.rating,
-                })
-                    .then((rating) => {
-                        RecipeCollection.findByIdAndUpdate(
-                            req.params.id,
-                            {
-                                $inc: {
-                                    cumulativeRating: req.body.rating,
-                                    numRates: 1,
-                                },
-                            },
-                            { new: true }
-                        )
-                            .then((recipeCollection) => {
-                                res.sendStatus(200);
-                            })
-                            .catch((err) => res.sendStatus(502));
-                    })
-                    .catch((err) => res.sendStatus(502));
-            }
-        })
-        .catch((err) => res.sendStatus(502));
-};
-
-const getRecipeCollectionUserRate = (req, res) => {
-    Rating.findOne({
-        ratedBy: req.user._id,
-        type: "RecipeCollection",
-        recipeCollection: req.params.id,
-    })
-        .then((rating) => {
-            res.status(200).send({ rating: rating ? rating.rating : 0 });
-        })
-        .catch((err) => res.status(502).send({ message: err.message }));
-};
-
 module.exports = {
     getRecipeCollections,
     createRecipeCollection,
@@ -352,6 +276,4 @@ module.exports = {
     getRecipeCollectionLink,
     editRecipeCollection,
     removeRecipeCollection,
-    rateRecipeCollection,
-    getRecipeCollectionUserRate,
 };

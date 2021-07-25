@@ -102,29 +102,4 @@ export default class RecipeCollectionService {
             };
         }
     }
-
-    static async rateRecipeCollection(id, rating) {
-        let token = getToken();
-        if (!token) {
-            return {
-                status: 401,
-            };
-        }
-        let headers = { Authorization: `Bearer ${token}` };
-
-        try {
-            const res = await axios.post(
-                `${RecipeCollectionService.baseURL()}/${id}/rate`,
-                { rating: rating * 2 },
-                { headers }
-            );
-
-            return res;
-        } catch (error) {
-            return {
-                status: error.response.status,
-                message: error.response.data.message,
-            };
-        }
-    }
 }
