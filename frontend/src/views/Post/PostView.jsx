@@ -22,7 +22,8 @@ import EditIcon from "@material-ui/icons/Edit";
 export default function PostView({ postID, editable }) {
     const { handleSubmit, register } = useForm();
 
-    //TODO: setTitle, setDescription
+    const [title, setTitle] = useState("");
+    const [description, setDescription] = useState("");
 
     const [charactersLeft, setCharactersLeft] = useState(500);
 
@@ -30,7 +31,6 @@ export default function PostView({ postID, editable }) {
     const [uploadedImages, setUploadedImages] = useState([]);
     const [successfullyUploaded, setSuccessfullyUploaded] = useState(false);
     const [response, setResponse] = useState();
-    const [post, setPost] = useState();
 
     // userImages: these are the images that already user have. These are present in the post[media]
     const [userImages, setUserImages] = useState([]);
@@ -40,7 +40,8 @@ export default function PostView({ postID, editable }) {
     useEffect(() => {
         if (postID) {
             PostService.postById(postID).then((res) => {
-                setPost(res);
+                setTitle(res["title"]);
+                setDescription(res["description"]);
                 if (res["media"]) {
                     res["media"].map((url) => {
                         const name_arr = url.split("/");
@@ -69,6 +70,14 @@ export default function PostView({ postID, editable }) {
                 ]);
             };
         }
+    };
+
+    const handleTitle = (e) => {
+        setTitle(e.target.value);
+    };
+
+    const handleDescription = (e) => {
+        setDescription(e.target.value);
     };
 
     const removeImage = (e, name) => {
@@ -151,9 +160,10 @@ export default function PostView({ postID, editable }) {
                 onSubmit={handleSubmit(addPost)}
             >
                 <TextField
-                    defaultValue={editable && post && post["title"]}
-                    key={"post-title"}
                     {...register("title")}
+                    value={title}
+                    key={"post-title"}
+                    onChange={handleTitle}
                     id="outlined-full-width"
                     label="Title"
                     style={{ margin: 8 }}
@@ -167,9 +177,10 @@ export default function PostView({ postID, editable }) {
                 />
 
                 <TextField
-                    defaultValue={editable && post && post["description"]}
-                    key={"post-description"}
                     {...register("description")}
+                    key={"post-description"}
+                    value={description}
+                    onChange={handleDescription}
                     multiline
                     rows={4}
                     maxLength="8"

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import { useForm } from "react-hook-form";
 import {
@@ -17,6 +17,7 @@ import {
     TimePicker,
 } from "@material-ui/pickers";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
+import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 import { Form } from "react-bootstrap";
 
@@ -24,9 +25,12 @@ import "./EventView.css";
 import moment from "moment";
 import EventService from "../../services/EventService";
 
-export default function AddEventView() {
+export default function AddEventView({ eventID, editable }) {
     const { handleSubmit, register } = useForm();
 
+    const [title, setTitle] = useState("");
+    const [description, setDescription] = useState("");
+    const [location, setLocation] = useState("");
     const [charactersLeft, setCharactersLeft] = useState(500);
     const [uploadedImages, setUploadedImages] = useState([]);
     const [eventDate, setEventDate] = useState(new moment());
@@ -35,9 +39,44 @@ export default function AddEventView() {
     const [succesfullyUploaded, setSuccesfullyUploaded] = useState(false);
     const [response, setResponse] = useState();
 
-    const handleEventDate = (date) => setEventDate(date);
-    const handleStartTime = (date) => setStartTime(date);
-    const handleEndTime = (date) => setEndTime(date);
+    // userImages: these are the images that already user have. These are present in the post[media]
+    const [userImages, setUserImages] = useState([]);
+
+    //toBeDeletedImages: List of urls that contain the images that are to be deleted
+    const [toBeDeleted, setToBeDeleted] = useState([]);
+
+    useEffect(() => {
+        if (eventID) {
+            EventService.eventById(eventID).then((res) => {
+                setTitle(res["title"]);
+                setDescription(res["description"]);
+                setEventDate(res["eventDate"]);
+                setStartTime(res["startTime"]);
+                setEndTime(res["endTime"]);
+                setLocation(res["eventLocation"]);
+                if (res["media"]) {
+                    res["media"].map((url) => {
+                        const name_arr = url.split("/");
+                        const nameOfTheFile = name_arr[name_arr.length - 1];
+                        setUserImages((oldUserImages) => [
+                            ...oldUserImages,
+                            { name: nameOfTheFile, preview: url },
+                        ]);
+                    });
+                }
+            });
+        }
+    }, []);
+
+    const handleEventDate = (date) => {
+        setEventDate(date);
+    };
+    const handleStartTime = (date) => {
+        setStartTime(date);
+    };
+    const handleEndTime = (date) => {
+        setEndTime(date);
+    };
 
     const handleFileOnChange = (e) => {
         e.preventDefault();
@@ -55,12 +94,35 @@ export default function AddEventView() {
         }
     };
 
+    const handleTitle = (e) => {
+        setTitle(e.target.value);
+    };
+
+    const handleDescription = (e) => {
+        setDescription(e.target.value);
+    };
+
+    const handleLocation = (e) => {
+        setLocation(e.target.value);
+    };
+
     const removeImage = (e, name) => {
         e.preventDefault();
         const newArray = uploadedImages.filter((image) => {
             return image["name"] != name;
         });
         setUploadedImages(newArray);
+    };
+
+    const removeUserImages = (e, name) => {
+        e.preventDefault();
+        const newArray = userImages.filter((image) => {
+            return image["name"] != name;
+        });
+        const name_arr = name.split("/");
+        const nameOfTheFile = name_arr[name_arr.length - 1];
+        setUserImages(newArray);
+        setToBeDeleted((prevArray) => [...prevArray, nameOfTheFile]);
     };
 
     const Alert = (props) => {
@@ -95,19 +157,36 @@ export default function AddEventView() {
                 formData.append("media", uploadedImages[i]["file"]);
             }
         }
+        if (editable) {
+            if (userImages.length > 0) {
+                formData.append("userImages", JSON.stringify(userImages));
+            }
+            if (toBeDeleted.length > 0) {
+                for (let i = 0; i < toBeDeleted.length; i++)
+                    formData.append("toBeDeleted", toBeDeleted[i]);
+            }
+        }
         formData.append("eventLocation", data.eventLocation);
         formData.append("eventDate", eventDate.toISOString());
         formData.append("startTime", startTime.toISOString());
         formData.append("endTime", endTime.toISOString());
-        EventService.addEvent(formData).then((res) => {
-            setResponse(res);
-            if (res.status === 201) {
-                setSuccesfullyUploaded(true);
-            }
-            if (res.status / 100 === 4) {
-                setSuccesfullyUploaded(true);
-            }
-        });
+
+        if (!editable) {
+            EventService.addEvent(formData).then((res) => {
+                setResponse(res);
+                if (res.status === 201) {
+                    setSuccesfullyUploaded(true);
+                }
+                if (res.status / 100 === 4) {
+                    setSuccesfullyUploaded(true);
+                }
+            });
+        } else {
+            EventService.updateEvent(formData, eventID).then((res) => {
+                if (res.status === 200) alert("Edit Success");
+                else alert(res.status);
+            });
+        }
     };
 
     const Input = styled("input")({
@@ -120,10 +199,12 @@ export default function AddEventView() {
                 onSubmit={handleSubmit(addPost)}
             >
                 <TextField
-                    key={"event-title"}
                     {...register("title")}
+                    key={"event-title"}
+                    value={title}
                     id="outlined-full-width"
                     label="Title"
+                    onChange={handleTitle}
                     style={{ margin: 8 }}
                     placeholder="Enter the title"
                     fullWidth
@@ -135,8 +216,10 @@ export default function AddEventView() {
                 />
 
                 <TextField
-                    key={"event-description"}
                     {...register("description")}
+                    key={"event-description"}
+                    value={description}
+                    onChange={handleDescription}
                     multiline
                     rows={4}
                     maxLength="8"
@@ -214,6 +297,8 @@ export default function AddEventView() {
                         <div className="event-location">
                             <TextField
                                 {...register("eventLocation")}
+                                value={location}
+                                onChange={handleLocation}
                                 id="outlined-full-width"
                                 label="location"
                                 style={{ margin: 8 }}
@@ -245,8 +330,36 @@ export default function AddEventView() {
                                 </Button>
                             </label>
                         </div>
-                        {uploadedImages.length ? (
-                            uploadedImages.map((item) => (
+                        {uploadedImages.length
+                            ? uploadedImages.map((item) => (
+                                  <div
+                                      className="image-preview-container"
+                                      key={item["name"]}
+                                      style={{
+                                          border: "1px solid gray",
+                                      }}
+                                  >
+                                      <img
+                                          className="preview"
+                                          src={[item["preview"]]}
+                                      />{" "}
+                                      <div className="remove-image-button">
+                                          <IconButton
+                                              onClick={(e) =>
+                                                  removeImage(e, item["name"])
+                                              }
+                                              aria-label="delete"
+                                          >
+                                              <DeleteIcon fontSize="large" />
+                                          </IconButton>
+                                      </div>
+                                  </div>
+                              ))
+                            : !userImages && (
+                                  <h4 className="no-media">No media</h4>
+                              )}
+                        {userImages.length &&
+                            userImages.map((item) => (
                                 <div
                                     className="image-preview-container"
                                     key={item["name"]}
@@ -257,11 +370,14 @@ export default function AddEventView() {
                                     <img
                                         className="preview"
                                         src={[item["preview"]]}
-                                    />{" "}
+                                    />
                                     <div className="remove-image-button">
                                         <IconButton
                                             onClick={(e) =>
-                                                removeImage(e, item["name"])
+                                                removeUserImages(
+                                                    e,
+                                                    item["name"]
+                                                )
                                             }
                                             aria-label="delete"
                                         >
@@ -269,10 +385,7 @@ export default function AddEventView() {
                                         </IconButton>
                                     </div>
                                 </div>
-                            ))
-                        ) : (
-                            <h4 className="no-media">No media</h4>
-                        )}
+                            ))}
                     </div>
                 </div>
 
@@ -291,9 +404,10 @@ export default function AddEventView() {
                         className="submit-button"
                         type="submit"
                         variant="contained"
-                        color="primary"
+                        color={editable ? "default" : "primary"}
+                        startIcon={editable && <EditIcon />}
                     >
-                        Submit
+                        {editable ? "Edit" : "Submit"}
                     </Button>
                 </div>
             </form>

@@ -216,8 +216,6 @@ const update = async (req, res) => {
 
         let toBeDeleted = req.body.toBeDeleted;
 
-        // DELETE S3
-
         if (toBeDeleted && toBeDeleted.length) {
             toBeDeleted.map((media) => removeFileFromS3(media));
         }
@@ -279,7 +277,6 @@ const remove = async (req, res) => {
         await post.remove();
         res.status(200).json({ message: "Post Deleted." });
     } catch (error) {
-        console.log(error);
         res.status(500).json({
             error: "Internal server error",
             message: error.message,
