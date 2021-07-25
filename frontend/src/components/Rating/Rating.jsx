@@ -39,7 +39,7 @@ const UserRating = ({
             name="simple-controlled"
             value={rating}
             onChange={async (event, rate) => {
-                if (rate !== rating) {
+                if (rate !== rating && rate > 0) {
                     console.log("applying rate...");
                     const success = await rateEntry(entryID, rate);
                     if (success) {

@@ -44,7 +44,12 @@ const ShopHeader = ({ recipeType, setRecipeType }) => {
                                         : setRecipeType(tagType["type"]);
                                 }}
                             >
-                                <Icon className={classes.icon}>
+                                <Icon
+                                    className={classes.icon}
+                                    {...(recipeType === tagType["type"]
+                                        ? { color: "primary" }
+                                        : {})}
+                                >
                                     {tagType["icon"]}
                                 </Icon>
                             </IconButton>

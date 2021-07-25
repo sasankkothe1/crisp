@@ -302,7 +302,7 @@ const rateRecipeCollection = (req, res) => {
                             })
                             .catch((err) => res.sendStatus(502));
                     })
-                    .catch((err) => res.sendStatusus(502));
+                    .catch((err) => res.sendStatus(502));
             } else {
                 Rating.create({
                     _id: new mongoose.Types.ObjectId(),

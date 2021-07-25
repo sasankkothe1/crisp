@@ -25,6 +25,14 @@ const useStyles = makeStyles(() => ({
         columnGap: "1em",
         width: "90%",
     },
+    nof: {
+        width: "100%",
+        height: "100%",
+        display: "flex",
+        alignContent: "center",
+        top: "50%",
+        left: "50%",
+    },
 }));
 
 export default function ShopItemsList(props) {
@@ -126,6 +134,8 @@ export default function ShopItemsList(props) {
             />
         </div>
     ) : (
-        <h1> No posts found! </h1>
+        <div className={classes.nof}>
+            <h1> No posts found! </h1>
+        </div>
     );
 }

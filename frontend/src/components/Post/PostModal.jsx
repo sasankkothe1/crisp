@@ -16,6 +16,8 @@ import PaymentPortal from "../../components/Payment/PaymentPortal";
 import "./PostModal.css";
 
 import RecipeCollectionService from "../../services/RecipeCollectionService";
+import RatingService from "../../services/RatingService";
+
 import SnackbarAlert from "../Alert/SnackbarAlert";
 
 import { isLoggedIn } from "../../services/utils";
@@ -126,10 +128,11 @@ export default function PostModal({
                             }}
                             getEntryUserRate={async (id) => {
                                 if (postType == "RecipeCollection") {
-                                    const res =
-                                        await RecipeCollectionService.getRecipeCollectionUserRate(
-                                            id
-                                        );
+                                    const res = await RatingService.getUserRate(
+                                        id,
+                                        postType
+                                    );
+
                                     return [
                                         res.status == 200,
                                         res.data.rating / 2,
