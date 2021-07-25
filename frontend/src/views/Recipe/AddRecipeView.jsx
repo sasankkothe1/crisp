@@ -180,13 +180,13 @@ export default function AddRecipeView({ recipeID }) {
         if (recipeID) {
             return (
                 <List>
-                    {ingredients.map((el) => {
+                    {ingredients.map((el, i) => {
                         const { ingredientName, ingredientQuantity } = el;
                         const labelId = `checkbox-list-label-${ingredientName}`;
 
                         return (
                             <ListItem
-                                key={ingredientName}
+                                key={i}
                                 role={undefined}
                                 dense
                                 button
@@ -207,6 +207,7 @@ export default function AddRecipeView({ recipeID }) {
                                     />
                                 </ListItemIcon>
                                 <ListItemText
+                                    key={i}
                                     id={labelId}
                                     primary={`${ingredientName} : ${ingredientQuantity}`}
                                 />
@@ -323,13 +324,16 @@ export default function AddRecipeView({ recipeID }) {
                                 </Button>
                             ) : (
                                 ingredientsList.map((ingredient, i) => {
+                                    let keyIndex = i;
                                     return (
                                         <div key={i} className="ingredient-row">
                                             <TextField
+                                                key={++keyIndex}
                                                 size={"small"}
                                                 id="outlined-full-width"
                                                 variant="outlined"
                                                 name="ingredientName"
+                                                placeholder={"Ingredient Name"}
                                                 className="ingredient-text-field"
                                                 value={
                                                     ingredient["ingredientName"]
@@ -339,11 +343,13 @@ export default function AddRecipeView({ recipeID }) {
                                                 }
                                             />
                                             <TextField
+                                                key={++keyIndex}
                                                 size={"small"}
                                                 id="outlined-full-width"
                                                 variant="outlined"
                                                 name="ingredientQuantity"
                                                 className="ingredient-text-field"
+                                                placeholder={"Quantity"}
                                                 value={
                                                     ingredient[
                                                         "ingredientQuantity"
@@ -355,7 +361,7 @@ export default function AddRecipeView({ recipeID }) {
                                             />
                                             <div className="btn-box">
                                                 <IconButton
-                                                    key={i}
+                                                    key={++keyIndex}
                                                     size={"small"}
                                                     aria-label="delete"
                                                     onClick={(e) =>
@@ -366,7 +372,7 @@ export default function AddRecipeView({ recipeID }) {
                                                 </IconButton>
 
                                                 <IconButton
-                                                    key={i}
+                                                    key={++keyIndex}
                                                     disabled={
                                                         !(
                                                             ingredientsList.length -
@@ -450,12 +456,14 @@ export default function AddRecipeView({ recipeID }) {
                                 </Button>
                             ) : (
                                 instructionsList.map((instruction, i) => {
+                                    let keyIndex = i;
                                     return (
                                         <div
-                                            key={i}
+                                            key={++keyIndex}
                                             className="instructions-row"
                                         >
                                             <TextField
+                                                key={++keyIndex}
                                                 size={"small"}
                                                 id="outlined-full-width"
                                                 variant="outlined"
@@ -471,7 +479,7 @@ export default function AddRecipeView({ recipeID }) {
                                             />
                                             <div className="btn-box">
                                                 <IconButton
-                                                    key={i}
+                                                    key={++keyIndex}
                                                     size={"small"}
                                                     aria-label="delete"
                                                     onClick={(e) =>
@@ -485,7 +493,7 @@ export default function AddRecipeView({ recipeID }) {
                                                 </IconButton>
 
                                                 <IconButton
-                                                    key={i}
+                                                    key={++keyIndex}
                                                     disabled={
                                                         !(
                                                             instructionsList.length -
