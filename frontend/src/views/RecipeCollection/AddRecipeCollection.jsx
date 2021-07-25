@@ -2,12 +2,7 @@ import React, { useState } from "react";
 
 import { useForm } from "react-hook-form";
 
-import {
-    Button,
-    styled,
-    TextField,
-    IconButton,
-} from "@material-ui/core";
+import { Button, styled, TextField, IconButton } from "@material-ui/core";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import DeleteIcon from "@material-ui/icons/Delete";
 
@@ -280,7 +275,7 @@ export default function AddRecipeCollectionView() {
                     </div>
                 </div>
 
-                <TagCloud 
+                <TagCloud
                     key={"post-tags"}
                     other={register("tags")}
                     label="Tags"
@@ -297,7 +292,7 @@ export default function AddRecipeCollectionView() {
                         }
                         setTags([...tags, currentTagTrimmed]);
                         return true;
-                   }}
+                    }}
                 />
 
                 <TextField
@@ -332,13 +327,13 @@ export default function AddRecipeCollectionView() {
                     </Button>
                 </div>
             </form>
-            { response && (
-                <SnackbarAlert 
-                    open={uploadAttempt} 
-                    success={response.status == 201} 
+            {response && (
+                <SnackbarAlert
+                    open={uploadAttempt}
+                    success={response.status == 201}
                     onClose={() => {
                         setResponse(null);
-                        setUploadAttempt(false); 
+                        setUploadAttempt(false);
                     }}
                     onSuccess={() => response.message}
                     onError={() => response.message}

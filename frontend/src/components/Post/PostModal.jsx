@@ -94,31 +94,30 @@ export default function PostModal({ data, rcProps, editable }) {
                                     show={showPaymentPortal}
                                     setShow={setShowPaymentPortal}
                                     onSuccess={(res) => {
-                                        setPaymentResponse(
-                                            res.data
-                                        );
+                                        setPaymentResponse(res.data);
                                         setPaymentAttempt(true);
                                     }}
                                     onFailure={(res) => {
                                         console.log(res);
-
                                     }}
                                 />
-                                { paymentResponse && (
-                                    <SnackbarAlert 
+                                {paymentResponse && (
+                                    <SnackbarAlert
                                         open={paymentAttempt}
                                         success={paymentResponse.success}
                                         onClose={() => {
                                             setPaymentResponse(null);
-                                            setPaymentAttempt(false); 
+                                            setPaymentAttempt(false);
                                             rcProps.setDataChanged(
                                                 !rcProps.dataChanged
-                                            ); 
+                                            );
                                         }}
-                                        onSuccess={() => 
+                                        onSuccess={() =>
                                             `Successful payment: ${paymentResponse.order._id}`
-                                        } 
-                                        onError={() => `Error: ${paymentResponse.data.error}`}
+                                        }
+                                        onError={() =>
+                                            `Error: ${paymentResponse.data.error}`
+                                        }
                                     />
                                 )}
                             </>

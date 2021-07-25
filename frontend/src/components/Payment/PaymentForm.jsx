@@ -135,7 +135,7 @@ PaymentForm.propTypes = {
     orderType: PropTypes.String,
     orderObject: PropTypes.object,
     onSuccess: PropTypes.func,
-    onFailure: PropTypes.func
+    onFailure: PropTypes.func,
 };
 
 export default PaymentForm;

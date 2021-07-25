@@ -17,7 +17,7 @@ const PaymentPortal = ({
     show,
     setShow,
     onSuccess,
-    onFailure
+    onFailure,
 }) => {
     const handleClose = () => setShow(false);
 
@@ -46,7 +46,7 @@ PaymentPortal.propTypes = {
     show: PropTypes.bool,
     setShow: PropTypes.func,
     onSuccess: PropTypes.func,
-    onFailure: PropTypes.func
+    onFailure: PropTypes.func,
 };
 
 export default PaymentPortal;
