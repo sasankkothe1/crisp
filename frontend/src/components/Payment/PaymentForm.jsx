@@ -26,7 +26,7 @@ const CARD_OPTIONS = {
     },
 };
 
-const PaymentForm = ({ orderType, orderObject, onSuccess }) => {
+const PaymentForm = ({ orderType, orderObject, onSuccess, onFailure }) => {
     const [success, setSuccess] = useState(false);
     const stripe = useStripe();
     const elements = useElements();
@@ -87,7 +87,12 @@ const PaymentForm = ({ orderType, orderObject, onSuccess }) => {
                         console.log("Successful Payment");
                         setSuccess(true);
                         if (onSuccess) {
-                            onSuccess(response.data);
+                            onSuccess(response);
+                        }
+                    } else {
+                        console.log("Error :(");
+                        if (onFailure) {
+                            onFailure(response);
                         }
                     }
                 } else {
@@ -130,6 +135,7 @@ PaymentForm.propTypes = {
     orderType: PropTypes.String,
     orderObject: PropTypes.object,
     onSuccess: PropTypes.func,
+    onFailure: PropTypes.func,
 };
 
 export default PaymentForm;
