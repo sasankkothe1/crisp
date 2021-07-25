@@ -19,7 +19,7 @@ import RatingService from "../../services/RatingService";
 
 import SnackbarAlert from "../Alert/SnackbarAlert";
 
-import { isLoggedIn } from "../../services/utils";
+import { isLoggedIn, getLoggedInUserID } from "../../services/utils";
 
 import UserRating from "../Rating/Rating";
 
@@ -44,6 +44,7 @@ export default function PostModal({
                     )}
                     {postType == "RecipeCollection" &&
                         isLoggedIn() &&
+                        data.postedBy._id !== getLoggedInUserID() &&
                         (data.purchased && data.purchased == true ? (
                             <Button
                                 variant="contained"
@@ -84,6 +85,7 @@ export default function PostModal({
                                     setShow={setShowPaymentPortal}
                                     onSuccess={(res) => {
                                         setPaymentResponse(res.data);
+                                        setShowPaymentPortal(false);
                                         setPaymentAttempt(true);
                                     }}
                                     onFailure={(res) => {

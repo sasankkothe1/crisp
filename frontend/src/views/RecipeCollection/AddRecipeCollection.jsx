@@ -79,6 +79,10 @@ export default function AddRecipeCollectionView() {
         formData.append("pdfFile", uploadedPdfFile["file"]);
         tags.forEach((tag) => formData.append("tags", tag));
 
+        if (!data.meal) {
+            data.meal = "Any";
+        }
+
         if (data.meal !== "Any") {
             formData.append("meal", data.meal);
         }

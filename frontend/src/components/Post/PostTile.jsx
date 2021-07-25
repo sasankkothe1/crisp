@@ -1,10 +1,10 @@
 /* eslint-disable react/prop-types */
 import React from "react";
+import PropTypes from "prop-types";
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 
 import PersonIcon from "@material-ui/icons/Person";
-//import StarRatings from "react-star-ratings";
 import ReactPlayer from "react-player";
 
 import DoneAllIcon from "@material-ui/icons/DoneAll";
@@ -15,17 +15,16 @@ import Rating from "@material-ui/lab/Rating";
 
 import "./PostTile.css";
 
-export default function PostTile(props) {
-    const { data, onClick } = props;
-    const { media } = data;
+import { getLoggedInUserID } from "../../services/utils";
 
-    const { rcProps } = props;
+const PostTile = ({ data, onClick, isRC }) => {
+    const { media } = data;
 
     return (
         <div className="post-tile-container" onClick={onClick}>
             <div
                 className={
-                    rcProps && rcProps.purchased && rcProps.purchased == true
+                    isRC && data.purchased && data.purchased === true
                         ? "rc-tile-header"
                         : "post-tile-header"
                 }
@@ -34,21 +33,25 @@ export default function PostTile(props) {
                     <PersonIcon fontSize="small" ml="2rem" />
                     <div>
                         <h6 className="post-tile-header-user">
-                            {data["postedBy"]["firstName"]}
+                            {!isRC
+                                ? data["postedBy"]["firstName"]
+                                : data.postedBy._id !== getLoggedInUserID()
+                                ? data["postedBy"]["firstName"]
+                                : `${data["postedBy"]["firstName"]} (me)`}
                         </h6>
                     </div>
-                    {rcProps &&
-                        rcProps.price &&
-                        rcProps.purchased &&
-                        rcProps.purchased === true && (
+                    {isRC &&
+                        data.price &&
+                        data.purchased &&
+                        data.purchased === true && (
                             <DoneAllIcon fontSize="small" />
                         )}
-                    {rcProps && rcProps.price && !rcProps.purchased && (
+                    {isRC && data.price && !data.purchased && (
                         <React.Fragment>
                             <LocalOffer fontSize="small" />
                             <div>
                                 <h6 className="post-tile-header-user">
-                                    {rcProps.price}
+                                    {data.price}
                                 </h6>
                             </div>
                             <EuroIcon fontSize="small" />
@@ -94,4 +97,12 @@ export default function PostTile(props) {
             </div>
         </div>
     );
-}
+};
+
+PostTile.PropTypes = {
+    isRC: PropTypes.bool,
+    data: PropTypes.array,
+    onClick: PropTypes.func,
+};
+
+export default PostTile;
