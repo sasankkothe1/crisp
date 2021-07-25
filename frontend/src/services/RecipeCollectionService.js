@@ -28,13 +28,23 @@ export default class RecipeCollectionService {
         }
     }
 
-    static async getRecipeCollections(recipeType, meal, minPrice, maxPrice) {
+    static async getRecipeCollections(
+        limit,
+        page,
+        recipeType,
+        meal,
+        minPrice,
+        maxPrice
+    ) {
         try {
             const token = getToken();
 
             let url = `${RecipeCollectionService.baseURL()}`;
 
-            let params = {};
+            let params = {
+                page: page,
+                limit: limit,
+            };
 
             if (recipeType) {
                 params.recipe_type = recipeType;
@@ -56,6 +66,7 @@ export default class RecipeCollectionService {
                     Authorization: `Bearer ${token}`,
                 };
             }
+
             const res = await axios.get(url, {
                 headers: headers,
                 params: params,

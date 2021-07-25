@@ -60,7 +60,12 @@ export default function PostsList(props) {
                     show={show}
                     onHide={handleClose}
                 >
-                    <PostModal data={data[postIndex]} editable={editable} dataChanged={dataChanged} setDataChanged={setDataChanged} />
+                    <PostModal
+                        data={data[postIndex]}
+                        editable={editable}
+                        dataChanged={dataChanged}
+                        setDataChanged={setDataChanged}
+                    />
                 </Modal>
             </div>
             <Pagination
