@@ -17,7 +17,7 @@ const useRating = (entryID, getEntryUserRate) => {
 		console.log("getting rate...");
 		const [success, newRating] = await getEntryUserRate(entryID);
 
-       	if (success == 200) {
+       	if (success) {
             setRating(newRating);
         }
     }, []);
