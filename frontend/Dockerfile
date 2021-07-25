@@ -1,11 +1,12 @@
-FROM node:13
+FROM node:12
 
 WORKDIR /usr/src/server
 
-COPY package*.json ./
+COPY package.json ./
+COPY yarn.lock ./
 
-RUN npm install
+RUN yarn install
 
 COPY . ./
 
-CMD ["npm", "run", "start"]
+CMD ["yarn", "start"]

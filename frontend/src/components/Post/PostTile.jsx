@@ -20,13 +20,13 @@ export default function PostTile(props) {
     const { data, onClick } = props;
     const { media } = data;
 
-    const { rcProps } = props;
+    const { isRC } = props;
 
     return (
         <div className="post-tile-container" onClick={onClick}>
             <div
                 className={
-                    rcProps && rcProps.purchased && rcProps.purchased == true
+                    isRC && data.purchased && data.purchased === true
                         ? "rc-tile-header"
                         : "post-tile-header"
                 }
@@ -35,23 +35,23 @@ export default function PostTile(props) {
                     <PersonIcon fontSize="small" ml="2rem" />
                     <div>
                         <h6 className="post-tile-header-user">
-                            {!rcProps ? data["postedBy"]["firstName"] : (
+                            {!isRC ? data["postedBy"]["firstName"] : (
                                 data.postedBy._id !== getLoggedInUserID() ? data["postedBy"]["firstName"] : `${data["postedBy"]["firstName"]} (me)`
                             )}
                         </h6>
                     </div>
-                    {rcProps &&
+                    {isRC &&
                         data.price &&
-                        rcProps.purchased &&
-                        rcProps.purchased === true && (
+                        data.purchased &&
+                        data.purchased === true && (
                             <DoneAllIcon fontSize="small" />
                         )}
-                    {rcProps && rcProps.price && !rcProps.purchased && (
+                    {isRC && data.price && !data.purchased && (
                         <React.Fragment>
                             <LocalOffer fontSize="small" />
                             <div>
                                 <h6 className="post-tile-header-user">
-                                    {rcProps.price}
+                                    {data.price}
                                 </h6>
                             </div>
                             <EuroIcon fontSize="small" />

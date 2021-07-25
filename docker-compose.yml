@@ -19,6 +19,7 @@ services:
     environment:
       - PORT=3000
       - REACT_APP_BACKEND_URL=/api
+      - NODE_ENV=production
     ports:
       - "3000"
     restart: always
@@ -35,6 +36,7 @@ services:
       - AWS_S3_SECRET_ACCESS_KEY=$AWS_S3_SECRET_ACCESS_KEY
       - AWS_S3_BUCKET=$AWS_S3_BUCKET
       - STRIPE_SECRET_TEST=$STRIPE_SECRET_TEST
+      - NODE_ENV=production
     ports:
       - "4000"
     restart: always
