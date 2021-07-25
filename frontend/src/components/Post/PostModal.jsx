@@ -5,7 +5,6 @@ import { Link } from "react-router-dom";
 import { Col, Container, Modal, Row } from "react-bootstrap";
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
-import StarRatings from "react-star-ratings";
 import ReactPlayer from "react-player";
 import moment from "moment-timezone";
 import { Button } from "@material-ui/core/";
@@ -16,6 +15,8 @@ import PaymentPortal from "../../components/Payment/PaymentPortal";
 import "./PostModal.css";
 
 import RecipeCollectionService from "../../services/RecipeCollectionService";
+import RatingService from "../../services/RatingService";
+
 import SnackbarAlert from "../Alert/SnackbarAlert";
 
 import { isLoggedIn } from "../../services/utils";
@@ -86,7 +87,8 @@ export default function PostModal({
                                         setPaymentAttempt(true);
                                     }}
                                     onFailure={(res) => {
-                                        console.log(res);
+                                        setPaymentResponse(res.data);
+                                        setPaymentAttempt(true);
                                     }}
                                 />
                                 {paymentResponse && (
@@ -102,49 +104,33 @@ export default function PostModal({
                                             `Successful payment: ${paymentResponse.order._id}`
                                         }
                                         onError={() =>
-                                            `Error: ${paymentResponse.data.error}`
+                                            `Error: ${paymentResponse.error}`
                                         }
                                     />
                                 )}
                             </>
                         ))}
-                    {data._id ? (
+                    {postType && (
                         <UserRating
                             entryID={data._id}
                             dataChanged={dataChanged}
                             setDataChanged={setDataChanged}
                             rateEntry={async (id, rate) => {
-                                if (postType == "RecipeCollection") {
-                                    const res =
-                                        await RecipeCollectionService.rateRecipeCollection(
-                                            id,
-                                            rate
-                                        );
-                                    return res.status == 200;
-                                }
-                                return true;
+                                const res = await RatingService.rate(
+                                    id,
+                                    postType,
+                                    rate
+                                );
+                                return res.status == 200;
                             }}
                             getEntryUserRate={async (id) => {
-                                if (postType == "RecipeCollection") {
-                                    const res =
-                                        await RecipeCollectionService.getRecipeCollectionUserRate(
-                                            id
-                                        );
-                                    return [
-                                        res.status == 200,
-                                        res.data.rating / 2,
-                                    ];
-                                }
-                                return [true, 3.775];
+                                const res = await RatingService.getUserRate(
+                                    id,
+                                    postType
+                                );
+
+                                return [res.status == 200, res.data.rating / 2];
                             }}
-                        />
-                    ) : (
-                        <StarRatings
-                            className={"post-modal-ratings"}
-                            starRatedColor="black"
-                            rating={0}
-                            starDimension="20px"
-                            starSpacing="2px"
                         />
                     )}
                 </div>

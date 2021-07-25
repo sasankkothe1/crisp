@@ -7,6 +7,7 @@ const api = express
     .use("/events", require("./api/event"))
     .use("/recipes", require("./api/recipe"))
     .use("/recipe_collections", require("./api/recipe_collection"))
+    .use("/rating", require("./api/rating"))
     .use("/users", require("./api/user"))
     .use("/auth", require("./api/auth"))
     .use("/private", require("./api/private"))

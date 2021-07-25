@@ -14,7 +14,6 @@ const useRating = (entryID, getEntryUserRate) => {
     }
 
     useEffect(async () => {
-        console.log("getting rate...");
         const [success, newRating] = await getEntryUserRate(entryID);
 
         if (success) {
@@ -39,8 +38,7 @@ const UserRating = ({
             name="simple-controlled"
             value={rating}
             onChange={async (event, rate) => {
-                if (rate !== rating) {
-                    console.log("applying rate...");
+                if (rate !== rating && rate > 0) {
                     const success = await rateEntry(entryID, rate);
                     if (success) {
                         setDataChanged(!dataChanged);

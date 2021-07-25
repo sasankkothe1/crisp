@@ -9,17 +9,28 @@ const RatingSchema = new mongoose.Schema({
     },
     type: {
         type: String,
-        enum: ["RecipeCollection"],
+        enum: ["RecipeCollection", "Post", "Event", "Recipe"],
         required: true,
     },
     recipeCollection: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "RecipeCollection",
-        required: true,
+    },
+    post: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Post",
+    },
+    event: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Event",
+    },
+    recipe: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Recipe",
     },
     rating: {
         type: Number,
-        min: 0,
+        min: 1,
         max: 10,
     },
 });

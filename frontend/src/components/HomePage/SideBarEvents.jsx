@@ -15,11 +15,13 @@ export default function SideBarEvents() {
 
     const handleClose = () => setShow(false);
 
+    const [dataChanged, setDataChanged] = useState(false);
+
     useEffect(() => {
         EventService.sideBarEvents().then((res) => {
             setEvents(res);
         });
-    }, []);
+    }, [dataChanged]);
 
     const displayPost = (i) => {
         setPostIndex(i);
@@ -54,7 +56,12 @@ export default function SideBarEvents() {
                 show={show}
                 onHide={handleClose}
             >
-                <PostModal data={events[postIndex]} />
+                <PostModal
+                    data={events[postIndex]}
+                    dataChanged={dataChanged}
+                    setDataChanged={setDataChanged}
+                    postType="Event"
+                />
             </Modal>
         </div>
     );

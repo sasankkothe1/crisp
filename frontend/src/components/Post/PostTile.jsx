@@ -4,7 +4,7 @@ import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 
 import PersonIcon from "@material-ui/icons/Person";
-import StarRatings from "react-star-ratings";
+//import StarRatings from "react-star-ratings";
 import ReactPlayer from "react-player";
 
 import DoneAllIcon from "@material-ui/icons/DoneAll";
@@ -56,23 +56,13 @@ export default function PostTile(props) {
                     )}
                 </div>
                 <div className="post-tile-header-right">
-                    {rcProps ? (
-                        <Rating
-                            className={"post-tile-ratings"}
-                            name="simple-controlled"
-                            value={data.rating / 2}
-                            precision={0.1}
-                            readOnly
-                        />
-                    ) : (
-                        <StarRatings
-                            className={"post-tile-ratings"}
-                            starRatedColor="black"
-                            rating={parseInt(data["rating"]) / 2}
-                            starDimension="20px"
-                            starSpacing="2px"
-                        />
-                    )}
+                    <Rating
+                        className={"post-tile-ratings"}
+                        name="simple-controlled"
+                        value={data.rating / 2}
+                        precision={0.1}
+                        readOnly
+                    />
                 </div>
             </div>
             <div className="post-tile-content">
