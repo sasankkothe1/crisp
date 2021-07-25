@@ -38,7 +38,6 @@ const getUserRate = (req, res) => {
 
     Rating.findOne(params)
         .then((rating) => {
-            console.log(rating);
             res.status(200).send({ rating: rating ? rating.rating : 0 });
         })
         .catch((err) => res.status(502).send({ message: err.message }));
@@ -73,12 +72,8 @@ const rate = (req, res) => {
         }
     }
 
-    console.log(params);
-
     Rating.findOne(params)
         .then((rating) => {
-            console.log(rating);
-
             if (rating) {
                 Rating.findByIdAndUpdate(
                     rating._id,
@@ -196,7 +191,6 @@ const rate = (req, res) => {
                                 break;
                             }
                             case "Post": {
-                                console.log("Updating post...");
                                 PostModel.findByIdAndUpdate(
                                     req.params.id,
                                     updateParams,
@@ -211,7 +205,6 @@ const rate = (req, res) => {
                                 break;
                             }
                             case "Event": {
-                                console.log("Updating event...");
                                 EventModel.findByIdAndUpdate(
                                     req.params.id,
                                     updateParams,

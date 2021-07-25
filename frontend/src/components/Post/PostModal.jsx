@@ -87,7 +87,8 @@ export default function PostModal({
                                         setPaymentAttempt(true);
                                     }}
                                     onFailure={(res) => {
-                                        console.log(res);
+                                        setPaymentResponse(res.data);
+                                        setPaymentAttempt(true);
                                     }}
                                 />
                                 {paymentResponse && (
@@ -103,7 +104,7 @@ export default function PostModal({
                                             `Successful payment: ${paymentResponse.order._id}`
                                         }
                                         onError={() =>
-                                            `Error: ${paymentResponse.data.error}`
+                                            `Error: ${paymentResponse.error}`
                                         }
                                     />
                                 )}
