@@ -122,9 +122,9 @@ const PaymentForm = ({ orderType, orderObject, onSuccess, onFailure }) => {
                 </>
             ) : (
                 <div>
-                    <h2 className="stripeText">
-                        You just bought a sweet spatula
-                    </h2>
+                    {orderType === "subscription" && (
+                        <h2 className="stripeText">Successful subscription!</h2>
+                    )}
                 </div>
             )}
         </div>

@@ -43,7 +43,8 @@ export default function PostModal({
                         <Modal.Title>{data["title"]}</Modal.Title>
                     )}
                     {postType == "RecipeCollection" &&
-                        isLoggedIn() && (data.postedBy._id !== getLoggedInUserID() ) &&
+                        isLoggedIn() &&
+                        data.postedBy._id !== getLoggedInUserID() &&
                         (data.purchased && data.purchased == true ? (
                             <Button
                                 variant="contained"
@@ -84,6 +85,7 @@ export default function PostModal({
                                     setShow={setShowPaymentPortal}
                                     onSuccess={(res) => {
                                         setPaymentResponse(res.data);
+                                        setShowPaymentPortal(false);
                                         setPaymentAttempt(true);
                                     }}
                                     onFailure={(res) => {

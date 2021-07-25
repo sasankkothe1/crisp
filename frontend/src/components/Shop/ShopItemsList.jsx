@@ -98,16 +98,14 @@ export default function ShopItemsList(props) {
     return rcd?.length > 0 ? (
         <div className={classes.root}>
             <div className={classes.post}>
-                {rcd.map((rc, i) => 
-                    (
-                        <PostTile
-                            onClick={() => displayRC(i)}
-                            key={i}
-                            data={rc}
-                            isRC={true}
-                        />
-                    )
-                )}
+                {rcd.map((rc, i) => (
+                    <PostTile
+                        onClick={() => displayRC(i)}
+                        key={i}
+                        data={rc}
+                        isRC={true}
+                    />
+                ))}
                 <Modal
                     size={"lg"}
                     scrollable
@@ -134,7 +132,7 @@ export default function ShopItemsList(props) {
         </div>
     ) : (
         <div className={classes.nof}>
-            <h1> { !init ? "" : "No recipe collections found!" } </h1>
+            <h1> {!init ? "" : "No recipe collections found!"} </h1>
         </div>
     );
 }

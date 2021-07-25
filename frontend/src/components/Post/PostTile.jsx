@@ -1,5 +1,6 @@
 /* eslint-disable react/prop-types */
 import React from "react";
+import PropTypes from "prop-types";
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 
@@ -16,11 +17,8 @@ import "./PostTile.css";
 
 import { getLoggedInUserID } from "../../services/utils";
 
-export default function PostTile(props) {
-    const { data, onClick } = props;
+const PostTile = ({ data, onClick, isRC }) => {
     const { media } = data;
-
-    const { isRC } = props;
 
     return (
         <div className="post-tile-container" onClick={onClick}>
@@ -35,9 +33,11 @@ export default function PostTile(props) {
                     <PersonIcon fontSize="small" ml="2rem" />
                     <div>
                         <h6 className="post-tile-header-user">
-                            {!isRC ? data["postedBy"]["firstName"] : (
-                                data.postedBy._id !== getLoggedInUserID() ? data["postedBy"]["firstName"] : `${data["postedBy"]["firstName"]} (me)`
-                            )}
+                            {!isRC
+                                ? data["postedBy"]["firstName"]
+                                : data.postedBy._id !== getLoggedInUserID()
+                                ? data["postedBy"]["firstName"]
+                                : `${data["postedBy"]["firstName"]} (me)`}
                         </h6>
                     </div>
                     {isRC &&
@@ -97,4 +97,12 @@ export default function PostTile(props) {
             </div>
         </div>
     );
-}
+};
+
+PostTile.PropTypes = {
+    isRC: PropTypes.bool,
+    data: PropTypes.array,
+    onClick: PropTypes.func,
+};
+
+export default PostTile;
