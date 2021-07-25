@@ -4,7 +4,6 @@ import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 
 import PersonIcon from "@material-ui/icons/Person";
-//import StarRatings from "react-star-ratings";
 import ReactPlayer from "react-player";
 
 import DoneAllIcon from "@material-ui/icons/DoneAll";
@@ -14,6 +13,8 @@ import EuroIcon from "@material-ui/icons/Euro";
 import Rating from "@material-ui/lab/Rating";
 
 import "./PostTile.css";
+
+import { getLoggedInUserID } from "../../services/utils";
 
 export default function PostTile(props) {
     const { data, onClick } = props;
@@ -34,11 +35,13 @@ export default function PostTile(props) {
                     <PersonIcon fontSize="small" ml="2rem" />
                     <div>
                         <h6 className="post-tile-header-user">
-                            {data["postedBy"]["firstName"]}
+                            {!rcProps ? data["postedBy"]["firstName"] : (
+                                data.postedBy._id !== getLoggedInUserID() ? data["postedBy"]["firstName"] : `${data["postedBy"]["firstName"]} (me)`
+                            )}
                         </h6>
                     </div>
                     {rcProps &&
-                        rcProps.price &&
+                        data.price &&
                         rcProps.purchased &&
                         rcProps.purchased === true && (
                             <DoneAllIcon fontSize="small" />

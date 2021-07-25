@@ -97,7 +97,6 @@ export default function ShopItemsList(props) {
             <div className={classes.post}>
                 {rcd.map((rc, i) => {
                     const rcProps = {
-                        price: rc.price,
                         purchased: rc.purchased,
                     };
                     return (
