@@ -117,9 +117,9 @@ function ProfileView({ history }) {
                 <Grid item container className={classes.topContainer}>
                     <ProfileHeader
                         counts={{
-                            recipeCount: 0,
-                            postCount: 0,
-                            eventCount: 0,
+                            recipeCount: profileUser?.recipes?.length ? profileUser?.recipes?.length : 0,
+                            postCount: profileUser?.posts?.length ? profileUser?.posts?.length : 0,
+                            eventCount: profileUser?.events?.length ? profileUser?.events?.length : 0,
                         }}
                         isLoggedInUser={isLoggedInUser}
                         isFollowing={isFollowing}
