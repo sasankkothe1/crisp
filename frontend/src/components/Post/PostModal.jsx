@@ -115,12 +115,11 @@ export default function PostModal({
                             dataChanged={dataChanged}
                             setDataChanged={setDataChanged}
                             rateEntry={async (id, rate) => {
-                                const res =
-                                    await RatingService.rate(
-                                        id,
-                                        postType,
-                                        rate
-                                    );
+                                const res = await RatingService.rate(
+                                    id,
+                                    postType,
+                                    rate
+                                );
                                 return res.status == 200;
                             }}
                             getEntryUserRate={async (id) => {
@@ -129,10 +128,7 @@ export default function PostModal({
                                     postType
                                 );
 
-                                return [
-                                    res.status == 200,
-                                    res.data.rating / 2,
-                                ];
+                                return [res.status == 200, res.data.rating / 2];
                             }}
                         />
                     )}

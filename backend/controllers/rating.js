@@ -57,7 +57,7 @@ const rate = (req, res) => {
         }
         case "Post": {
             params.post = req.params.id;
-            break; 
+            break;
         }
         case "Event": {
             params.event = req.params.id;
@@ -122,7 +122,7 @@ const rate = (req, res) => {
                                     })
                                     .catch((err) => {
                                         res.sendStatus(502);
-                                    }); 
+                                    });
                                 break;
                             }
                             case "Event": {
@@ -136,7 +136,7 @@ const rate = (req, res) => {
                                     })
                                     .catch((err) => {
                                         res.sendStatus(502);
-                                    }); 
+                                    });
                                 break;
                             }
                             case "Recipe": {
@@ -150,11 +150,11 @@ const rate = (req, res) => {
                                     })
                                     .catch((err) => {
                                         res.sendStatus(502);
-                                    }); 
+                                    });
                                 break;
-                            } 
+                            }
                             default: {
-                                return; 
+                                return;
                             }
                         }
                     })
@@ -166,7 +166,7 @@ const rate = (req, res) => {
                 console.log({
                     _id: new mongoose.Types.ObjectId(),
                     ...params,
-                    rating: req.body.rating, 
+                    rating: req.body.rating,
                 });
                 Rating.create({
                     _id: new mongoose.Types.ObjectId(),
@@ -237,10 +237,10 @@ const rate = (req, res) => {
                                     .catch((err) => {
                                         res.sendStatus(502);
                                     });
-                                break; 
+                                break;
                             }
                             default: {
-                                return; 
+                                return;
                             }
                         }
                     })

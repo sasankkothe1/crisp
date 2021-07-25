@@ -69,7 +69,10 @@ export default function PostsList(props) {
                         editable={editable}
                         dataChanged={dataChanged}
                         setDataChanged={setDataChanged}
-                        postType={data[postIndex].typeOfPost[0].toUpperCase() + data[postIndex].typeOfPost.slice(1)}
+                        postType={
+                            data[postIndex].typeOfPost[0].toUpperCase() +
+                            data[postIndex].typeOfPost.slice(1)
+                        }
                     />
                 </Modal>
             </div>

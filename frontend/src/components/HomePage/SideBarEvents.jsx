@@ -56,8 +56,8 @@ export default function SideBarEvents() {
                 show={show}
                 onHide={handleClose}
             >
-                <PostModal 
-                    data={events[postIndex]} 
+                <PostModal
+                    data={events[postIndex]}
                     dataChanged={dataChanged}
                     setDataChanged={setDataChanged}
                     postType="Event"

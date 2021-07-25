@@ -18,15 +18,15 @@ const RatingSchema = new mongoose.Schema({
     },
     post: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Post"
+        ref: "Post",
     },
     event: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Event"
+        ref: "Event",
     },
     recipe: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Recipe"
+        ref: "Recipe",
     },
     rating: {
         type: Number,

@@ -1,68 +1,71 @@
 const mongoose = require("mongoose");
 const mongoosePaginate = require("mongoose-paginate-v2");
 
-const RecipeSchema = new mongoose.Schema({
-    typeOfPost: {
-        type: String,
-        required: true,
-        default: "recipe",
-    },
-    postedBy: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-        required: true,
-    },
-    title: {
-        type: String,
-        required: true,
-    },
-    description: {
-        type: String,
-        required: true,
-    },
-    media: {
-        type: [String],
-    },
-    tags: {
-        type: [String],
-        default: ["noTags"],
-    },
-    datePosted: {
-        type: Date,
-        default: Date.now,
-    },
-    premiumStatus: {
-        type: Boolean,
-        default: false,
-    },
-    ingredientsList: [
-        {
-            ingredientName: {
-                type: String,
-            },
-            ingredientQuantity: {
-                type: String,
-            },
+const RecipeSchema = new mongoose.Schema(
+    {
+        typeOfPost: {
+            type: String,
+            required: true,
+            default: "recipe",
         },
-    ],
-    instructions: {
-        type: [String],
+        postedBy: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User",
+            required: true,
+        },
+        title: {
+            type: String,
+            required: true,
+        },
+        description: {
+            type: String,
+            required: true,
+        },
+        media: {
+            type: [String],
+        },
+        tags: {
+            type: [String],
+            default: ["noTags"],
+        },
+        datePosted: {
+            type: Date,
+            default: Date.now,
+        },
+        premiumStatus: {
+            type: Boolean,
+            default: false,
+        },
+        ingredientsList: [
+            {
+                ingredientName: {
+                    type: String,
+                },
+                ingredientQuantity: {
+                    type: String,
+                },
+            },
+        ],
+        instructions: {
+            type: [String],
+        },
+        cuisine: {
+            type: String,
+        },
+        cumulativeRating: {
+            type: Number,
+            default: 0,
+        },
+        numRates: {
+            type: Number,
+            default: 0,
+        },
     },
-    cuisine: {
-        type: String,
-    },
-    cumulativeRating: {
-        type: Number,
-        default: 0,
-    },
-    numRates: {
-        type: Number,
-        default: 0,
-    },
-}, {
-    toObject: { virtuals: true },
-    toJSON: { virtuals: true },
-}); 
+    {
+        toObject: { virtuals: true },
+        toJSON: { virtuals: true },
+    }
+);
 
 RecipeSchema.plugin(mongoosePaginate);
 
