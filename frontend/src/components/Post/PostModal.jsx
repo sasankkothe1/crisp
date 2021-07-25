@@ -118,8 +118,9 @@ export default function PostModal({
                             rateEntry={async (id, rate) => {
                                 if (postType == "RecipeCollection") {
                                     const res =
-                                        await RecipeCollectionService.rateRecipeCollection(
+                                        await RatingService.rate(
                                             id,
+                                            postType,
                                             rate
                                         );
                                     return res.status == 200;

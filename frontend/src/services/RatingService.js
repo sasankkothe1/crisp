@@ -45,7 +45,7 @@ export default class RatingService {
 
         try {
             const res = await axios.post(
-                `${RatingService.baseURL()}`,
+                `${RatingService.baseURL()}/${id}`,
                 {
                     rating: rating * 2,
                     type: type,
