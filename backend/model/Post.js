@@ -35,13 +35,28 @@ const PostSchema = new mongoose.Schema({
         type: Boolean,
         required: true,
     },
-    rating: {
+    cumulativeRating: {
         type: Number,
         default: 0,
     },
+    numRates: {
+        type: Number,
+        default: 0,
+    },
+}, {
+    toObject: { virtuals: true },
+    toJSON: { virtuals: true },
 });
 
 PostSchema.plugin(mongoosePaginate);
+
+PostSchema.virtual("rating").get(function () {
+    if (this.numRates > 0) {
+        return this.cumulativeRating / this.numRates;
+    } else {
+        return 0;
+    }
+});
 
 const PostModel = mongoose.model("Post", PostSchema);
 

@@ -3,7 +3,9 @@ const mongoose = require("mongoose");
 const Rating = require("../model/Rating");
 
 const RecipeCollection = require("../model/RecipeCollection");
-const Post = require("../model/Post");
+const { PostModel } = require("../model/Post");
+const { EventModel } = require("../model/Event");
+const { RecipeModel } = require("../model/Recipe");
 
 const getUserRate = (req, res) => {
     const params = {
@@ -16,13 +18,23 @@ const getUserRate = (req, res) => {
             params.recipeCollection = req.params.id;
             break;
         }
+        case "Post": {
+            params.post = req.params.id;
+            break;
+        }
+        case "Event": {
+            params.event = req.params.id;
+            break;
+        }
+        case "Recipe": {
+            params.recipe = req.params.id;
+            break;
+        }
         default: {
             res.sendStatus(502);
             return;
         }
     }
-
-    console.log(params);
 
     Rating.findOne(params)
         .then((rating) => {
@@ -43,11 +55,25 @@ const rate = (req, res) => {
             params.recipeCollection = req.params.id;
             break;
         }
+        case "Post": {
+            params.post = req.params.id;
+            break; 
+        }
+        case "Event": {
+            params.event = req.params.id;
+            break;
+        }
+        case "Recipe": {
+            params.recipe = req.params.id;
+            break;
+        }
         default: {
             res.sendStatus(502);
             return;
         }
     }
+
+    console.log(params);
 
     Rating.findOne(params)
         .then((rating) => {
@@ -79,17 +105,69 @@ const rate = (req, res) => {
                                 )
                                     .then((recipeCollection) => {
                                         res.sendStatus(200);
-                                        return;
                                     })
                                     .catch((err) => {
                                         res.sendStatus(502);
-                                        return;
                                     });
+                                break;
+                            }
+                            case "Post": {
+                                PostModel.findByIdAndUpdate(
+                                    req.params.id,
+                                    updateParams,
+                                    { new: true }
+                                )
+                                    .then((post) => {
+                                        res.sendStatus(200);
+                                    })
+                                    .catch((err) => {
+                                        res.sendStatus(502);
+                                    }); 
+                                break;
+                            }
+                            case "Event": {
+                                EventModel.findByIdAndUpdate(
+                                    req.params.id,
+                                    updateParams,
+                                    { new: true }
+                                )
+                                    .then((event) => {
+                                        res.sendStatus(200);
+                                    })
+                                    .catch((err) => {
+                                        res.sendStatus(502);
+                                    }); 
+                                break;
+                            }
+                            case "Recipe": {
+                                RecipeModel.findByIdAndUpdate(
+                                    req.params.id,
+                                    updateParams,
+                                    { new: true }
+                                )
+                                    .then((recipe) => {
+                                        res.sendStatus(200);
+                                    })
+                                    .catch((err) => {
+                                        res.sendStatus(502);
+                                    }); 
+                                break;
+                            } 
+                            default: {
+                                return; 
                             }
                         }
                     })
-                    .catch((err) => res.sendStatus(502));
+                    .catch((err) => {
+                        res.status(502).send({ message: err.message });
+                        return;
+                    });
             } else {
+                console.log({
+                    _id: new mongoose.Types.ObjectId(),
+                    ...params,
+                    rating: req.body.rating, 
+                });
                 Rating.create({
                     _id: new mongoose.Types.ObjectId(),
                     ...params,
@@ -111,16 +189,64 @@ const rate = (req, res) => {
                                 )
                                     .then((recipeCollection) => {
                                         res.sendStatus(200);
-                                        return;
                                     })
                                     .catch((err) => {
                                         res.sendStatus(502);
-                                        return;
                                     });
+                                break;
+                            }
+                            case "Post": {
+                                console.log("Updating post...");
+                                PostModel.findByIdAndUpdate(
+                                    req.params.id,
+                                    updateParams,
+                                    { new: true }
+                                )
+                                    .then((post) => {
+                                        res.sendStatus(200);
+                                    })
+                                    .catch((err) => {
+                                        res.sendStatus(502);
+                                    });
+                                break;
+                            }
+                            case "Event": {
+                                console.log("Updating event...");
+                                EventModel.findByIdAndUpdate(
+                                    req.params.id,
+                                    updateParams,
+                                    { new: true }
+                                )
+                                    .then((event) => {
+                                        res.sendStatus(200);
+                                    })
+                                    .catch((err) => {
+                                        res.sendStatus(502);
+                                    });
+                                break;
+                            }
+                            case "Recipe": {
+                                RecipeModel.findByIdAndUpdate(
+                                    req.params.id,
+                                    updateParams,
+                                    { new: true }
+                                )
+                                    .then((recipe) => {
+                                        res.sendStatus(200);
+                                    })
+                                    .catch((err) => {
+                                        res.sendStatus(502);
+                                    });
+                                break; 
+                            }
+                            default: {
+                                return; 
                             }
                         }
                     })
-                    .catch((err) => res.sendStatus(502));
+                    .catch((err) => {
+                        res.status(502).send({ message: err.message });
+                    });
             }
         })
         .catch((err) => res.sendStatus(502));

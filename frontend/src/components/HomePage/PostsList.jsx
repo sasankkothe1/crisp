@@ -28,7 +28,7 @@ export default function PostsList(props) {
     const fetchPage = (page) => {
         fetchMethod(limit, page, fetchParam).then((res) => {
             setData(res.docs);
-            setPaginationData({ totalPages: res.totalPages });
+            setPaginationData({ totalPages: res.totalPages, page: page });
         });
     };
 
@@ -42,6 +42,10 @@ export default function PostsList(props) {
     };
 
     const [dataChanged, setDataChanged] = useState(false);
+
+    useEffect(() => {
+        fetchPage(paginationData.page);
+    }, [dataChanged]);
 
     return data?.length > 0 ? (
         <div className="root">
@@ -65,6 +69,7 @@ export default function PostsList(props) {
                         editable={editable}
                         dataChanged={dataChanged}
                         setDataChanged={setDataChanged}
+                        postType={data[postIndex].typeOfPost[0].toUpperCase() + data[postIndex].typeOfPost.slice(1)}
                     />
                 </Modal>
             </div>

@@ -30,17 +30,6 @@ const getRecipeCollections = (req, res) => {
         filters.price = priceFilter;
     }
 
-    /*
-    let collections = RecipeCollection.find(filters);
-
-    collections = collections.populate({
-        path: "postedBy",
-        select: { firstName: 1, _id: 1 },
-    });
-    */
-
-    //collection
-
     console.log({
         limit: req.query.limit,
         page: req.query.page,

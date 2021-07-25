@@ -35,10 +35,6 @@ const RecipeSchema = new mongoose.Schema({
         type: Boolean,
         default: false,
     },
-    rating: {
-        type: Number,
-        default: 0,
-    },
     ingredientsList: [
         {
             ingredientName: {
@@ -55,9 +51,29 @@ const RecipeSchema = new mongoose.Schema({
     cuisine: {
         type: String,
     },
-});
+    cumulativeRating: {
+        type: Number,
+        default: 0,
+    },
+    numRates: {
+        type: Number,
+        default: 0,
+    },
+}, {
+    toObject: { virtuals: true },
+    toJSON: { virtuals: true },
+}); 
 
 RecipeSchema.plugin(mongoosePaginate);
+
+RecipeSchema.virtual("rating").get(function () {
+    if (this.numRates > 0) {
+        return this.cumulativeRating / this.numRates;
+    } else {
+        return 0;
+    }
+});
+
 const RecipeModel = mongoose.model("Recipe", RecipeSchema);
 
 module.exports = { RecipeModel };

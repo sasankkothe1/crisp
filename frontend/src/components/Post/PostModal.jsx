@@ -5,7 +5,6 @@ import { Link } from "react-router-dom";
 import { Col, Container, Modal, Row } from "react-bootstrap";
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
-import StarRatings from "react-star-ratings";
 import ReactPlayer from "react-player";
 import moment from "moment-timezone";
 import { Button } from "@material-ui/core/";
@@ -110,45 +109,31 @@ export default function PostModal({
                                 )}
                             </>
                         ))}
-                    {data._id ? (
+                    {postType && (
                         <UserRating
                             entryID={data._id}
                             dataChanged={dataChanged}
                             setDataChanged={setDataChanged}
                             rateEntry={async (id, rate) => {
-                                if (postType == "RecipeCollection") {
-                                    const res =
-                                        await RatingService.rate(
-                                            id,
-                                            postType,
-                                            rate
-                                        );
-                                    return res.status == 200;
-                                }
-                                return true;
+                                const res =
+                                    await RatingService.rate(
+                                        id,
+                                        postType,
+                                        rate
+                                    );
+                                return res.status == 200;
                             }}
                             getEntryUserRate={async (id) => {
-                                if (postType == "RecipeCollection") {
-                                    const res = await RatingService.getUserRate(
-                                        id,
-                                        postType
-                                    );
+                                const res = await RatingService.getUserRate(
+                                    id,
+                                    postType
+                                );
 
-                                    return [
-                                        res.status == 200,
-                                        res.data.rating / 2,
-                                    ];
-                                }
-                                return [true, 3.775];
+                                return [
+                                    res.status == 200,
+                                    res.data.rating / 2,
+                                ];
                             }}
-                        />
-                    ) : (
-                        <StarRatings
-                            className={"post-modal-ratings"}
-                            starRatedColor="black"
-                            rating={0}
-                            starDimension="20px"
-                            starSpacing="2px"
                         />
                     )}
                 </div>

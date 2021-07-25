@@ -35,10 +35,6 @@ const EventSchema = new mongoose.Schema({
         type: Boolean,
         default: false,
     },
-    rating: {
-        type: Number,
-        default: 0,
-    },
     eventDate: {
         type: Date,
         required: true,
@@ -55,9 +51,29 @@ const EventSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    cumulativeRating: {
+        type: Number,
+        default: 0,
+    },
+    numRates: {
+        type: Number,
+        default: 0,
+    },
+}, {
+    toObject: { virtuals: true },
+    toJSON: { virtuals: true },
 });
 
 EventSchema.plugin(mongoosePaginate);
+
+EventSchema.virtual("rating").get(function () {
+    if (this.numRates > 0) {
+        return this.cumulativeRating / this.numRates;
+    } else {
+        return 0;
+    }
+});
+
 const EventModel = mongoose.model("Event", EventSchema);
 
 module.exports = { EventModel };
