@@ -19,10 +19,12 @@ import "./PostModal.css";
 import RecipeCollectionService from "../../services/RecipeCollectionService";
 import SnackbarAlert from "../Alert/SnackbarAlert";
 
+import { isLoggedIn } from "../../services/utils";
+
 const useRating = (data, rcProps) => {
     const [rating, setRating] = useState(0);
 
-    if (!rcProps) {
+    if (!rcProps || !isLoggedIn()) {
         return [rating, setRating];
     }
 
@@ -53,6 +55,7 @@ export default function PostModal({ data, rcProps, editable }) {
                         <Modal.Title>{data["title"]}</Modal.Title>
                     )}
                     {rcProps &&
+                        isLoggedIn() &&
                         (data.purchased && data.purchased == true ? (
                             <Button
                                 variant="contained"
@@ -140,7 +143,7 @@ export default function PostModal({ data, rcProps, editable }) {
                                     }
                                 }
                             }}
-                            readOnly={rcProps ? false : true}
+                            readOnly={rcProps ? !isLoggedIn() : true}
                         />
                     ) : (
                         <StarRatings
