@@ -357,10 +357,6 @@ export default function AddRecipeView({ recipeID, editable }) {
                         shrink: true,
                     }}
                     variant="outlined"
-                    InputProps={{
-                        readOnly: !editable,
-                    }}
-                    disabled={!editable && false}
                 />
 
                 <TextField
