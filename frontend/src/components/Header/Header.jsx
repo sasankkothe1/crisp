@@ -1,7 +1,8 @@
+/* eslint-disable indent */
 import React, { useState, useCallback, useEffect } from "react";
 import PropTypes from "prop-types";
 import { withRouter, Link } from "react-router-dom";
-import { connect, useSelector } from "react-redux";
+import { connect } from "react-redux";
 import {
     AppBar,
     InputAdornment,
@@ -23,7 +24,7 @@ import SearchIcon from "@material-ui/icons/Search";
 import Logo from "../../assets/logo.png";
 import { logout } from "../../redux/actions";
 
-import { isLoggedIn } from "../../services/utils";
+import { isLoggedIn, isPartner, isAdmin } from "../../services/utils";
 
 const useStyles = makeStyles((theme) => ({
     header: {
@@ -56,18 +57,11 @@ const useStyles = makeStyles((theme) => ({
 const Header = ({ history, location, dispatch }) => {
     const classes = useStyles();
 
-    const loggedInUser = useSelector((state) => state.user);
-
     useEffect(async () => {
-        // TODO: check admin in path
-        console.log(location.path);
-
-        if (!(loggedInUser._id && loggedInUser.role === "Admin")) {
+        if (location.pathname.split("/")[1] === "admin" && !isAdmin()) {
             history.push("/");
-        } else {
-            console.log("we in");
         }
-    }, []);
+    }, [location.pathname]);
 
     const [anchorEl, setAnchorEl] = useState(null);
     const [searchValue, setSearchValue] = useState("");
@@ -138,7 +132,6 @@ const Header = ({ history, location, dispatch }) => {
                             aria-controls="menu-list-add"
                             aria-haspopup="true"
                             onClick={handleMenu}
-                            color="black"
                         >
                             <AddCircleOutlineIcon className={classes.icon} />
                         </IconButton>
@@ -203,7 +196,6 @@ const Header = ({ history, location, dispatch }) => {
                         <IconButton
                             aria-label="account of current user"
                             aria-haspopup="true"
-                            color="black"
                             onClick={() => redirect("/shop")}
                         >
                             <ShoppingCartIcon className={classes.icon} />
@@ -213,7 +205,6 @@ const Header = ({ history, location, dispatch }) => {
                             aria-controls="menu-list-auth"
                             aria-haspopup="true"
                             onClick={handleMenu}
-                            color="black"
                         >
                             <AccountCircle className={classes.icon} />
                         </IconButton>
@@ -247,6 +238,19 @@ const Header = ({ history, location, dispatch }) => {
                                                     >
                                                         My Profile
                                                     </MenuItem>
+                                                    {!isPartner() &&
+                                                        !isAdmin() && (
+                                                            <MenuItem
+                                                                onClick={() =>
+                                                                    redirect(
+                                                                        "/partnershipApplication"
+                                                                    )
+                                                                }
+                                                            >
+                                                                Apply for
+                                                                Partnership
+                                                            </MenuItem>
+                                                        )}
                                                     <MenuItem
                                                         onClick={onLogout}
                                                     >

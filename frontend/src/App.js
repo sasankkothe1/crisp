@@ -18,6 +18,8 @@ import RecipeIDView from "./views/Recipe/RecipeIDView";
 import EditPost from "./views/EditViews/EditPost";
 import EditEvent from "./views/EditViews/EditEvent";
 import EditRecipe from "./views/EditViews/EditRecipe";
+import PartnerRequestsView from "./views/Admin/PartnerRequestsView";
+import PartnershipApplicationView from "./views/Partner/PartnershipApplicationView";
 
 // create store for redux
 export const store = createStore(reducers, applyMiddleware(thunkMiddleware));
@@ -66,6 +68,12 @@ function App() {
                         </Route>
                         <Route exact path="/editrecipe/:id">
                             <EditRecipe />
+                        </Route>
+                        <Route exact path="/partnershipApplication">
+                            <PartnershipApplicationView />
+                        </Route>
+                        <Route exact path="/admin/partnerRequests">
+                            <PartnerRequestsView />
                         </Route>
                         <Route
                             render={() => <Redirect to={{ pathname: "/" }} />}

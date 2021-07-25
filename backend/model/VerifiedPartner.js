@@ -1,20 +1,36 @@
 const mongoose = require("mongoose");
 
-const VerifiedPartnerSchema = new mongoose.Schema({
-    recipeCollections: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "RecipeCollection",
+const BankDetailsSchema = new mongoose.Schema({
+    nameOfTheBank: {
+        type: String,
         required: true,
     },
-    bankDetails: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "BankDetails",
+    BIC: {
+        type: String,
         required: true,
+    },
+    IBAN: {
+        type: String,
+        required: true,
+    },
+});
+
+const VerifiedPartnerSchema = new mongoose.Schema({
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
     },
     partnerManager: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "PartnerManager",
-        required: true,
+    },
+    recipeCollections: {
+        type: [mongoose.Schema.Types.ObjectId],
+        ref: "RecipeCollection",
+        default: [],
+    },
+    bankDetails: {
+        type: BankDetailsSchema,
     },
 });
 

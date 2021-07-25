@@ -66,6 +66,13 @@ export default class RecipeService {
         let headers = { Authorization: `Bearer ${token}` };
 
         try {
+            if (!userID) {
+                return {
+                    status: "Failed",
+                    message: "Missing User ID",
+                };
+            }
+
             res = await axios.get(
                 `${RecipeService.baseURL()}/recipes/postedBy/${userID}`,
                 {

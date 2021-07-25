@@ -109,3 +109,22 @@ exports.isFollowing = async (req, res, next) => {
         return next(error);
     }
 };
+
+exports.isSubscribed = async (req, res, next) => {
+    const { id } = req.params;
+
+    try {
+        const userA = req.user;
+        const userB = await User.findById(id);
+
+        if (!userB) {
+            return next(new ErrorResponse("User Not Found", 404));
+        }
+
+        return res
+            .status(200)
+            .json({ isSubscribed: userA.subscriptions.includes(id) });
+    } catch (error) {
+        return next(error);
+    }
+};
