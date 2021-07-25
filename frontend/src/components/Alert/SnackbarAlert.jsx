@@ -10,9 +10,7 @@ const SnackbarAlert = ({ open, onClose, success, onSuccess, onError }) => {
     };
 
     const handleClose = (event, reason) => {
-        if (reason === "clickaway") {
-            return;
-        }
+        console.log(reason);
         onClose(event);
     };
 
