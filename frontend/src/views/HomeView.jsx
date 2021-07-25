@@ -1,5 +1,5 @@
-import React from "react";
-import { makeStyles } from "@material-ui/core";
+import React, { useState } from "react";
+import { makeStyles, Button } from "@material-ui/core";
 import PostsList from "../components/HomePage/PostsList";
 import SideBar from "../components/HomePage/SideBar";
 import PostService from "../services/PostService";
@@ -13,7 +13,14 @@ const useStyles = makeStyles((theme) => ({
         marginTop: theme.spacing(-2),
     },
     homeViewPostList: {
-        flexGrow: 2,
+        width: "80vw !important",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "flex-start",
+        alignItems: "center",
+    },
+    button: {
+        marginTop: theme.spacing(2),
     },
 
     homeViewSideBar: {
@@ -25,19 +32,36 @@ const useStyles = makeStyles((theme) => ({
 export default function HomeView() {
     const classes = useStyles();
 
+    const [isPersonalized, setIsPersonalized] = useState(false);
+
     return (
         <div className={classes.homeViewContainer}>
             <div className={classes.homeViewPostList}>
-                <PostsList
-                    editable={false}
-                    limit={16}
-                    fetchMethod={
-                        isLoggedIn()
-                            ? PostService.allPostsPersonalized
-                            : PostService.allPosts
-                    }
-                    fetchParams={{}}
-                />
+                <Button
+                    variant="outlined"
+                    onClick={() => {
+                        setIsPersonalized(!isPersonalized);
+                    }}
+                    className={classes.button}
+                >
+                    {isPersonalized ? "Discover" : "Personalize"}
+                </Button>
+
+                {isPersonalized && isLoggedIn() ? (
+                    <PostsList
+                        editable={false}
+                        limit={16}
+                        fetchMethod={PostService.allPostsPersonalized}
+                        fetchParams={{}}
+                    />
+                ) : (
+                    <PostsList
+                        editable={false}
+                        limit={16}
+                        fetchMethod={PostService.allPosts}
+                        fetchParams={{}}
+                    />
+                )}
             </div>
             <div className={classes.homeViewSideBar}>
                 <SideBar />
