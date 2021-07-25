@@ -110,15 +110,17 @@ export default function PostModal({ data, rcProps, editable }) {
                             dataChanged={rcProps.dataChanged}
                             setDataChanged={rcProps.setDataChanged}
                             rateEntry={async (id, rate) => {
-                                return RecipeCollectionService.rateRecipeCollection(
+                                const res = await RecipeCollectionService.rateRecipeCollection(
                                     id,
                                     rate
                                 );
+                                return res.status == 200;
                             }}
                             getEntryUserRate={async (id) => {
-                                return RecipeCollectionService.getRecipeCollectionUserRate(
+                                const res = await RecipeCollectionService.getRecipeCollectionUserRate(
                                     id
                                 );
+                                return [res.status == 200, res.data.rating / 2];
                             }}
                         />
                     ) :

@@ -15,11 +15,10 @@ const useRating = (entryID, getEntryUserRate) => {
 
     useEffect(async () => {
 		console.log("getting rate...");
-		const res = await getEntryUserRate(entryID);
+		const [success, newRating] = await getEntryUserRate(entryID);
 
-		console.log(res);
-       	if (res.status == 200) {
-            setRating(res.data.rating / 2);
+       	if (success == 200) {
+            setRating(newRating);
         }
     }, []);
 
@@ -36,13 +35,12 @@ const UserRating = ({ entryID, dataChanged, setDataChanged, rateEntry, getEntryU
 			onChange={async (event, rate) => {
 				if (rate !== rating) {
 					console.log("applying rate...");
-					const res =
+					const success =
 						await rateEntry(
 							entryID,
 							rate
 						);
-					console.log(res);
-					if (res.status == 200) {
+					if (success) {
 						setDataChanged(
 							!dataChanged
 						);
