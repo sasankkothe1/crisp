@@ -1,47 +1,35 @@
 /* eslint-disable indent */
 /* eslint-disable react/prop-types */
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Col, Container, Modal, Row } from "react-bootstrap";
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
-import StarRatings from "react-star-ratings";
 import ReactPlayer from "react-player";
 import moment from "moment-timezone";
 import { Button } from "@material-ui/core/";
 import EditIcon from "@material-ui/icons/Edit";
-import Rating from "@material-ui/lab/Rating";
 
 import PaymentPortal from "../../components/Payment/PaymentPortal";
 
 import "./PostModal.css";
 
 import RecipeCollectionService from "../../services/RecipeCollectionService";
+import RatingService from "../../services/RatingService";
+
 import SnackbarAlert from "../Alert/SnackbarAlert";
 
-import { isLoggedIn } from "../../services/utils";
+import { isLoggedIn, getLoggedInUserID } from "../../services/utils";
 
-const useRating = (data, rcProps) => {
-    const [rating, setRating] = useState(0);
+import UserRating from "../Rating/Rating";
 
-    if (!rcProps || !isLoggedIn()) {
-        return [rating, setRating];
-    }
-
-    useEffect(async () => {
-        const res = await RecipeCollectionService.getRecipeCollectionUserRate(
-            data._id
-        );
-        if (res.status == 200) {
-            setRating(res.data.rating / 2);
-        }
-    }, []);
-
-    return [rating, setRating];
-};
-
-export default function PostModal({ data, rcProps, editable }) {
-    const [rating, setRating] = useRating(data, rcProps);
+export default function PostModal({
+    data,
+    dataChanged,
+    setDataChanged,
+    postType,
+    editable,
+}) {
     const [showPaymentPortal, setShowPaymentPortal] = useState(false);
 
     const [paymentAttempt, setPaymentAttempt] = useState(false);
@@ -54,8 +42,9 @@ export default function PostModal({ data, rcProps, editable }) {
                     {data["title"] && (
                         <Modal.Title>{data["title"]}</Modal.Title>
                     )}
-                    {rcProps &&
+                    {postType == "RecipeCollection" &&
                         isLoggedIn() &&
+                        data.postedBy._id !== getLoggedInUserID() &&
                         (data.purchased && data.purchased == true ? (
                             <Button
                                 variant="contained"
@@ -96,10 +85,12 @@ export default function PostModal({ data, rcProps, editable }) {
                                     setShow={setShowPaymentPortal}
                                     onSuccess={(res) => {
                                         setPaymentResponse(res.data);
+                                        setShowPaymentPortal(false);
                                         setPaymentAttempt(true);
                                     }}
                                     onFailure={(res) => {
-                                        console.log(res);
+                                        setPaymentResponse(res.data);
+                                        setPaymentAttempt(true);
                                     }}
                                 />
                                 {paymentResponse && (
@@ -109,49 +100,39 @@ export default function PostModal({ data, rcProps, editable }) {
                                         onClose={() => {
                                             setPaymentResponse(null);
                                             setPaymentAttempt(false);
-                                            rcProps.setDataChanged(
-                                                !rcProps.dataChanged
-                                            );
+                                            setDataChanged(!dataChanged);
                                         }}
                                         onSuccess={() =>
                                             `Successful payment: ${paymentResponse.order._id}`
                                         }
                                         onError={() =>
-                                            `Error: ${paymentResponse.data.error}`
+                                            `Error: ${paymentResponse.error}`
                                         }
                                     />
                                 )}
                             </>
                         ))}
-                    {rcProps ? (
-                        <Rating
-                            className={"post-modal-ratings"}
-                            name="simple-controlled"
-                            value={rating}
-                            onChange={async (event, rate) => {
-                                if (rate !== rating) {
-                                    const res =
-                                        await RecipeCollectionService.rateRecipeCollection(
-                                            data._id,
-                                            rate
-                                        );
-                                    if (res.status == 200) {
-                                        rcProps.setDataChanged(
-                                            !rcProps.dataChanged
-                                        );
-                                        setRating(rate);
-                                    }
-                                }
+                    {postType && (
+                        <UserRating
+                            entryID={data._id}
+                            dataChanged={dataChanged}
+                            setDataChanged={setDataChanged}
+                            rateEntry={async (id, rate) => {
+                                const res = await RatingService.rate(
+                                    id,
+                                    postType,
+                                    rate
+                                );
+                                return res.status == 200;
                             }}
-                            readOnly={rcProps ? !isLoggedIn() : true}
-                        />
-                    ) : (
-                        <StarRatings
-                            className={"post-modal-ratings"}
-                            starRatedColor="black"
-                            rating={0}
-                            starDimension="20px"
-                            starSpacing="2px"
+                            getEntryUserRate={async (id) => {
+                                const res = await RatingService.getUserRate(
+                                    id,
+                                    postType
+                                );
+
+                                return [res.status == 200, res.data.rating / 2];
+                            }}
                         />
                     )}
                 </div>

@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const mongoosePaginate = require("mongoose-paginate-v2");
 
 const RecipeCollectionSchema = new mongoose.Schema(
     {
@@ -57,6 +58,8 @@ const RecipeCollectionSchema = new mongoose.Schema(
         toJSON: { virtuals: true },
     }
 );
+
+RecipeCollectionSchema.plugin(mongoosePaginate);
 
 RecipeCollectionSchema.virtual("rating").get(function () {
     if (this.numRates > 0) {

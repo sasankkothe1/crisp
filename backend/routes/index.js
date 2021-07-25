@@ -9,6 +9,7 @@ const api = express
     .use("/recipe_collections", require("./api/recipe_collection"))
     .use("/partner_managers", require("./api/partner_manager"))
     .use("/partner_applications", require("./api/partner_application"))
+    .use("/rating", require("./api/rating"))
     .use("/users", require("./api/user"))
     .use("/auth", require("./api/auth"));
 
