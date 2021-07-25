@@ -30,15 +30,36 @@ const getRecipeCollections = (req, res) => {
         filters.price = priceFilter;
     }
 
+    /*
     let collections = RecipeCollection.find(filters);
 
     collections = collections.populate({
         path: "postedBy",
         select: { firstName: 1, _id: 1 },
     });
+    */
 
-    collections
-        .then((recipeCollections) => {
+    //collection
+
+    console.log({
+        limit: req.query.limit,
+        page: req.query.page,
+        populate: {
+            path: "postedBy",
+            select: { firstName: 1, _id: 1 },
+        },
+    });
+
+    RecipeCollection.paginate(filters, {
+        limit: req.query.limit,
+        page: req.query.page,
+        populate: {
+            path: "postedBy",
+            select: { firstName: 1, _id: 1 },
+        },
+    })
+        .then((recipeCollectionsPaginated) => {
+            let recipeCollections = recipeCollectionsPaginated.docs;
             recipeCollections = recipeCollections.map((rc) => rc.toJSON());
             if (req.user) {
                 Order.find({
@@ -56,13 +77,19 @@ const getRecipeCollections = (req, res) => {
                         );
                     });
 
-                    res.send(recipeCollections);
+                    res.send({
+                        totalPages: recipeCollectionsPaginated.totalPages,
+                        docs: recipeCollections,
+                    });
                 });
             } else {
-                res.send(recipeCollections);
+                res.send({
+                    totalPages: recipeCollectionsPaginated.totalPages,
+                    docs: recipeCollections,
+                });
             }
         })
-        .catch((err) => res.status(404).send({ message: err.message }));
+        .catch((err) => res.status(502).send({ message: err.message }));
 };
 
 const createRecipeCollection = (req, res) => {

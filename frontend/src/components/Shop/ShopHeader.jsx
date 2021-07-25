@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const ShopHeader = (props) => {
+const ShopHeader = ({ recipeType, setRecipeType }) => {
     const classes = useStyles();
 
     return (
@@ -39,9 +39,9 @@ const ShopHeader = (props) => {
                         <Grid item>
                             <IconButton
                                 onClick={() => {
-                                    props.recipeType == tagTypes["type"]
-                                        ? props.setRecipeType("")
-                                        : props.setRecipeType(tagType["type"]);
+                                    recipeType === tagType["type"]
+                                        ? setRecipeType("")
+                                        : setRecipeType(tagType["type"]);
                                 }}
                             >
                                 <Icon className={classes.icon}>

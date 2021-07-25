@@ -1,14 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 import { makeStyles } from "@material-ui/core";
 
 import ShopSidebar from "../components/Shop/ShopSidebar";
 import ShopHeader from "../components/Shop/ShopHeader";
 import ShopItemsList from "../components/Shop/ShopItemsList";
-
-//import { recipeCollectionsData } from "../SampleData/recipeCollectionsData";
-
-import recipeCollectionService from "../services/RecipeCollectionService";
 
 const useStyles = makeStyles(() => ({
     shopContainer: {
@@ -45,19 +41,6 @@ export default function ShopView() {
 
     const [meal, setMeal] = useState("");
 
-    const [rcd, setRCD] = useState([]);
-
-    useEffect(async () => {
-        const res = await recipeCollectionService.getRecipeCollections(
-            recipeType,
-            meal,
-            minPrice,
-            maxPrice
-        );
-
-        setRCD(res.data);
-    }, [recipeType, buttonClicked, dataChanged]);
-
     const sidebarProps = {
         meal: meal,
         setMeal: setMeal,
@@ -73,9 +56,14 @@ export default function ShopView() {
     };
 
     const listProps = {
-        recipeCollectionsData: rcd,
         dataChanged: dataChanged,
         setDataChanged: setDataChanged,
+        recipeType: recipeType,
+        meal: meal,
+        minPrice: minPrice,
+        maxPrice: maxPrice,
+        buttonClicked: buttonClicked,
+        limit: 6,
     };
 
     return (

@@ -22,7 +22,13 @@ import { isLoggedIn } from "../../services/utils";
 
 import UserRating from "../Rating/Rating";
 
-export default function PostModal({ data, dataChanged, setDataChanged, postType, editable }) {
+export default function PostModal({
+    data,
+    dataChanged,
+    setDataChanged,
+    postType,
+    editable,
+}) {
     const [showPaymentPortal, setShowPaymentPortal] = useState(false);
 
     const [paymentAttempt, setPaymentAttempt] = useState(false);
@@ -35,7 +41,7 @@ export default function PostModal({ data, dataChanged, setDataChanged, postType,
                     {data["title"] && (
                         <Modal.Title>{data["title"]}</Modal.Title>
                     )}
-                    { postType == "RecipeCollection" &&
+                    {postType == "RecipeCollection" &&
                         isLoggedIn() &&
                         (data.purchased && data.purchased == true ? (
                             <Button
@@ -90,9 +96,7 @@ export default function PostModal({ data, dataChanged, setDataChanged, postType,
                                         onClose={() => {
                                             setPaymentResponse(null);
                                             setPaymentAttempt(false);
-                                            setDataChanged(
-                                                !dataChanged
-                                            );
+                                            setDataChanged(!dataChanged);
                                         }}
                                         onSuccess={() =>
                                             `Successful payment: ${paymentResponse.order._id}`
@@ -104,33 +108,37 @@ export default function PostModal({ data, dataChanged, setDataChanged, postType,
                                 )}
                             </>
                         ))}
-                    { data._id ? (
+                    {data._id ? (
                         <UserRating
                             entryID={data._id}
                             dataChanged={dataChanged}
                             setDataChanged={setDataChanged}
                             rateEntry={async (id, rate) => {
                                 if (postType == "RecipeCollection") {
-                                    const res = await RecipeCollectionService.rateRecipeCollection(
-                                        id,
-                                        rate
-                                    );
+                                    const res =
+                                        await RecipeCollectionService.rateRecipeCollection(
+                                            id,
+                                            rate
+                                        );
                                     return res.status == 200;
                                 }
                                 return true;
                             }}
                             getEntryUserRate={async (id) => {
                                 if (postType == "RecipeCollection") {
-                                    const res = await RecipeCollectionService.getRecipeCollectionUserRate(
-                                        id
-                                    );
-                                    return [res.status == 200, res.data.rating / 2];
+                                    const res =
+                                        await RecipeCollectionService.getRecipeCollectionUserRate(
+                                            id
+                                        );
+                                    return [
+                                        res.status == 200,
+                                        res.data.rating / 2,
+                                    ];
                                 }
                                 return [true, 3.775];
                             }}
                         />
-                    ) :
-                    (
+                    ) : (
                         <StarRatings
                             className={"post-modal-ratings"}
                             starRatedColor="black"
