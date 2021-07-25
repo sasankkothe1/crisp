@@ -360,14 +360,14 @@ export default function AddRecipeView({ recipeID, editable }) {
                     InputProps={{
                         readOnly: !editable,
                     }}
-                    disabled={!editable && true}
+                    disabled={!editable && false}
                 />
 
                 <TextField
                     {...register("description")}
                     value={description}
                     onChange={handleDescription}
-                    disabled={!editable && true}
+                    disabled={!editable && false}
                     key={"recipe-description"}
                     multiline
                     rows={4}
