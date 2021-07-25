@@ -16,14 +16,14 @@ const mimetypes = [
     "video/MP2T",
 ];
 
-const { uploadTemplate } = require("../../middleware/upload");
+const { uploadS3Template } = require("../../middleware/upload");
 
-const upload = uploadTemplate(mimetypes);
+const uploadS3 = uploadS3Template(mimetypes);
 
 router.post(
     "/addEvent",
     isAuthenticated,
-    upload.array("media"),
+    uploadS3.array("media"),
     EventController.create
 );
 router.get("/sideBarEvents", EventController.listSideBarEvents);
@@ -39,7 +39,7 @@ router.get("/:id", isAuthenticated, EventController.read);
 router.put(
     "/:id",
     isAuthenticated,
-    upload.array("media"),
+    uploadS3.array("media"),
     EventController.update
 );
 router.delete("/:id", isAuthenticated, EventController.remove);

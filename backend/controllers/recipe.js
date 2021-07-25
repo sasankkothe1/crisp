@@ -1,10 +1,10 @@
 const { RecipeModel } = require("../model/Recipe");
 
-const fs = require("fs");
-
 const test = async (req, res) => {
     return res.send("testing");
 };
+
+const { removeFileFromS3 } = require("../middleware/upload");
 
 const create = async (req, res) => {
     if (Object.keys(req.body).length === 0)
@@ -27,19 +27,15 @@ const create = async (req, res) => {
             error: "Bad Request",
             message: "The premium status is empty",
         });
-    let url = req.protocol + "://" + req.get("host") + "/";
-    let mediaFiles = [];
-
-    if (req.files?.length > 0) {
-        for (var i = 0; i < req.files.length; i++)
-            mediaFiles.push(url + req.files[i].filename);
-    }
 
     let recipe = {
         ...req.body,
         ingredientsList: JSON.parse(req.body.ingredientsList),
         postedBy: req.user._id,
-        media: mediaFiles,
+        media:
+            req.files?.length > 0
+                ? [...req.files].map((file) => file.location)
+                : [],
     };
 
     const session = await RecipeModel.startSession();
@@ -188,19 +184,14 @@ const update = async (req, res) => {
             });
         }
 
-        let mediaFiles = recipe.media;
-        if (req.file !== undefined) {
-            let url = req.protocol + "://" + req.get("host") + "/";
-
-            if (req.files.length > 0) {
-                for (var i = 0; i < req.files.length; i++)
-                    mediaFiles.push(url + req.files[i].filename);
-            }
+        if (req.files?.length > 0) {
+            recipe.media = recipe.media.concat(
+                [...req.files].map((file) => file.location)
+            );
         }
 
         recipe.title = req.body.title;
         recipe.description = req.body.description;
-        recipe.media = mediaFiles;
         recipe.tags = req.body.tags;
         recipe.premiumStatus = req.body.premiumStatus;
         recipe.rating = req.body.rating;
@@ -244,20 +235,8 @@ const remove = async (req, res) => {
     }
     try {
         let { media } = recipe;
-        media.map((mediaFile) => {
-            let path =
-                "./public/uploads/" +
-                mediaFile.substr(mediaFile.lastIndexOf("/") + 1);
-            fs.access(path, fs.F_OK, (err) => {
-                if (err) {
-                    console.log(err);
-                    return;
-                }
-                fs.unlink(path, (err) => {
-                    if (err) throw err;
-                });
-            });
-        });
+
+        media.map((media) => removeFileFromS3(media));
 
         await recipe.remove();
         res.status(200).json({ message: "Recipe Deleted." });
