@@ -6,10 +6,20 @@ export function getBackendURL() {
 }
 
 export function isLoggedIn() {
-    return isTokenValid();
+    return isTokenValid() && store.getState().user._id;
+}
+
+export function isAdmin() {
+    return isLoggedIn && store.getState().user.role === "Admin";
+}
+
+export function isPartner() {
+    return isLoggedIn && store.getState().user.role === "Partner";
 }
 
 export function getLoggedInUserID() {
+    isTokenValid();
+
     return store.getState().user._id;
 }
 
