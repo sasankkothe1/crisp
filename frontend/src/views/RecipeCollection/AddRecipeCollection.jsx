@@ -7,41 +7,27 @@ import {
     styled,
     TextField,
     IconButton,
-    //Snackbar,
-    makeStyles,
 } from "@material-ui/core";
-//import MuiAlert from "@material-ui/lab/Alert";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import DeleteIcon from "@material-ui/icons/Delete";
 
 import MenuItem from "@material-ui/core/MenuItem";
-
-import Chip from "@material-ui/core/Chip";
 
 import "../Post/PostView.css";
 
 import RecipeCollectionService from "../../services/RecipeCollectionService";
 
 import SnackbarAlert from "../../components/Alert/SnackbarAlert";
-
-const useStyles = makeStyles((theme) => ({
-    rcFormContainer: {},
-    chip: {
-        margin: theme.spacing(0.5, 0.25),
-    },
-}));
+import TagCloud from "../../components/Shop/TagCloud";
 
 export default function AddRecipeCollectionView() {
-    const classes = useStyles();
-
     const { handleSubmit, register } = useForm();
+
+    const [tags, setTags] = useState([]);
 
     const [charactersLeft, setCharactersLeft] = useState(500);
     const [uploadedMedia, setUploadedMedia] = useState([]);
     const [uploadedPdfFile, setUploadedPdfFile] = useState("");
-
-    const [tags, setTags] = useState([]);
-    const [currentTag, setCurrentTag] = useState("");
 
     const handleMediaOnChange = (e) => {
         e.preventDefault();
@@ -118,50 +104,9 @@ export default function AddRecipeCollectionView() {
             .catch((err) => console.log(err));
     };
 
-    /*
-    const handleClose = (event, reason) => {
-        if (reason === "clickaway") {
-            return;
-        }
-        setResponse(null);
-        setUploadAttempt(false);
-    };
-    */
-
-    const addTag = (event) => {
-        console.log(event);
-        if (event.key == "Enter") {
-            const currentTagTrimmed = currentTag.trim();
-            if (!currentTagTrimmed) {
-                return;
-            }
-            if (tags.indexOf(currentTagTrimmed) !== -1) {
-                return;
-            }
-            setTags([...tags, currentTagTrimmed]);
-            setCurrentTag("");
-        }
-    };
-
-    const changeTag = (event) => {
-        setCurrentTag(event.target.value);
-        console.log(currentTag);
-    };
-
-    const removeTag = (item) => () => {
-        console.log(item);
-        setTags(tags.filter((tag) => tag !== item));
-    };
-
     const Input = styled("input")({
         display: "none",
     });
-
-    /*
-    const Alert = (props) => {
-        return <MuiAlert elevation={6} variant="filled" {...props} />;
-    };
-    */
 
     const mealTypes = ["Any", "Breakfast", "Dinner", "Snacks", "Lunch"];
 
@@ -335,32 +280,24 @@ export default function AddRecipeCollectionView() {
                     </div>
                 </div>
 
-                <TextField
+                <TagCloud 
                     key={"post-tags"}
-                    {...register("tags")}
+                    other={register("tags")}
                     label="Tags"
-                    style={{ margin: 8 }}
                     placeholder="Enter tag..."
-                    fullWidth
-                    margin="normal"
-                    InputLabelProps={{
-                        shrink: true,
-                    }}
-                    value={currentTag}
-                    InputProps={{
-                        startAdornment: tags.map((item) => (
-                            <Chip
-                                key={item}
-                                tabIndex={-1}
-                                label={item}
-                                className={classes.chip}
-                                onDelete={removeTag(item)}
-                            />
-                        )),
-                        onKeyDown: (event) => addTag(event),
-                        onChange: (event) => changeTag(event),
-                    }}
-                    variant="outlined"
+                    tags={tags}
+                    setTags={setTags}
+                    handleNewTag={(tag) => {
+                        const currentTagTrimmed = tag.trim();
+                        if (!currentTagTrimmed) {
+                            return false;
+                        }
+                        if (tags.indexOf(currentTagTrimmed) !== -1) {
+                            return false;
+                        }
+                        setTags([...tags, currentTagTrimmed]);
+                        return true;
+                   }}
                 />
 
                 <TextField
