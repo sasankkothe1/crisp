@@ -22,6 +22,8 @@ import EditIcon from "@material-ui/icons/Edit";
 export default function PostView({ postID, editable }) {
     const { handleSubmit, register } = useForm();
 
+    //TODO: setTitle, setDescription
+
     const [charactersLeft, setCharactersLeft] = useState(500);
 
     // uploadedImages: used while uploading the images while creating the post
@@ -133,7 +135,7 @@ export default function PostView({ postID, editable }) {
             });
         } else {
             PostService.updatePost(formData, postID).then((res) => {
-                if (res.status === 200) alert("successful");
+                if (res.status === 200) alert("Edit Success");
                 else alert(res.status);
             });
         }
@@ -239,7 +241,7 @@ export default function PostView({ postID, editable }) {
                             : !userImages && (
                                   <h4 className="no-media">No media</h4>
                               )}
-                        {userImages.length ? (
+                        {userImages.length &&
                             userImages.map((item) => (
                                 <div
                                     className="image-preview-container"
@@ -266,10 +268,7 @@ export default function PostView({ postID, editable }) {
                                         </IconButton>
                                     </div>
                                 </div>
-                            ))
-                        ) : (
-                            <h4 className="no-media">No media</h4>
-                        )}
+                            ))}
                     </div>
                 </div>
 

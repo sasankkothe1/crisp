@@ -20,11 +20,16 @@ import AddIcon from "@material-ui/icons/Add";
 import DeleteIcon from "@material-ui/icons/Delete";
 import { Form } from "react-bootstrap";
 import RecipeService from "../../services/RecipeService";
+import EditIcon from "@material-ui/icons/Edit";
 
 import "./RecipeView.css";
 
-export default function AddRecipeView({ recipeID }) {
+export default function AddRecipeView({ recipeID, editable }) {
     const { handleSubmit, register } = useForm();
+
+    const [title, setTitle] = useState("");
+    const [description, setDescription] = useState("");
+    const [cuisine, setCuisine] = useState("");
 
     const [checked, setChecked] = useState([0]);
     const [charactersLeft, setCharactersLeft] = useState(500);
@@ -34,14 +39,47 @@ export default function AddRecipeView({ recipeID }) {
     const [recipe, setRecipe] = useState();
     const [succesfullyUploaded, setSuccesfullyUploaded] = useState(false);
     const [response, setResponse] = useState();
+    // userImages: these are the images that already user have. These are present in the post[media]
+    const [userImages, setUserImages] = useState([]);
+
+    //toBeDeletedImages: List of urls that contain the images that are to be deleted
+    const [toBeDeleted, setToBeDeleted] = useState([]);
 
     useEffect(() => {
         if (recipeID) {
             RecipeService.recipeById(recipeID).then((res) => {
                 setRecipe(res);
+                setTitle(res["title"]);
+                setDescription(res["description"]);
+                setCuisine(res["cuisine"]);
+                if (res["media"]) {
+                    res["media"].map((url) => {
+                        const name_arr = url.split("/");
+                        const nameOfTheFile = name_arr[name_arr.length - 1];
+                        setUserImages((oldUserImages) => [
+                            ...oldUserImages,
+                            { name: nameOfTheFile, preview: url },
+                        ]);
+                    });
+                }
+                res["ingredientsList"].map((el) => {
+                    setIngredientsList((oldIngredients) => [
+                        ...oldIngredients,
+                        {
+                            ingredientName: el["ingredientName"],
+                            ingredientQuantity: el["ingredientQuantity"],
+                        },
+                    ]);
+                });
+                res["instructions"].map((el) => {
+                    setInstructionsList((oldInstructions) => [
+                        ...oldInstructions,
+                        el,
+                    ]);
+                });
             });
         }
-    }, [recipe]);
+    }, []);
 
     const addIngredient = () => {
         setIngredientsList([{ ingredientName: "", ingredientQuantity: "" }]);
@@ -49,6 +87,18 @@ export default function AddRecipeView({ recipeID }) {
 
     const addInstruction = () => {
         setInstructionsList([""]);
+    };
+
+    const handleTitle = (e) => {
+        setTitle(e.target.value);
+    };
+
+    const handleDescription = (e) => {
+        setDescription(e.target.value);
+    };
+
+    const handleCuisine = (e) => {
+        setCuisine(e.target.value);
     };
 
     // handle input change
@@ -118,6 +168,17 @@ export default function AddRecipeView({ recipeID }) {
         setUploadedImages(newArray);
     };
 
+    const removeUserImages = (e, name) => {
+        e.preventDefault();
+        const newArray = userImages.filter((image) => {
+            return image["name"] != name;
+        });
+        const name_arr = name.split("/");
+        const nameOfTheFile = name_arr[name_arr.length - 1];
+        setUserImages(newArray);
+        setToBeDeleted((prevArray) => [...prevArray, nameOfTheFile]);
+    };
+
     const Alert = (props) => {
         return <MuiAlert elevation={6} variant="filled" {...props} />;
     };
@@ -143,6 +204,16 @@ export default function AddRecipeView({ recipeID }) {
             }
         }
 
+        if (editable) {
+            if (userImages.length > 0) {
+                formData.append("userImages", JSON.stringify(userImages));
+            }
+            if (toBeDeleted.length > 0) {
+                for (let i = 0; i < toBeDeleted.length; i++)
+                    formData.append("toBeDeleted", toBeDeleted[i]);
+            }
+        }
+
         formData.append("ingredientsList", JSON.stringify(ingredientsList));
         if (instructionsList.length > 0) {
             for (let i = 0; i < instructionsList.length; i++) {
@@ -152,15 +223,22 @@ export default function AddRecipeView({ recipeID }) {
 
         formData.append("cuisine", data.cuisine);
 
-        RecipeService.addRecipe(formData).then((res) => {
-            setResponse(res);
-            if (res.status === 201) {
-                setSuccesfullyUploaded(true);
-            }
-            if (res.status / 100 === 4) {
-                setSuccesfullyUploaded(true);
-            }
-        });
+        if (!editable) {
+            RecipeService.addRecipe(formData).then((res) => {
+                setResponse(res);
+                if (res.status === 201) {
+                    setSuccesfullyUploaded(true);
+                }
+                if (res.status / 100 === 4) {
+                    setSuccesfullyUploaded(true);
+                }
+            });
+        } else {
+            RecipeService.updateRecipe(formData, recipeID).then((res) => {
+                if (res.status === 200) alert("Edit Success");
+                else alert(res.status, res.message);
+            });
+        }
     };
 
     const handleToggle = (value) => () => {
@@ -177,7 +255,7 @@ export default function AddRecipeView({ recipeID }) {
     };
 
     const renderIngredientsList = (ingredients) => {
-        if (recipeID) {
+        if (recipeID && !editable) {
             return (
                 <List>
                     {ingredients.map((el, i) => {
@@ -220,7 +298,7 @@ export default function AddRecipeView({ recipeID }) {
     };
 
     const renderInstructionsList = (instructions) => {
-        if (recipeID) {
+        if (recipeID && !editable) {
             return (
                 <List>
                     {instructions.map((el, i) => {
@@ -265,9 +343,10 @@ export default function AddRecipeView({ recipeID }) {
                 onSubmit={handleSubmit(addPost)}
             >
                 <TextField
-                    value={recipe && recipe["title"]}
-                    key={"recipe-title"}
                     {...register("title")}
+                    value={title}
+                    onChange={handleTitle}
+                    key={"recipe-title"}
                     id="outlined-full-width"
                     label="Title"
                     style={{ margin: 8 }}
@@ -278,13 +357,18 @@ export default function AddRecipeView({ recipeID }) {
                         shrink: true,
                     }}
                     variant="outlined"
-                    disabled={recipe && true}
+                    InputProps={{
+                        readOnly: !editable,
+                    }}
+                    disabled={!editable && true}
                 />
+
                 <TextField
-                    value={recipe && recipe["description"]}
-                    disabled={recipe && true}
-                    key={"recipe-description"}
                     {...register("description")}
+                    value={description}
+                    onChange={handleDescription}
+                    disabled={!editable && true}
+                    key={"recipe-description"}
                     multiline
                     rows={4}
                     maxLength="8"
@@ -313,7 +397,7 @@ export default function AddRecipeView({ recipeID }) {
                     <div className="ingredients-details-container">
                         <label>Ingredients</label>
                         <div className="ingredients-list">
-                            {recipe !== undefined ? (
+                            {recipe !== undefined && !editable ? (
                                 renderIngredientsList(recipe["ingredientsList"])
                             ) : ingredientsList.length === 0 ? (
                                 <Button
@@ -323,6 +407,7 @@ export default function AddRecipeView({ recipeID }) {
                                     Add Ingredients
                                 </Button>
                             ) : (
+                                ingredientsList &&
                                 ingredientsList.map((ingredient, i) => {
                                     let keyIndex = i;
                                     return (
@@ -411,8 +496,36 @@ export default function AddRecipeView({ recipeID }) {
                                 </Button>
                             </label>
                         </div>
-                        {uploadedImages.length ? (
-                            uploadedImages.map((item) => (
+                        {uploadedImages.length
+                            ? uploadedImages.map((item) => (
+                                  <div
+                                      className="image-preview-container"
+                                      key={item["name"]}
+                                      style={{
+                                          border: "1px solid gray",
+                                      }}
+                                  >
+                                      <img
+                                          className="preview"
+                                          src={[item["preview"]]}
+                                      />{" "}
+                                      <div className="remove-image-button">
+                                          <IconButton
+                                              onClick={(e) =>
+                                                  removeImage(e, item["name"])
+                                              }
+                                              aria-label="delete"
+                                          >
+                                              <DeleteIcon fontSize="large" />
+                                          </IconButton>
+                                      </div>
+                                  </div>
+                              ))
+                            : !userImages && (
+                                  <h4 className="no-media">No media</h4>
+                              )}
+                        {userImages.length &&
+                            userImages.map((item) => (
                                 <div
                                     className="image-preview-container"
                                     key={item["name"]}
@@ -423,11 +536,14 @@ export default function AddRecipeView({ recipeID }) {
                                     <img
                                         className="preview"
                                         src={[item["preview"]]}
-                                    />{" "}
+                                    />
                                     <div className="remove-image-button">
                                         <IconButton
                                             onClick={(e) =>
-                                                removeImage(e, item["name"])
+                                                removeUserImages(
+                                                    e,
+                                                    item["name"]
+                                                )
                                             }
                                             aria-label="delete"
                                         >
@@ -435,17 +551,14 @@ export default function AddRecipeView({ recipeID }) {
                                         </IconButton>
                                     </div>
                                 </div>
-                            ))
-                        ) : (
-                            <h4 className="no-media">No media</h4>
-                        )}
+                            ))}
                     </div>
                 </div>
                 <div className="recipe-instructions-container">
                     <div className="ingredients-details-container">
                         <label>Instructions</label>
                         <div className="instructions-list">
-                            {recipe !== undefined ? (
+                            {recipe !== undefined && !editable ? (
                                 renderInstructionsList(recipe["instructions"])
                             ) : instructionsList.length === 0 ? (
                                 <Button
@@ -519,9 +632,10 @@ export default function AddRecipeView({ recipeID }) {
                 </div>
 
                 <TextField
-                    value={recipe && recipe["cuisine"]}
-                    key={"recipe-cuisine"}
                     {...register("cuisine")}
+                    value={cuisine}
+                    onChange={handleCuisine}
+                    key={"recipe-cuisine"}
                     id="outlined-full-width"
                     label="Cuisine"
                     style={{ margin: 8 }}
@@ -532,9 +646,9 @@ export default function AddRecipeView({ recipeID }) {
                         shrink: true,
                     }}
                     variant="outlined"
-                    disabled={recipe && true}
+                    disabled={!editable && true}
                 />
-                {!recipe && (
+                {recipe && editable && (
                     <>
                         <Form.Group controlId="typeOfSolution">
                             <Form.Control
@@ -551,9 +665,10 @@ export default function AddRecipeView({ recipeID }) {
                                 className="submit-button"
                                 type="submit"
                                 variant="contained"
-                                color="primary"
+                                color={editable ? "default" : "primary"}
+                                startIcon={editable && <EditIcon />}
                             >
-                                Submit
+                                {editable ? "Edit" : "Submit"}
                             </Button>
                         </div>
                     </>
