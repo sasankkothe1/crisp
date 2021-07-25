@@ -61,6 +61,12 @@ const UserSchema = new mongoose.Schema({
         type: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
         default: [],
     },
+    recipeCollections: {
+        type: [
+            { type: mongoose.Schema.Types.ObjectId, ref: "RecipeCollection" },
+        ],
+        default: [],
+    },
     billingInfo: BillingInfoSchema,
 });
 

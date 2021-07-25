@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const RecipeCollection = require("../model/RecipeCollection");
 const Order = require("../model/Order");
 const Rating = require("../model/Rating");
+const User = require("../model/User");
 
 const { removeFileFromS3 } = require("../middleware/upload");
 
@@ -79,7 +80,19 @@ const createRecipeCollection = (req, res) => {
             if (err) {
                 res.status(502).send({ message: err.message });
             } else {
-                res.status(201).send({ id: recipeCollection._id });
+                User.findByIdAndUpdate(
+                    req.user._id,
+                    {
+                        $push: { recipeCollections: recipeCollection._id },
+                    },
+                    (err, user) => {
+                        if (err) {
+                            res.status(502).send({ message: err.message });
+                        } else {
+                            res.status(201).send({ id: recipeCollection._id });
+                        }
+                    }
+                );
             }
         }
     );
@@ -208,6 +221,21 @@ const removeRecipeCollection = (req, res) => {
                     if (recipeCollection.pdfFile) {
                         removeFileFromS3(recipeCollection.pdfFile);
                     }
+                    User.findByIdAndUpdate(
+                        req.user._id,
+                        {
+                            $pull: { recipeCollections: req.params.id },
+                        },
+                        (err, user) => {
+                            if (err) {
+                                res.status(502).send({ message: err.message });
+                            } else {
+                                res.status(200).send({
+                                    id: recipeCollection._id,
+                                });
+                            }
+                        }
+                    );
                     res.status(200).send({ id: recipeCollection._id });
                 } else {
                     res.sendStatus(200);
