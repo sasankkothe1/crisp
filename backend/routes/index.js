@@ -7,12 +7,11 @@ const api = express
     .use("/events", require("./api/event"))
     .use("/recipes", require("./api/recipe"))
     .use("/recipe_collections", require("./api/recipe_collection"))
+    .use("/partner_managers", require("./api/partner_manager"))
+    .use("/partner_applications", require("./api/partner_application"))
     .use("/rating", require("./api/rating"))
     .use("/users", require("./api/user"))
-    .use("/auth", require("./api/auth"))
-    .use("/private", require("./api/private"))
-    .use("/bankdetails", require("./api/bank_details"))
-    .use("/partnerManager", require("./api/partner_manager"));
+    .use("/auth", require("./api/auth"));
 
 module.exports = {
     api,

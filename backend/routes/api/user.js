@@ -7,12 +7,14 @@ const {
     followUser,
     unfollowUser,
     isFollowing,
+    isSubscribed,
 } = require("../../controllers/user");
 
 const User = require("../../model/User");
 
 router.get("/getUserDetails/:id", getUserDetails);
 router.get("/isFollowing/:id", isAuthenticated, isFollowing);
+router.get("/isSubscribed/:id", isAuthenticated, isSubscribed);
 
 router.put("/followUser/:id", isAuthenticated, followUser);
 router.put("/unfollowUser/:id", isAuthenticated, unfollowUser);

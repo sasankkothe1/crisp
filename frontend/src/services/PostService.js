@@ -84,6 +84,13 @@ export default class PostService {
         let headers = { Authorization: `Bearer ${token}` };
 
         try {
+            if (!userID) {
+                return {
+                    status: "Failed",
+                    message: "Missing User ID",
+                };
+            }
+
             res = await axios.get(
                 `${PostService.baseURL()}/postedBy/${userID}`,
                 {

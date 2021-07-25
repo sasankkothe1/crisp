@@ -36,6 +36,8 @@ const ProfileHeader = ({
     counts,
     isLoggedInUser,
     isFollowing,
+    isSubscribed,
+    isPartner,
     onFollow,
     onUnfollow,
     onSubscribe,
@@ -74,14 +76,16 @@ const ProfileHeader = ({
                                     Follow
                                 </Button>
                             )}
-                            <Button
-                                className={classes.SubscribeButton}
-                                onClick={() => {
-                                    onSubscribe(true);
-                                }}
-                            >
-                                Subscribe
-                            </Button>
+                            {isPartner && !isSubscribed && (
+                                <Button
+                                    className={classes.SubscribeButton}
+                                    onClick={() => {
+                                        onSubscribe(true);
+                                    }}
+                                >
+                                    Subscribe
+                                </Button>
+                            )}
                         </>
                     )
                 }
@@ -98,12 +102,6 @@ const ProfileHeader = ({
                     <Grid item>
                         <Typography variant="h5">{`${counts.eventCount} Events`}</Typography>
                     </Grid>
-                    {/* <Grid item>
-                        <Typography variant="h5">{`following: ${following?.length}`}</Typography>
-                    </Grid> */}
-                    {/* <Grid item>
-                        <Typography variant="h5">{`followers: ${followers?.length}`}</Typography>
-                    </Grid> */}
                 </Grid>
             </CardContent>
         </Card>
@@ -114,6 +112,8 @@ ProfileHeader.propTypes = {
     counts: PropTypes.object,
     isLoggedInUser: PropTypes.bool,
     isFollowing: PropTypes.bool,
+    isSubscribed: PropTypes.bool,
+    isPartner: PropTypes.bool,
     onFollow: PropTypes.func,
     onUnfollow: PropTypes.func,
     onSubscribe: PropTypes.func,

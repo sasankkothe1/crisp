@@ -1,9 +1,7 @@
-// routes/api/post.js
-
 const express = require("express");
 const router = express.Router();
 
-const PartnerManagerController = require("../../controllers/partner_manager");
+const PartnerApplicationController = require("../../controllers/partner_application");
 
 const middleware = require("../../middleware/auth");
 
@@ -11,35 +9,33 @@ router.get(
     "/getAll",
     middleware.isAuthenticated,
     middleware.isAdmin,
-    PartnerManagerController.getAll
+    PartnerApplicationController.getAll
+);
+
+router.get(
+    "/getById",
+    middleware.isAuthenticated,
+    PartnerApplicationController.getById
 );
 
 router.post(
     "/create",
     middleware.isAuthenticated,
-    middleware.isAdmin,
-    PartnerManagerController.create
+    PartnerApplicationController.create
 );
 
 router.put(
-    "/assign/:id",
+    "/approve",
     middleware.isAuthenticated,
     middleware.isAdmin,
-    PartnerManagerController.assign
+    PartnerApplicationController.approve
 );
 
 router.put(
-    "/:id",
+    "/reject",
     middleware.isAuthenticated,
     middleware.isAdmin,
-    PartnerManagerController.removeAssign
-);
-
-router.delete(
-    "/:id",
-    middleware.isAuthenticated,
-    middleware.isAdmin,
-    PartnerManagerController.remove
+    PartnerApplicationController.reject
 );
 
 module.exports = router;

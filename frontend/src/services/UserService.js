@@ -127,4 +127,22 @@ export default class UserService {
             return new Error("Session expired, please login again");
         }
     }
+
+    static async isSubscribed(userID) {
+        if (isTokenValid()) {
+            try {
+                const headers = { Authorization: `Bearer ${getToken()}` };
+                const res = await axios.get(
+                    `${getBackendURL()}/users/isSubscribed/${userID}`,
+                    { headers }
+                );
+
+                return res.data.isSubscribed;
+            } catch (error) {
+                return error;
+            }
+        } else {
+            return new Error("Session expired, please login again");
+        }
+    }
 }

@@ -63,6 +63,7 @@ function ProfileView({ history }) {
     const [profileUser, setProfileUser] = useState({});
     const [isLoggedInUser, setIsLoggedInUser] = useState(false);
     const [isFollowing, setIsFollowing] = useState(false);
+    const [isSubscribed, setIsSubscribed] = useState(false);
     const [tabIndex, setTabIndex] = useState(0);
 
     // Payment Modal Condition
@@ -73,9 +74,8 @@ function ProfileView({ history }) {
             setProfileUser(await UserService.getUserDetails(id));
             setIsLoggedInUser(id === loggedInUser._id);
             if (id != loggedInUser._id) {
-                const isIt = await UserService.isFollowing(id);
-                console.log(`Is it?: ${isIt}`);
-                setIsFollowing(isIt);
+                setIsFollowing(await UserService.isFollowing(id));
+                setIsSubscribed(await UserService.isSubscribed(id));
             }
         } else {
             if (loggedInUser._id) {
@@ -123,6 +123,8 @@ function ProfileView({ history }) {
                         }}
                         isLoggedInUser={isLoggedInUser}
                         isFollowing={isFollowing}
+                        isSubscribed={isSubscribed}
+                        isPartner={profileUser.role === "Partner"}
                         onFollow={onFollow}
                         onUnfollow={onUnfollow}
                         onSubscribe={setShow}
@@ -220,6 +222,10 @@ function ProfileView({ history }) {
                     orderObject={profileUser}
                     show={show}
                     setShow={setShow}
+                    onSuccess={() => {
+                        setShow(false);
+                        setIsSubscribed(true);
+                    }}
                 />
             )}
         </>
