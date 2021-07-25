@@ -26,7 +26,6 @@ export default function AddRecipeCollectionView() {
 
     const handleMediaOnChange = (e) => {
         e.preventDefault();
-        console.log(e.target.files);
         [...e.target.files].forEach((file) => {
             let name = file["name"];
             let reader = new FileReader();

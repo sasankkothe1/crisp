@@ -70,20 +70,16 @@ function ProfileView({ history }) {
 
     useEffect(async () => {
         if (id) {
-            const wut = await UserService.getUserDetails(id);
-            console.log("RIGHT HERE");
-            console.log(wut);
-            setProfileUser(wut);
+            setProfileUser(await UserService.getUserDetails(id));
             setIsLoggedInUser(id === loggedInUser._id);
             if (id != loggedInUser._id) {
                 setIsFollowing(await UserService.isFollowing(id));
             }
         } else {
             if (loggedInUser._id) {
-                const wut = await UserService.getUserDetails(loggedInUser._id);
-                console.log("RIGHT THERE");
-                console.log(wut);
-                setProfileUser(wut);
+                setProfileUser(
+                    await UserService.getUserDetails(loggedInUser._id)
+                );
                 setIsLoggedInUser(true);
             } else {
                 history.push("/");
@@ -184,6 +180,7 @@ function ProfileView({ history }) {
                                     fetchMethod={
                                         RecipeService.allRecipesByUserID
                                     }
+                                    editable={true}
                                     fetchParam={profileUser._id}
                                 />
                             </TabPanel>
@@ -195,6 +192,7 @@ function ProfileView({ history }) {
                                 <PostsList
                                     limit={16}
                                     fetchMethod={PostService.allPostByUserID}
+                                    editable={true}
                                     fetchParam={profileUser._id}
                                 />
                             </TabPanel>
@@ -206,6 +204,7 @@ function ProfileView({ history }) {
                                 <PostsList
                                     limit={16}
                                     fetchMethod={EventService.allEventsByUserID}
+                                    editable={true}
                                     fetchParam={profileUser._id}
                                 />
                             </TabPanel>

@@ -45,9 +45,7 @@ export default class PostService {
     static async postById(id) {
         let res = null;
         try {
-            res = await axios.get(
-                `${PostService.baseURL()}/posts/postByID/${id}`
-            );
+            res = await axios.get(`${PostService.baseURL()}/postByID/${id}`);
             return res.data;
         } catch (error) {
             return {
@@ -88,11 +86,9 @@ export default class PostService {
         let token = getToken();
         let headers = { Authorization: `Bearer ${token}` };
         try {
-            res = await axios.put(
-                `${PostService.baseURL()}/posts/${id}`,
-                post,
-                { headers }
-            );
+            res = await axios.put(`${PostService.baseURL()}/${id}`, post, {
+                headers,
+            });
             return { status: res.status, message: "Edited Successfully" };
         } catch (error) {
             console.log(error);

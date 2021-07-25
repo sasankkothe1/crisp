@@ -181,19 +181,12 @@ const update = async (req, res) => {
                 ? [...req.files].map((file) => file.location)
                 : [];
 
-        // TODO: s3???
-
         let toBeDeleted = req.body.toBeDeleted;
 
+        // DELETE S3
+
         if (toBeDeleted && toBeDeleted.length) {
-            for (let i = 0; i < toBeDeleted.length; i++) {
-                fs.unlink(
-                    path.join(__dirname, `../public/uploads/${toBeDeleted[i]}`),
-                    () => {
-                        console.log("deleted");
-                    }
-                );
-            }
+            toBeDeleted.map((media) => removeFileFromS3(media));
         }
 
         let userImages = JSON.parse(req.body.userImages);

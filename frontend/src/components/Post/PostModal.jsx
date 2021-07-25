@@ -58,13 +58,11 @@ export default function PostModal({ data, rcProps, editable }) {
                                 variant="contained"
                                 color="primary"
                                 onClick={async () => {
-                                    console.log(data._id);
                                     const res =
                                         await RecipeCollectionService.getRecipeCollectionLink(
                                             data._id
                                         );
                                     if (res.status == 200) {
-                                        console.log(res.data.link);
                                         const newWindow = window.open(
                                             res.data.link,
                                             "_blank",

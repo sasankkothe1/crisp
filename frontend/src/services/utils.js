@@ -6,7 +6,7 @@ export function getBackendURL() {
 }
 
 export function isLoggedIn() {
-    return Boolean(window.localStorage["jwtToken"]);
+    return isTokenValid();
 }
 
 export function getLoggedInUserID() {

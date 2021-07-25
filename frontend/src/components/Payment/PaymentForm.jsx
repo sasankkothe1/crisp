@@ -90,7 +90,7 @@ const PaymentForm = ({ orderType, orderObject, onSuccess, onFailure }) => {
                             onSuccess(response);
                         }
                     } else {
-                        console.log("Error :(");
+                        console.log("Error");
                         if (onFailure) {
                             onFailure(response);
                         }

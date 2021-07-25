@@ -112,11 +112,9 @@ export default function AddRecipeView({ recipeID }) {
 
     const removeImage = (e, name) => {
         e.preventDefault();
-        console.log(name);
         const newArray = uploadedImages.filter((image) => {
             return image["name"] != name;
         });
-        console.log(newArray);
         setUploadedImages(newArray);
     };
 

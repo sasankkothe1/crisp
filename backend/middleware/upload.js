@@ -36,7 +36,7 @@ const uploadS3Template = function (mimetypes) {
                     .toLowerCase()
                     .split(".")
                     .slice(-1)[0];
-                cb(null, `${Date.now().toString()}.${fileType}`);
+                cb(null, `${uuidv4()}-${Date.now().toString()}.${fileType}`);
             },
         }),
         limits: { fileSize: 1024 * 1024 * 10 },

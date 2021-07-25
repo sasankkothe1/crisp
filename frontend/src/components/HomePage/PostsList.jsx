@@ -26,7 +26,6 @@ export default function PostsList(props) {
     }, [fetchMethod, fetchParam]);
 
     const fetchPage = (page) => {
-        console.log(fetchParam);
         fetchMethod(limit, page, fetchParam).then((res) => {
             setData(res.docs);
             setPaginationData({ totalPages: res.totalPages });

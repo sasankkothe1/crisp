@@ -48,7 +48,6 @@ export default function ShopSidebar(props) {
     };
 
     const handleMealClick = (event) => {
-        console.log(event.target.value);
         if (event.target.value == props.meal) {
             props.setMeal("");
         } else {

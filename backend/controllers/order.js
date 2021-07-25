@@ -12,7 +12,6 @@ const getOrders = (req, res) => {
             : [req.query.populate];
 
         for (const field of populates) {
-            console.log(field);
             orders = orders.populate(field);
         }
     }

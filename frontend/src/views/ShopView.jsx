@@ -48,7 +48,6 @@ export default function ShopView() {
     const [rcd, setRCD] = useState([]);
 
     useEffect(async () => {
-        console.log(recipeType, meal, minPrice, maxPrice);
         const res = await recipeCollectionService.getRecipeCollections(
             recipeType,
             meal,

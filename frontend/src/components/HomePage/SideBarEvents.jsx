@@ -19,16 +19,6 @@ export default function SideBarEvents() {
         EventService.sideBarEvents().then((res) => {
             setEvents(res);
         });
-
-        // events.map((el) => {
-        //     console.log({
-        //         title: el["title"],
-        //         start: moment(el["startTime"])
-        //             .tz("Europe/Berlin")
-        //             .format("HH:mm"),
-        //         end: moment(el["endTime"]).tz("Europe/Berlin").format("HH:mm"),
-        //     });
-        // });
     }, []);
 
     const displayPost = (i) => {

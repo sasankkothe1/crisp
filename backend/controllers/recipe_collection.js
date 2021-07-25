@@ -30,8 +30,6 @@ const getRecipeCollections = (req, res) => {
         filters.price = priceFilter;
     }
 
-    console.log(filters);
-
     let collections = RecipeCollection.find(filters);
 
     collections = collections.populate({
@@ -144,7 +142,6 @@ const getRecipeCollection = (req, res) => {
                     recipeCollection: req.params.id,
                 })
                     .then((order) => {
-                        console.log(order);
                         if (order) {
                             recipeCollection.purchased = true;
                         } else {
@@ -252,7 +249,6 @@ const rateRecipeCollection = (req, res) => {
         recipeCollection: req.params.id,
     })
         .then((rating) => {
-            console.log(rating);
             if (rating) {
                 Rating.findByIdAndUpdate(
                     rating._id,
@@ -265,7 +261,6 @@ const rateRecipeCollection = (req, res) => {
                 )
                     .then((oldRating) => {
                         const delta = req.body.rating - oldRating.rating;
-                        console.log(delta);
                         RecipeCollection.findByIdAndUpdate(
                             req.params.id,
                             {

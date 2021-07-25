@@ -53,8 +53,6 @@ function UserLoginView({ history, dispatch }) {
     }, []);
 
     useEffect(() => {
-        console.log(user);
-
         if (user?._id) {
             history.push("/");
         } else if (user?.error) {
