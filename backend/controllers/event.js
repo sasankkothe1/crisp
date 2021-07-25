@@ -51,7 +51,10 @@ const create = async (req, res) => {
     let event = {
         ...req.body,
         postedBy: req.user._id,
-        media: req.files?.length > 0 ? [...req.files].map(file => file.location) : [],
+        media:
+            req.files?.length > 0
+                ? [...req.files].map((file) => file.location)
+                : [],
     };
 
     const session = await EventModel.startSession();
@@ -221,7 +224,9 @@ const update = async (req, res) => {
         event.description = req.body.description;
 
         if (req.files?.length > 0) {
-            event.media = event.media.concat([...req.files].map(file => file.location));
+            event.media = event.media.concat(
+                [...req.files].map((file) => file.location)
+            );
         }
 
         event.tags = req.body.tags;
@@ -267,9 +272,7 @@ const remove = async (req, res) => {
     }
     try {
         let { media } = event;
-        media.map((media) =>
-            removeFileFromS3(media)
-        );
+        media.map((media) => removeFileFromS3(media));
 
         await event.remove();
         res.status(200).json({ message: "Event Deleted." });

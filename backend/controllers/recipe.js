@@ -32,7 +32,10 @@ const create = async (req, res) => {
         ...req.body,
         ingredientsList: JSON.parse(req.body.ingredientsList),
         postedBy: req.user._id,
-        media: req.files?.length > 0 ? [...req.files].map(file => file.location) : [],
+        media:
+            req.files?.length > 0
+                ? [...req.files].map((file) => file.location)
+                : [],
     };
 
     const session = await RecipeModel.startSession();
@@ -182,21 +185,13 @@ const update = async (req, res) => {
         }
 
         if (req.files?.length > 0) {
-            recipe.media = recipe.media.concat([...req.files].map(file => file.location));
-        }
-        let mediaFiles = recipe.media;
-        if (req.file !== undefined) {
-            let url = req.protocol + "://" + req.get("host") + "/";
-
-            if (req.files.length > 0) {
-                for (var i = 0; i < req.files.length; i++)
-                    mediaFiles.push(url + req.files[i].filename);
-            }
+            recipe.media = recipe.media.concat(
+                [...req.files].map((file) => file.location)
+            );
         }
 
         recipe.title = req.body.title;
         recipe.description = req.body.description;
-        recipe.media = mediaFiles;
         recipe.tags = req.body.tags;
         recipe.premiumStatus = req.body.premiumStatus;
         recipe.rating = req.body.rating;
@@ -241,10 +236,8 @@ const remove = async (req, res) => {
     try {
         let { media } = recipe;
 
-        media.map((media) =>
-            removeFileFromS3(media)
-        );
-        
+        media.map((media) => removeFileFromS3(media));
+
         await recipe.remove();
         res.status(200).json({ message: "Recipe Deleted." });
     } catch (error) {

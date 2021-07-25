@@ -34,7 +34,10 @@ const create = async (req, res) => {
     let post = {
         ...req.body,
         postedBy: req.user._id,
-        media: req.files?.length > 0 ? [...req.files].map(file => file.location) : [],
+        media:
+            req.files?.length > 0
+                ? [...req.files].map((file) => file.location)
+                : [],
     };
 
     const session = await PostModel.startSession();
@@ -173,7 +176,10 @@ const update = async (req, res) => {
             });
         }
 
-        let mediaFiles = req.files?.length > 0 ? [...req.files].map(file => file.location) : [];
+        let mediaFiles =
+            req.files?.length > 0
+                ? [...req.files].map((file) => file.location)
+                : [];
 
         // TODO: s3???
 
@@ -242,9 +248,7 @@ const remove = async (req, res) => {
     try {
         let { media } = post;
 
-        media.map((media) =>
-            removeFileFromS3(media)
-        );
+        media.map((media) => removeFileFromS3(media));
 
         await post.remove();
         res.status(200).json({ message: "Post Deleted." });
