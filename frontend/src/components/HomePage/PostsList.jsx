@@ -41,6 +41,8 @@ export default function PostsList(props) {
         fetchPage(value);
     };
 
+    const [dataChanged, setDataChanged] = useState(false);
+
     return data?.length > 0 ? (
         <div className="root">
             <div className="post">
@@ -58,7 +60,12 @@ export default function PostsList(props) {
                     show={show}
                     onHide={handleClose}
                 >
-                    <PostModal data={data[postIndex]} editable={editable} />
+                    <PostModal
+                        data={data[postIndex]}
+                        editable={editable}
+                        dataChanged={dataChanged}
+                        setDataChanged={setDataChanged}
+                    />
                 </Modal>
             </div>
             <Pagination
