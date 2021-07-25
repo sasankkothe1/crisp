@@ -26,6 +26,11 @@ router.post(
     PostController.create
 );
 router.get("/", PostController.listPosts);
+router.get(
+    "/personalized",
+    middleware.isAuthenticated,
+    PostController.listPersonalizedPosts
+);
 router.get("/new", PostController.listNewPosts);
 router.get(
     "/postedBy/:id",

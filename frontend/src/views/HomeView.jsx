@@ -3,6 +3,7 @@ import { makeStyles } from "@material-ui/core";
 import PostsList from "../components/HomePage/PostsList";
 import SideBar from "../components/HomePage/SideBar";
 import PostService from "../services/PostService";
+import { isLoggedIn } from "../services/utils";
 
 const useStyles = makeStyles((theme) => ({
     homeViewContainer: {
@@ -30,7 +31,11 @@ export default function HomeView() {
                 <PostsList
                     editable={false}
                     limit={16}
-                    fetchMethod={PostService.allPosts}
+                    fetchMethod={
+                        isLoggedIn()
+                            ? PostService.allPostsPersonalized
+                            : PostService.allPosts
+                    }
                     fetchParams={{}}
                 />
             </div>

@@ -42,6 +42,28 @@ export default class PostService {
         }
     }
 
+    static async allPostsPersonalized(limit, page) {
+        let res = null;
+
+        try {
+            let token = getToken();
+            let headers = { Authorization: `Bearer ${token}` };
+            res = await axios.get(`${PostService.baseURL()}/personalized`, {
+                headers: headers,
+                params: {
+                    limit: limit,
+                    page: page,
+                },
+            });
+            return res.data;
+        } catch (error) {
+            return {
+                status: error.response.status,
+                message: error.response.data.message,
+            };
+        }
+    }
+
     static async postById(id) {
         let res = null;
         try {

@@ -73,7 +73,9 @@ function ProfileView({ history }) {
             setProfileUser(await UserService.getUserDetails(id));
             setIsLoggedInUser(id === loggedInUser._id);
             if (id != loggedInUser._id) {
-                setIsFollowing(await UserService.isFollowing(id));
+                const isIt = await UserService.isFollowing(id);
+                console.log(`Is it?: ${isIt}`);
+                setIsFollowing(isIt);
             }
         } else {
             if (loggedInUser._id) {

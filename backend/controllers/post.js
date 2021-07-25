@@ -102,6 +102,39 @@ const listPosts = (req, res) => {
         });
 };
 
+const listPersonalizedPosts = (req, res) => {
+    // TODO: Do the same in event and recipe
+    PostModel.paginate(
+        {
+            postedBy: {
+                $in: [...req.user.following, ...req.user.subscriptions],
+            },
+        },
+        {
+            limit: req.query.limit,
+            page: req.query.page,
+            sort: "-datePosted",
+            populate: "postedBy",
+        }
+    )
+        .then((posts) => {
+            if (!posts) {
+                return res.status(400).json({
+                    error: "Not Found",
+                    message: "No Posts Found",
+                });
+            } else {
+                return res.status(200).json(posts);
+            }
+        })
+        .catch((error) => {
+            res.status(500).json({
+                error: "Internal server error",
+                message: error.message,
+            });
+        });
+};
+
 const listPostsByUserID = (req, res) => {
     PostModel.paginate(
         { postedBy: req.params.id },
@@ -258,6 +291,7 @@ module.exports = {
     create,
     read,
     listPosts,
+    listPersonalizedPosts,
     listNewPosts,
     listPostsByUserID,
     update,

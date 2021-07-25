@@ -1,7 +1,7 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import PropTypes from "prop-types";
 import { withRouter, Link } from "react-router-dom";
-import { connect } from "react-redux";
+import { connect, useSelector } from "react-redux";
 import {
     AppBar,
     InputAdornment,
@@ -53,8 +53,21 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const Header = ({ history, dispatch }) => {
+const Header = ({ history, location, dispatch }) => {
     const classes = useStyles();
+
+    const loggedInUser = useSelector((state) => state.user);
+
+    useEffect(async () => {
+        // TODO: check admin in path
+        console.log(location.path);
+
+        if (!(loggedInUser._id && loggedInUser.role === "Admin")) {
+            history.push("/");
+        } else {
+            console.log("we in");
+        }
+    }, []);
 
     const [anchorEl, setAnchorEl] = useState(null);
     const [searchValue, setSearchValue] = useState("");
@@ -89,6 +102,7 @@ const Header = ({ history, dispatch }) => {
         handleClose();
         dispatch(logout());
         history.push("/");
+        window.location.reload();
     };
 
     return (

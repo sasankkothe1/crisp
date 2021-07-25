@@ -77,7 +77,7 @@ export default class UserService {
             try {
                 const headers = { Authorization: `Bearer ${getToken()}` };
                 const res = await axios.put(
-                    `${this.baseURL()}/users/followUser/${userID}`,
+                    `${getBackendURL()}/users/followUser/${userID}`,
                     {},
                     { headers }
                 );
@@ -96,7 +96,7 @@ export default class UserService {
             try {
                 const headers = { Authorization: `Bearer ${getToken()}` };
                 const res = await axios.put(
-                    `${this.baseURL()}/users/unfollowUser/${userID}`,
+                    `${getBackendURL()}/users/unfollowUser/${userID}`,
                     {},
                     { headers }
                 );
@@ -115,7 +115,7 @@ export default class UserService {
             try {
                 const headers = { Authorization: `Bearer ${getToken()}` };
                 const res = await axios.get(
-                    `${this.baseURL()}/users/isFollowing/${userID}`,
+                    `${getBackendURL()}/users/isFollowing/${userID}`,
                     { headers }
                 );
 
