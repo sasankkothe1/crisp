@@ -1,6 +1,6 @@
 /* eslint-disable indent */
 /* eslint-disable react/prop-types */
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Col, Container, Modal, Row } from "react-bootstrap";
 import { Carousel } from "react-responsive-carousel";
@@ -10,7 +10,6 @@ import ReactPlayer from "react-player";
 import moment from "moment-timezone";
 import { Button } from "@material-ui/core/";
 import EditIcon from "@material-ui/icons/Edit";
-import Rating from "@material-ui/lab/Rating";
 
 import PaymentPortal from "../../components/Payment/PaymentPortal";
 
@@ -21,27 +20,9 @@ import SnackbarAlert from "../Alert/SnackbarAlert";
 
 import { isLoggedIn } from "../../services/utils";
 
-const useRating = (data, rcProps) => {
-    const [rating, setRating] = useState(0);
-
-    if (!rcProps || !isLoggedIn()) {
-        return [rating, setRating];
-    }
-
-    useEffect(async () => {
-        const res = await RecipeCollectionService.getRecipeCollectionUserRate(
-            data._id
-        );
-        if (res.status == 200) {
-            setRating(res.data.rating / 2);
-        }
-    }, []);
-
-    return [rating, setRating];
-};
+import UserRating from "../Rating/Rating";
 
 export default function PostModal({ data, rcProps, editable }) {
-    const [rating, setRating] = useRating(data, rcProps);
     const [showPaymentPortal, setShowPaymentPortal] = useState(false);
 
     const [paymentAttempt, setPaymentAttempt] = useState(false);
@@ -123,29 +104,27 @@ export default function PostModal({ data, rcProps, editable }) {
                                 )}
                             </>
                         ))}
-                    {rcProps ? (
-                        <Rating
-                            className={"post-modal-ratings"}
-                            name="simple-controlled"
-                            value={rating}
-                            onChange={async (event, rate) => {
-                                if (rate !== rating) {
-                                    const res =
-                                        await RecipeCollectionService.rateRecipeCollection(
-                                            data._id,
-                                            rate
-                                        );
-                                    if (res.status == 200) {
-                                        rcProps.setDataChanged(
-                                            !rcProps.dataChanged
-                                        );
-                                        setRating(rate);
-                                    }
-                                }
+                    { rcProps ? (
+                        <UserRating
+                            entryID={data._id}
+                            dataChanged={rcProps.dataChanged}
+                            setDataChanged={rcProps.setDataChanged}
+                            rateEntry={async (id, rate) => {
+                                const res = await RecipeCollectionService.rateRecipeCollection(
+                                    id,
+                                    rate
+                                );
+                                return res.status == 200;
                             }}
-                            readOnly={rcProps ? !isLoggedIn() : true}
+                            getEntryUserRate={async (id) => {
+                                const res = await RecipeCollectionService.getRecipeCollectionUserRate(
+                                    id
+                                );
+                                return [res.status == 200, res.data.rating / 2];
+                            }}
                         />
-                    ) : (
+                    ) :
+                    (
                         <StarRatings
                             className={"post-modal-ratings"}
                             starRatedColor="black"
